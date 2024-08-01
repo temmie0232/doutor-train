@@ -1,9 +1,5 @@
-import React from 'react'
+import HomeScreen from '@/features/home/Home';
 
-const page = () => {
-    return (
-        <div>page</div>
-    )
+export default function HomePage() {
+    return <HomeScreen />;
 }
-
-export default page
