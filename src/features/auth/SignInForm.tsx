@@ -16,6 +16,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 
 interface FormData {
+    name: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -34,17 +35,36 @@ const SignInForm: React.FC = () => {
 
     return (
         <div>
+            {/*カード全体*/}
             <Card className="w-full">
+                {/*タイトル*/}
                 <CardHeader className='text-center'>
                     <CardTitle>新規登録</CardTitle>
+                    {/*アンダーライン*/}
                     <div className="flex justify-center mt-2">
                         <div className="w-12 h-1 bg-black rounded-lg"></div>
                     </div>
                 </CardHeader>
 
+                {/*内容*/}
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid w-full items-center gap-4">
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="name">名前</Label>
+                                <Input
+                                    id="name"
+                                    placeholder="山田 太郎"
+                                    {...register("name", {
+                                        required: "名前は必須です",
+                                        minLength: {
+                                            value: 2,
+                                            message: "名前は2文字以上である必要があります"
+                                        }
+                                    })}
+                                />
+                                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                            </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="email">メールアドレス</Label>
                                 <Input
@@ -94,6 +114,7 @@ const SignInForm: React.FC = () => {
                     </form>
                 </CardContent>
 
+                {/*フッター*/}
                 <CardFooter className="flex justify-center flex-col">
                     <Button type="submit" className="w-4/5 text-sm" onClick={handleSubmit(onSubmit)}>登録する</Button>
                 </CardFooter>
