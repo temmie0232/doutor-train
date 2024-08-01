@@ -13,7 +13,7 @@ const AuthNavigation: React.FC = () => {
     return (
         <Tabs defaultValue="ログイン" className="w-full">
             {/*タブの要素*/}
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2 mb-3">
                 <TabsTrigger value="ログイン">ログイン</TabsTrigger>
                 <TabsTrigger value="新規登録">新規登録</TabsTrigger>
             </TabsList>

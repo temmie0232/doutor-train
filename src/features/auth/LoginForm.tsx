@@ -44,10 +44,10 @@ const LoginForm: React.FC = () => {
 
                 {/*フッター*/}
                 <CardFooter className="flex justify-center flex-col ">
-                    <Button type="submit" className="w-4/5 text-sm">ログイン</Button>
+                    <Button type="submit" className="w-4/6 text-sm">ログイン</Button>
                     <Separator className="my-4" />
-                    <Button variant="outline" size="sm" className="w-4/5 text-sm text-gray-600 hover:text-gray-900">
-                        アカウントなしでログイン
+                    <Button variant="outline" size="sm" className="w-4/6 text-sm text-gray-600 hover:text-gray-900">
+                        アカウントなしで開始
                     </Button>
                 </CardFooter>
             </Card>
