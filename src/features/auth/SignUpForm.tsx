@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
 import { useForm } from 'react-hook-form'
 
 import { Button } from "@/components/ui/button"
@@ -16,21 +18,24 @@ import {
 import { Separator } from '@/components/ui/separator'
 
 interface FormData {
-    name: string;
     email: string;
     password: string;
     confirmPassword: string;
 }
 
-const SignInForm: React.FC = () => {
+const SignUpForm: React.FC = () => {
+    const { signUp } = useAuth();
+    const router = useRouter();
     const { register, handleSubmit, formState: { errors }, getValues } = useForm<FormData>();
     const [error, setError] = useState<string | null>(null);
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
-        // ここでバックエンドAPIを呼び出してユーザー登録
-        // 成功時の処理（例：ログインページへリダイレクト）
-        // エラー時の処理（例：setError("登録に失敗しました。")）
+    const onSubmit = async (data: FormData) => {
+        try {
+            await signUp(data.email, data.password);
+            router.push('/home');
+        } catch (err) {
+            setError("登録に失敗しました。");
+        }
     };
 
     return (
@@ -50,21 +55,6 @@ const SignInForm: React.FC = () => {
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">名前</Label>
-                                <Input
-                                    id="name"
-                                    placeholder="山田 太郎"
-                                    {...register("name", {
-                                        required: "名前は必須です",
-                                        minLength: {
-                                            value: 2,
-                                            message: "名前は2文字以上である必要があります"
-                                        }
-                                    })}
-                                />
-                                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-                            </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="email">メールアドレス</Label>
                                 <Input
@@ -116,11 +106,11 @@ const SignInForm: React.FC = () => {
 
                 {/*フッター*/}
                 <CardFooter className="flex justify-center flex-col">
-                    <Button type="submit" className="w-4/5 text-sm" onClick={handleSubmit(onSubmit)}>登録する</Button>
+                    <Button type="submit" size="sm" className="w-4/5 text-sm" onClick={handleSubmit(onSubmit)}>登録する</Button>
                 </CardFooter>
             </Card>
         </div>
     )
 }
 
-export default SignInForm
+export default SignUpForm

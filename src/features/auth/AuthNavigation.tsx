@@ -7,7 +7,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import LoginForm from './LoginForm'
-import SignInForm from './SignInForm'
+import SignInForm from './SignUpForm'
 
 const AuthNavigation: React.FC = () => {
     return (

@@ -1,6 +1,6 @@
+import React from 'react'
 import AuthNavigation from '@/features/auth/AuthNavigation'
 import GoogleAuthButton from '@/features/auth/GoogleAuthButton'
-import React from 'react'
 
 const AuthPage = () => {
     return (
