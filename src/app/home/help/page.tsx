@@ -22,7 +22,7 @@ const HelpPage: React.FC = () => {
                 <AccordionItem value="item-3">
                     <AccordionTrigger>アプリについて</AccordionTrigger>
                     <AccordionContent>
-                        LINE内のメンバー以外(部外者)にこのアプリのURLを共有しないでください。
+                        多分このアプリグレーなので,LINE内のメンバー以外(部外者)にこのアプリのURLを共有しないでください。
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4">
