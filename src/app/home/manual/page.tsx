@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,7 @@ const ManualListPage = () => {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState<'ice' | 'hot' | 'food' | 'all'>('all');
+    const router = useRouter();
 
     useEffect(() => {
         const filtered = products.filter(product =>
@@ -20,6 +22,12 @@ const ManualListPage = () => {
         );
         setFilteredProducts(filtered);
     }, [searchTerm, sortBy]);
+
+    const handleProductClick = (productName: string) => {
+        const productID = encodeURIComponent(productName);
+        console.log("Encoded productID:", productID); // デバッグ用ログ
+        router.push(`/home/manual/${productID}`);
+    };
 
     return (
         <Layout>
@@ -41,7 +49,7 @@ const ManualListPage = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredProducts.map((product) => (
-                    <Card key={product.name} className="cursor-pointer hover:shadow-lg transition-shadow">
+                    <Card key={product.name} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleProductClick(product.name)}>
                         <CardContent className="p-2">
                             <div className="relative w-full h-48 mb-2">
                                 {product.image ? (
