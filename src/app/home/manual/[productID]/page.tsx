@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -6,8 +5,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import Layout from '@/components/layout/Layout';
-import { products } from '@/data/products';
+import { products, Product } from '@/data/products';
+import { productInstructions, Instruction } from '@/data/productInstructions';
 import { CiImageOff } from 'react-icons/ci';
 
 interface ProductDetailPageProps {
@@ -17,30 +19,41 @@ interface ProductDetailPageProps {
 const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     const router = useRouter();
     const { productID } = params;
-    const [instructionSteps, setInstructionSteps] = useState(0);
-
-    const decodedProductName = decodeURIComponent(productID);
-    const product = products.find(p =>
-        p.name === decodedProductName ||
-        p.name.includes(decodedProductName) ||
-        decodedProductName.includes(p.name)
-    );
+    const [product, setProduct] = useState<Product | null>(null);
+    const [instructions, setInstructions] = useState<string[][]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (product) {
-            fetch(`/api/instruction-steps/${encodeURIComponent(product.name)}`)
-                .then(response => response.json())
-                .then(data => setInstructionSteps(data.steps))
-                .catch(error => console.error('Error fetching instruction steps:', error));
+        const decodedProductName = decodeURIComponent(productID);
+        // 完全一致で商品を検索
+        const foundProduct = products.find(p => p.name === decodedProductName);
+
+        if (foundProduct) {
+            setProduct(foundProduct);
+            const productSteps = productInstructions[foundProduct.name] || [];
+            setInstructions(productSteps);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
-    }, [product]);
+    }, [productID]);
+
+    if (loading) {
+        return (
+            <Layout>
+                <div className="text-center">
+                    <p>Loading...</p>
+                </div>
+            </Layout>
+        );
+    }
 
     if (!product) {
         return (
             <Layout>
                 <div className="text-center">
                     <h1 className="text-2xl font-bold mb-4">商品が見つかりません</h1>
-                    <p className="mb-4">検索した商品名: {decodedProductName}</p>
+                    <p className="mb-4">検索した商品名: {decodeURIComponent(productID)}</p>
                     <Button onClick={() => router.back()}>戻る</Button>
                 </div>
             </Layout>
@@ -51,26 +64,26 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
         <Layout>
             <div className="max-w-2xl mx-auto">
                 <h1 className="text-3xl font-bold text-center">{product.name}</h1>
-                <div className="flex justify-center mt-1 mb-6">
+                <div className="flex justify-center mt-1 mb-8">
                     <div className="w-16 h-1 bg-black rounded-lg"></div>
                 </div>
 
-                <div className="mb-8">
-                    {product.image ? (
-                        <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-full h-64 object-cover rounded-lg shadow-md"
-                        />
-                    ) : (
-                        <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-lg shadow-md">
-                            <CiImageOff size={64} className="text-gray-400" />
-                        </div>
-                    )}
-                </div>
-
-                <div className="mb-8">
-                    <h2 className="text-xl font-semibold mb-3 text-center">商品情報</h2>
+                {/* 商品情報 */}
+                <div className="mb-10">
+                    <h2 className="text-2xl font-semibold mb-4">商品情報</h2>
+                    <div className="mb-4">
+                        {product.image ? (
+                            <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full max-h-64 object-contain rounded-lg shadow-md"
+                            />
+                        ) : (
+                            <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-lg shadow-md">
+                                <CiImageOff size={64} className="text-gray-400" />
+                            </div>
+                        )}
+                    </div>
                     <div className="space-y-2">
                         <div className="flex items-center">
                             <span className="w-24 font-medium">サイズ:</span>
@@ -95,36 +108,53 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                     </div>
                 </div>
 
-                <div className="mb-6">
-                    <h2 className="text-xl font-semibold mb-3 text-center">作り方</h2>
-                    <div className="space-y-4">
-                        {[...Array(instructionSteps)].map((_, index) => (
-                            <div key={index} className="relative w-full h-64">
-                                <Image
-                                    src={`/manual/${encodeURIComponent(product.name)}/${index + 1}.png`}
-                                    alt={`${product.name}の作り方 ステップ${index + 1}`}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="rounded-lg"
-                                    onError={(e) => {
-                                        const target = e.target as HTMLImageElement;
-                                        target.style.display = 'none';
-                                        const fallback = target.nextElementSibling as HTMLDivElement;
-                                        if (fallback) fallback.style.display = 'flex';
-                                    }}
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg" style={{ display: 'none' }}>
-                                    <CiImageOff size={48} className="text-gray-400" />
+                {/* セパレータ */}
+                <Separator className="my-8" />
+
+                {/* 作り方セクション */}
+                <h2 className="text-2xl font-semibold mb-4">作り方</h2>
+                <div className="space-y-6">
+                    {instructions.map((step, index) => (
+                        <Card key={index}>
+                            <CardHeader>
+                                <CardTitle>ステップ {index + 1}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="relative w-full">
+                                    <Image
+                                        src={`/manual/${encodeURIComponent(product!.name)}/${index + 1}.png`}
+                                        alt={`${product!.name}の作り方 ステップ${index + 1}`}
+                                        width={500}
+                                        height={300}
+                                        layout="responsive"
+                                        objectFit="contain"
+                                        className="rounded-lg"
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            const fallback = target.nextElementSibling as HTMLDivElement;
+                                            if (fallback) fallback.style.display = 'flex';
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg" style={{ display: 'none' }}>
+                                        <CiImageOff size={48} className="text-gray-400" />
+                                    </div>
                                 </div>
-                                <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">
-                                    ステップ {index + 1}
+                                <div className="mt-2 text-sm text-gray-600">
+                                    {step.map((line, lineIndex) => (
+                                        <p key={lineIndex} className={lineIndex > 0 ? "mt-1" : ""}>
+                                            {line}
+                                        </p>
+                                    ))}
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
 
-                <Button onClick={() => router.back()} className="w-full">商品リストに戻る</Button>
+                <div className="mt-8">
+                    <Button onClick={() => router.back()} className="w-full">商品リストに戻る</Button>
+                </div>
             </div>
         </Layout>
     );
