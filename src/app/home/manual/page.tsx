@@ -43,12 +43,12 @@ const ManualListPage = () => {
                 {filteredProducts.map((product) => (
                     <Card key={product.name} className="cursor-pointer hover:shadow-lg transition-shadow">
                         <CardContent className="p-2">
-                            <div className="relative w-full pb-[100%] mb-2">
+                            <div className="relative w-full h-48 mb-2">
                                 {product.image ? (
                                     <img
                                         src={product.image}
                                         alt={product.name}
-                                        className="absolute inset-0 w-full h-full object-cover rounded"
+                                        className="size-full object-cover rounded"
                                         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                                             const target = e.currentTarget;
                                             target.style.display = 'none';
@@ -59,7 +59,7 @@ const ManualListPage = () => {
                                         }}
                                     />
                                 ) : null}
-                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded" style={{ display: product.image ? 'none' : 'flex' }}>
+                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded" style={{ display: 'none' }}>
                                     <CiImageOff size={48} className="text-gray-400" />
                                 </div>
                             </div>

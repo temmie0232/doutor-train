@@ -31,6 +31,13 @@ const HelpPage: React.FC = () => {
                         パスワードのリセットは実装しないので新しいアカウントで始めてください。
                     </AccordionContent>
                 </AccordionItem>
+                <AccordionItem value="item-5">
+                    <AccordionTrigger>誤情報を見つけた場合</AccordionTrigger>
+                    <AccordionContent>
+                        メールで 誤:〇〇 正:〇〇 のように送ってください。
+                        temmie0232@gmail.com
+                    </AccordionContent>
+                </AccordionItem>
             </Accordion>
         </Layout>
     );
