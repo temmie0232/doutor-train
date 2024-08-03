@@ -19,7 +19,7 @@ const LogoutButton: React.FC = () => {
     };
 
     return (
-        <Button onClick={handleLogout} variant="outline">
+        <Button size="sm" className="w-2/5" onClick={handleLogout} variant="outline">
             ログアウト
         </Button>
     );

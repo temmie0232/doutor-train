@@ -14,6 +14,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Separator } from '@/components/ui/separator'
+import GuestLoginButton from '@/components/elements/GuestLoginButton';
 
 const LoginForm: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -80,9 +81,7 @@ const LoginForm: React.FC = () => {
                 <CardFooter className="flex justify-center flex-col">
                     <Button type="submit" size="sm" className="w-4/6 text-sm" onClick={handleSubmit}>ログイン</Button>
                     <Separator className="my-4" />
-                    <Button variant="outline" size="sm" className="w-4/6 text-sm text-gray-600 hover:text-gray-900">
-                        アカウントなしで開始
-                    </Button>
+                    <GuestLoginButton />
                 </CardFooter>
             </Card>
         </div>

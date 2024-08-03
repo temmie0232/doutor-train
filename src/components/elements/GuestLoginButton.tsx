@@ -19,8 +19,8 @@ const GuestLoginButton: React.FC = () => {
     };
 
     return (
-        <Button onClick={handleGuestLogin} variant="outline" className="w-full">
-            ゲストとしてログイン
+        <Button size="sm" onClick={handleGuestLogin} variant="outline" className="w-4/6">
+            アカウント無しで開始
         </Button>
     );
 };

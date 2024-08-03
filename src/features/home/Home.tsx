@@ -1,39 +1,102 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import LogoutButton from '@/components/elements/LogoutButton';
+import Header from '@/components/layout/Header';
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { MdMenuBook, MdOutlineCoffeeMaker } from 'react-icons/md';
+import { BiHelpCircle } from 'react-icons/bi';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const HomePage = () => {
   const { user } = useAuth();
+  const router = useRouter();
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleTrainingClick = () => {
+    if (user?.isAnonymous) {
+      setShowAlert(true);
+    } else {
+      // トレーニングページへの遷移ロジックをここに追加
+      console.log("トレーニングページへ遷移");
+    }
+  };
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle>ホーム</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="mb-4">
-            {user ? (
-              user.isAnonymous ?
-                "ゲストとしてログインしています。" :
-                `ようこそ、${user.email || 'ユーザー'}さん！`
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <main className="flex-grow container mx-auto p-4 pt-16 flex flex-col justify-center">
+        <div className="mb-20 text-center">
+          {user ? (
+            user.isAnonymous ? (
+              <div>
+                <p className="text-xl font-semibold mb-2">ゲストユーザーでログイン中</p>
+                <p className="text-sm text-gray-600">一部機能に制約があります</p>
+              </div>
             ) : (
-              "ログインしていません。"
-            )}
-          </p>
-          <div className="flex justify-between">
-            <Button variant="outline">マニュアル</Button>
-            <Button disabled={user?.isAnonymous}>トレーニング</Button>
+              <p className="text-2xl font-semibold">ようこそ、{user.displayName || user.email || 'ユーザー'}さん！</p>
+            )
+          ) : (
+            <p className="text-xl font-semibold">ログインしていません</p>
+          )}
+        </div>
+
+        <div className="max-w-xs mx-auto w-full">
+          <div className="space-y-12">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
+              onClick={() => console.log("マニュアルページへ遷移")}
+            >
+              <MdMenuBook className="mr-2 h-7 w-7" /> マニュアル
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
+              onClick={handleTrainingClick}
+            >
+              <MdOutlineCoffeeMaker className="mr-2 h-7 w-7" /> トレーニング
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
+              onClick={() => console.log("ヘルプページへ遷移")}
+            >
+              <BiHelpCircle className="mr-2 h-7 w-7" /> ヘルプ
+            </Button>
           </div>
-          <div className="mt-4">
-            <LogoutButton />
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </main>
+
+      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>アカウントが必要です</AlertDialogTitle>
+            <AlertDialogDescription>
+              この機能を利用するにはアカウントを作成してログインしてください。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>後で</AlertDialogCancel>
+            <AlertDialogAction onClick={() => router.push('/auth')}>
+              アカウント作成
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
