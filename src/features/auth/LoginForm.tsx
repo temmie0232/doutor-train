@@ -14,7 +14,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Separator } from '@/components/ui/separator'
-import GuestLoginButton from '@/components/elements/GuestLoginButton';
+import GuestLoginButton from '@/features/auth/GuestLoginButton';
 
 const LoginForm: React.FC = () => {
     const [email, setEmail] = useState('');
