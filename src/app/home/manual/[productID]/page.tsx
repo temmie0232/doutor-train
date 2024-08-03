@@ -1,6 +1,8 @@
+
 "use client"
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,18 +17,7 @@ interface ProductDetailPageProps {
 const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     const router = useRouter();
     const { productID } = params;
-
-    if (!productID) {
-        return (
-            <Layout>
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">エラー</h1>
-                    <p className="mb-4">商品IDが見つかりません</p>
-                    <Button onClick={() => router.back()}>戻る</Button>
-                </div>
-            </Layout>
-        );
-    }
+    const [instructionSteps, setInstructionSteps] = useState(0);
 
     const decodedProductName = decodeURIComponent(productID);
     const product = products.find(p =>
@@ -34,6 +25,15 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
         p.name.includes(decodedProductName) ||
         decodedProductName.includes(p.name)
     );
+
+    useEffect(() => {
+        if (product) {
+            fetch(`/api/instruction-steps/${encodeURIComponent(product.name)}`)
+                .then(response => response.json())
+                .then(data => setInstructionSteps(data.steps))
+                .catch(error => console.error('Error fetching instruction steps:', error));
+        }
+    }, [product]);
 
     if (!product) {
         return (
@@ -95,9 +95,33 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                     </div>
                 </div>
 
-                <div className="mb-6 ">
+                <div className="mb-6">
                     <h2 className="text-xl font-semibold mb-3 text-center">作り方</h2>
-                    <p>ここに{product.name}の作り方を記述します。</p>
+                    <div className="space-y-4">
+                        {[...Array(instructionSteps)].map((_, index) => (
+                            <div key={index} className="relative w-full h-64">
+                                <Image
+                                    src={`/manual/${encodeURIComponent(product.name)}/${index + 1}.png`}
+                                    alt={`${product.name}の作り方 ステップ${index + 1}`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-lg"
+                                    onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.style.display = 'none';
+                                        const fallback = target.nextElementSibling as HTMLDivElement;
+                                        if (fallback) fallback.style.display = 'flex';
+                                    }}
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg" style={{ display: 'none' }}>
+                                    <CiImageOff size={48} className="text-gray-400" />
+                                </div>
+                                <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">
+                                    ステップ {index + 1}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <Button onClick={() => router.back()} className="w-full">商品リストに戻る</Button>
