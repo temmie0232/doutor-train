@@ -36,7 +36,7 @@ const HomePage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto p-4 pt-16 flex flex-col justify-center">
-        <div className="mb-20 text-center">
+        <div className="mb-16 text-center">
           {user ? (
             user.isAnonymous ? (
               <div>
@@ -52,31 +52,40 @@ const HomePage = () => {
         </div>
 
         <div className="max-w-xs mx-auto w-full">
-          <div className="space-y-12">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
-              onClick={() => console.log("マニュアルページへ遷移")}
-            >
-              <MdMenuBook className="mr-2 h-7 w-7" /> マニュアル
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
-              onClick={handleTrainingClick}
-            >
-              <MdOutlineCoffeeMaker className="mr-2 h-7 w-7" /> トレーニング
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
-              onClick={() => console.log("ヘルプページへ遷移")}
-            >
-              <BiHelpCircle className="mr-2 h-7 w-7" /> ヘルプ
-            </Button>
+          <div className="space-y-8">
+            <div>
+              <p className="text-sm text-gray-600 mb-2 text-center">作り方何もわからない人は...</p>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
+                onClick={() => console.log("マニュアルページへ遷移")}
+              >
+                <MdMenuBook className="mr-2 h-7 w-7" /> マニュアル
+              </Button>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-2 text-center">マニュアルを読み終えた人は...</p>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
+                onClick={handleTrainingClick}
+              >
+                <MdOutlineCoffeeMaker className="mr-2 h-7 w-7" /> トレーニング
+              </Button>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-2 text-center">このアプリについて</p>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full h-20 text-xl flex items-center justify-center bg-white hover:bg-gray-100"
+                onClick={() => console.log("ヘルプページへ遷移")}
+              >
+                <BiHelpCircle className="mr-2 h-7 w-7" /> ヘルプ
+              </Button>
+            </div>
           </div>
         </div>
       </main>
