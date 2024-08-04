@@ -158,6 +158,9 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                 </div>
 
                 <div className="mt-8">
+                    <Button onClick={() => router.push(`/home/manual/${productID}/quiz`)} className="w-full mb-4">
+                        クイズに挑戦
+                    </Button>
                     <Button onClick={() => router.back()} className="w-full">商品リストに戻る</Button>
                 </div>
             </div>
