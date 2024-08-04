@@ -85,6 +85,11 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                         )}
                     </div>
                     <div className="space-y-2">
+                        {/* 商品説明を追加 */}
+                        <div className="mb-4">
+                            <span className="font-medium">商品説明:</span>
+                            <p className="mt-1 text-gray-600">{product.description}</p>
+                        </div>
                         <div className="flex items-center">
                             <span className="w-24 font-medium">サイズ:</span>
                             <div>
