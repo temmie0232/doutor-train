@@ -11,6 +11,7 @@ import Layout from '@/components/layout/Layout';
 import { products, Product } from '@/data/products';
 import { productInstructions, Instruction } from '@/data/productInstructions';
 import { CiImageOff } from 'react-icons/ci';
+import UnderDevelopmentDialog from '@/components/elements/UnderDevelopmentDialog';
 
 interface ProductDetailPageProps {
     params: { productID: string };
@@ -22,6 +23,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     const [product, setProduct] = useState<Product | null>(null);
     const [instructions, setInstructions] = useState<string[][]>([]);
     const [loading, setLoading] = useState(true);
+    const [showDialog, setShowDialog] = useState(false);
 
     useEffect(() => {
         const decodedProductName = decodeURIComponent(productID);
@@ -158,12 +160,13 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                 </div>
 
                 <div className="mt-8">
-                    <Button onClick={() => router.push(`/home/manual/${productID}/quiz`)} className="w-full mb-4">
+                    <Button onClick={() => setShowDialog(true)} className="w-full mb-4">
                         クイズに挑戦
                     </Button>
                     <Button onClick={() => router.back()} className="w-full">商品リストに戻る</Button>
                 </div>
             </div>
+            <UnderDevelopmentDialog open={showDialog} onOpenChange={setShowDialog} />
         </Layout>
     );
 };
