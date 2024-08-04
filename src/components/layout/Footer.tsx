@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
         <>
             <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
                 <Tabs value={currentTab} className="w-full">
-                    <TabsList className="flex justify-around h-16 bg-transparent">
+                    <TabsList className="flex justify-around h-14 bg-transparent">
                         <TabsTrigger
                             value="home"
                             onClick={() => handleNavigation('/home')}
