@@ -1,5 +1,3 @@
-// data/products.ts
-
 export interface Product {
     name: string;
     image: string;
@@ -11,10 +9,10 @@ export interface Product {
 
 export const products: Product[] = [
     { name: 'ブレンドコーヒー', image: '/images/1.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
-    { name: 'アメリカンコーヒー', image: '/images/2.jpg', category: 'hot', sizes: ['ONE'], isOnSale: true },
-    { name: 'ティー', image: '/images/3.jpg', category: 'hot', sizes: ['ONE'], isOnSale: true },
-    { name: 'ルイボスティー', image: '/images/4.jpg', category: 'hot', sizes: ['ONE'], isOnSale: true },
-    { name: 'ロイヤルミルクティー', image: '/images/5.jpg', category: 'hot', sizes: ['ONE'], isOnSale: true },
+    { name: 'アメリカンコーヒー', image: '/images/2.jpg', category: 'hot', sizes: ['R'], isOnSale: true },
+    { name: 'ティー', image: '/images/3.jpg', category: 'hot', sizes: ['R'], isOnSale: true },
+    { name: 'ルイボスティー', image: '/images/4.jpg', category: 'hot', sizes: ['R'], isOnSale: true },
+    { name: 'ロイヤルミルクティー', image: '/images/5.jpg', category: 'hot', sizes: ['R'], isOnSale: true },
     { name: '豆乳ティー', image: '/images/6.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
     { name: 'ホットミルク', image: '/images/7.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
     { name: 'ホット豆乳', image: '/images/8.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
@@ -25,9 +23,9 @@ export const products: Product[] = [
     { name: '宇治抹茶豆乳ラテ', image: '/images/13.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
     { name: '豆乳ラテ', image: '/images/14.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
     { name: 'カフェモカ', image: '/images/15.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
-    { name: 'エスプレッソコーヒー', image: '/images/16.jpg', category: 'hot', sizes: ['ONE'], isOnSale: true },
+    { name: 'エスプレッソコーヒー', image: '/images/16.jpg', category: 'hot', sizes: ['R'], isOnSale: true },
     { name: 'カフェ・ラテ', image: '/images/17.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true },
-    { name: '本日のコーヒー', image: '/images/18.jpg', category: 'hot', sizes: ['ONE'], isOnSale: true },
+    { name: '本日のコーヒー', image: '/images/18.jpg', category: 'hot', sizes: ['R'], isOnSale: true },
 
     { name: 'アイスコーヒー', image: '/images/19.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
     { name: 'アイスティー', image: '/images/20.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
@@ -43,14 +41,14 @@ export const products: Product[] = [
     { name: 'アイス宇治抹茶ラテ', image: '/images/30.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
     { name: 'アイス宇治抹茶豆乳ラテ', image: '/images/31.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
     { name: 'アイスカフェ・ラテ', image: '/images/32.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
-    { name: 'プレミアムアイスカフェ・ラテ', image: '/images/33.jpg', category: 'ice', sizes: ['ONE'], isOnSale: true },
+    { name: 'プレミアムアイスカフェ・ラテ', image: '/images/33.jpg', category: 'ice', sizes: ['R'], isOnSale: true },
     { name: 'アイスロイヤルミルクティー', image: '/images/34.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
     { name: 'アイス豆乳ティー', image: '/images/35.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
     { name: 'アイスカフェ・モカ', image: '/images/36.jpg', category: 'ice', sizes: ['R', 'L'], isOnSale: true },
-    { name: 'タピオカ黒糖ミルク', image: '/images/37.jpg', category: 'ice', sizes: ['ONE'], isOnSale: true },
-    { name: 'タピオカロイヤルミルクティー', image: '/images/38.jpg', category: 'ice', sizes: ['ONE'], isOnSale: true },
-    { name: 'レモンスカッシュ', image: '/images/39.jpg', category: 'ice', sizes: ['ONE'], isLimited: true, isOnSale: true },
-    { name: 'グリーンレモティーハニー', image: '/images/40.jpg', category: 'ice', sizes: ['ONE'], isLimited: true, isOnSale: true },
+    { name: 'タピオカ黒糖ミルク', image: '/images/37.jpg', category: 'ice', sizes: ['R'], isOnSale: true },
+    { name: 'タピオカロイヤルミルクティー', image: '/images/38.jpg', category: 'ice', sizes: ['R'], isOnSale: true },
+    { name: 'レモンスカッシュ', image: '/images/39.jpg', category: 'ice', sizes: ['R'], isLimited: true, isOnSale: true },
+    { name: 'グリーンレモティーハニー', image: '/images/40.jpg', category: 'ice', sizes: ['R'], isLimited: true, isOnSale: true },
     { name: 'レモンヨーグルン', image: '/images/41.jpg', category: 'ice', sizes: ['R', 'L'], isLimited: true, isOnSale: true },
     { name: 'マスカットヨーグルン', image: '/images/42.jpg', category: 'ice', sizes: ['R', 'L'], isLimited: true, isOnSale: true },
 
