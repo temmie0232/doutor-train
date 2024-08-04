@@ -60,9 +60,6 @@ const Header: React.FC = () => {
                         <Button variant="outline" onClick={handleLogout} className="w-full">
                             ログアウト
                         </Button>
-                        <Button variant="outline" onClick={handleTrainingClick} className="w-full mt-2">
-                            トレーニング
-                        </Button>
                     </PopoverContent>
                 </Popover>
             </header>
