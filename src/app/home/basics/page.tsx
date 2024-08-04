@@ -8,7 +8,6 @@ import Link from 'next/link';
 const BasicsPage: React.FC = () => {
     return (
         <Layout>
-            <h1 className="text-2xl font-bold mb-4">基礎編</h1>
             <div className="space-y-4">
                 <section>
                     <h2 className="text-xl font-semibold mb-2">1. 接客の基本</h2>

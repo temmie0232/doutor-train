@@ -39,7 +39,6 @@ const ManualListPage = () => {
 
     return (
         <Layout>
-            <h1 className="text-2xl font-bold mb-4 text-center">商品マニュアル</h1>
             <div className="mb-4">
                 <Input
                     type="text"

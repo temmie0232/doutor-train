@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 const TrainingPage: React.FC = () => {
     return (
         <Layout>
-            <h1 className="text-2xl font-bold mb-4">トレーニング</h1>
             <div className="space-y-6">
                 <section>
                     <h2 className="text-xl font-semibold mb-2">基本トレーニング</h2>
