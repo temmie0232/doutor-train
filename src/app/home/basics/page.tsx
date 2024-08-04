@@ -14,16 +14,16 @@ const BasicsPage: React.FC = () => {
                     <p>お客様への挨拶、オーダーの取り方、商品の受け渡し方など</p>
                 </section>
                 <section>
-                    <h2 className="text-xl font-semibold mb-2">2. 衛生管理</h2>
-                    <p>手洗いの仕方、食品の取り扱い方、店内の清掃方法など</p>
+                    <h2 className="text-xl font-semibold mb-2">2. レジの使い方</h2>
+                    <p>注文の入力、会計のやり方など</p>
                 </section>
                 <section>
-                    <h2 className="text-xl font-semibold mb-2">3. 機器の使い方</h2>
-                    <p>コーヒーマシン、レジの操作方法など</p>
+                    <h2 className="text-xl font-semibold mb-2">3. セットアップについて</h2>
+                    <p>注文に対応した取り揃えのやり方</p>
                 </section>
                 <section>
-                    <h2 className="text-xl font-semibold mb-2">4. メニュー基礎知識</h2>
-                    <p>主要商品の特徴、アレルギー情報など</p>
+                    <h3 className="text-xl font-semibold mb-2">4. ドリンクの基礎知識</h3>
+                    <p>グラス・カップのサイズ、商品の対応しているサイズなど</p>
                 </section>
             </div>
             <div className="mt-8">
