@@ -14,7 +14,6 @@ interface ProductQuizProps {
 }
 
 const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
-    const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
@@ -28,14 +27,9 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
         }
     }, [productName, product]);
 
-    const handleSubmit = () => {
+    const handleSubmit = (quizScore: number) => {
         setSubmitted(true);
-        const correctItems = selectedItems.filter(item => correctAnswer.includes(item));
-        const incorrectItems = selectedItems.filter(item => !correctAnswer.includes(item));
-        const missedItems = correctAnswer.filter(item => !selectedItems.includes(item));
-
-        const totalScore = correctItems.length - (incorrectItems.length + missedItems.length);
-        setScore(Math.max(0, totalScore));
+        setScore(quizScore);
     };
 
     return (
@@ -48,21 +42,15 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                 </CardHeader>
                 <CardContent>
                     <ProductImage product={product} />
-                    <MaterialSelector
-                        selectedItems={selectedItems}
-                        setSelectedItems={setSelectedItems}
-                        submitted={submitted}
-                        correctAnswer={correctAnswer}
-                    />
-                    <Button
-                        onClick={handleSubmit}
-                        className="mt-4 w-full bg-black text-white hover:bg-gray-800"
-                        disabled={submitted}
-                    >
-                        回答する
-                    </Button>
+                    {product && (
+                        <MaterialSelector
+                            correctAnswer={correctAnswer}
+                            product={product}
+                            onSubmit={handleSubmit}
+                        />
+                    )}
                     {submitted && (
-                        <QuizResult score={score} correctAnswer={correctAnswer} selectedItems={selectedItems} />
+                        <QuizResult score={score} correctAnswer={correctAnswer} />
                     )}
                 </CardContent>
             </Card>
