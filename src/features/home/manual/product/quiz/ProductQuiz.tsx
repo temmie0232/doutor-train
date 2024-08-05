@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Product, products } from '@/data/products';
-import { getQuizAnswerByProduct } from '@/data/quizAnswers';
+import { getQuizAnswerByProduct, QuizAnswerItem } from '@/data/quizAnswers';
 import ProductImage from './ProductImage';
 import MaterialSelector from './MaterialSelector';
 import QuizResult from './QuizResult';
@@ -15,7 +15,7 @@ interface ProductQuizProps {
 
 const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [submitted, setSubmitted] = useState<boolean>(false);
-    const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
+    const [correctAnswer, setCorrectAnswer] = useState<QuizAnswerItem[]>([]);
     const [score, setScore] = useState<number>(0);
     const product: Product | undefined = products.find(p => p.name === productName);
     const router = useRouter();

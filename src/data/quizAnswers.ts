@@ -1,20 +1,14 @@
 import { Product } from '@/data/products';
 
-interface QuizAnswerItem {
+export interface QuizAnswerItem {
     item: string;
-    sizeDependent?: {
-        R: string | QuizAnswerItem;
-        L: string | QuizAnswerItem | null;
-    };
+    attributes?: { [key: string]: string };
+    sizeDependent?: { [size: string]: string | null };
     quantity?: number;
-    attributes?: {
-        [key: string]: string | number;
-    };
 }
 
-interface QuizAnswer {
-    [key: string]: QuizAnswerItem[];
-}
+export type QuizAnswer = { [productName: string]: QuizAnswerItem[] };
+
 
 export const quizAnswers: QuizAnswer = {
     "ブレンドコーヒー": [
@@ -561,22 +555,17 @@ export const quizAnswers: QuizAnswer = {
     ]
 };
 
-export function getQuizAnswerByProduct(product: Product): string[] {
+export function getQuizAnswerByProduct(product: Product): QuizAnswerItem[] {
     const answer = quizAnswers[product.name];
     if (!answer) return [];
 
     return answer.flatMap(item => {
         if (item.sizeDependent) {
-            const rSize = product.sizes.includes('R') ? item.sizeDependent.R : null;
-            const lSize = product.sizes.includes('L') && item.sizeDependent.L ? item.sizeDependent.L : null;
-            return [rSize, lSize].filter(Boolean) as string[];
+            return product.sizes.map(size => ({
+                item: item.item,
+                sizeDependent: { [size]: item.sizeDependent[size] || null }
+            }));
         }
-        if (item.attributes) {
-            return `${item.item} (${Object.entries(item.attributes).map(([key, value]) => `${key}: ${value}`).join(', ')})`;
-        }
-        if (item.quantity) {
-            return `${item.item} x${item.quantity}`;
-        }
-        return item.item;
+        return item;
     });
 }
