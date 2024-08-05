@@ -7,22 +7,20 @@ import { Product, products } from '@/data/products';
 import { getQuizResults } from '@/lib/firebase';
 import SearchBar from '@/features/home/manual/SearchBar';
 import ProductGrid from '@/features/home/manual/ProductGrid';
+import SortDropdown from '@/features/home/manual/SortDropdown';
+import { Separator } from '@/components/ui/separator';
 
 const ManualListPage: React.FC = () => {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortBy, setSortBy] = useState<'ice' | 'hot' | 'food' | 'all'>('all');
+    const [selectedTypes, setSelectedTypes] = useState<string[]>(['すべて']);
+    const [selectedUnderstandings, setSelectedUnderstandings] = useState<string[]>(['すべて']);
     const [quizResults, setQuizResults] = useState<{ [key: string]: { score: number; totalQuestions: number } }>({});
     const router = useRouter();
     const { user } = useAuth();
 
-    useEffect(() => {
-        const filtered = products.filter(product =>
-            product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (sortBy === 'all' || product.category === sortBy)
-        );
-        setFilteredProducts(filtered);
-    }, [searchTerm, sortBy]);
+    const typeOptions = ['すべて', 'アイス', 'ホット', 'フード'];
+    const understandingOptions = ['すべて', '理解できた', '学習中', '未受験'];
 
     useEffect(() => {
         const fetchQuizResults = async () => {
@@ -34,9 +32,45 @@ const ManualListPage: React.FC = () => {
         fetchQuizResults();
     }, [user]);
 
+    useEffect(() => {
+        const filtered = products.filter(product => {
+            const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesType = selectedTypes.includes('すべて') || selectedTypes.includes(product.category);
+            const quizResult = quizResults[product.name];
+            const understanding = quizResult
+                ? quizResult.score === quizResult.totalQuestions
+                    ? '理解できた'
+                    : '学習中'
+                : '未受験';
+            const matchesUnderstanding = selectedUnderstandings.includes('すべて') || selectedUnderstandings.includes(understanding);
+
+            return matchesSearch && matchesType && matchesUnderstanding;
+        });
+        setFilteredProducts(filtered);
+    }, [searchTerm, selectedTypes, selectedUnderstandings, quizResults]);
+
+    const handleTypeToggle = (option: string) => {
+        setSelectedTypes(prev =>
+            option === 'すべて'
+                ? ['すべて']
+                : prev.includes(option)
+                    ? prev.filter(t => t !== option && t !== 'すべて')
+                    : [...prev.filter(t => t !== 'すべて'), option]
+        );
+    };
+
+    const handleUnderstandingToggle = (option: string) => {
+        setSelectedUnderstandings(prev =>
+            option === 'すべて'
+                ? ['すべて']
+                : prev.includes(option)
+                    ? prev.filter(u => u !== option && u !== 'すべて')
+                    : [...prev.filter(u => u !== 'すべて'), option]
+        );
+    };
+
     const handleProductClick = (productName: string) => {
         const productID = encodeURIComponent(productName);
-        console.log("Encoded productID:", productID);
         router.push(`/home/manual/${productID}`);
     };
 
@@ -45,9 +79,22 @@ const ManualListPage: React.FC = () => {
             <SearchBar
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
             />
+            <div className="flex space-x-4 my-4">
+                <SortDropdown
+                    title="種類"
+                    options={typeOptions}
+                    selectedOptions={selectedTypes}
+                    onOptionToggle={handleTypeToggle}
+                />
+                <SortDropdown
+                    title="理解度"
+                    options={understandingOptions}
+                    selectedOptions={selectedUnderstandings}
+                    onOptionToggle={handleUnderstandingToggle}
+                />
+            </div>
+            <Separator className="my-4" />
             <ProductGrid
                 products={filteredProducts}
                 onProductClick={handleProductClick}
