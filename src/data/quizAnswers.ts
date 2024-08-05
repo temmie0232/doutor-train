@@ -4,11 +4,10 @@ export interface QuizAnswerItem {
     item: string;
     attributes?: { [key: string]: string };
     sizeDependent?: { [size: string]: string | null };
-    quantity?: number;
+    quantity?: number | { [size: string]: number };
 }
 
 export type QuizAnswer = { [productName: string]: QuizAnswerItem[] };
-
 
 export const quizAnswers: QuizAnswer = {
     "ブレンドコーヒー": [
@@ -139,7 +138,10 @@ export const quizAnswers: QuizAnswer = {
         { item: "ココア" },
         {
             item: "ホイップクリーム",
-            quantity: 1
+            quantity: {
+                R: 1,
+                L: 2
+            }
         }
     ],
     "沖縄黒糖ラテ": [
@@ -159,7 +161,10 @@ export const quizAnswers: QuizAnswer = {
         { item: "黒糖ベース" },
         {
             item: "ホイップクリーム",
-            quantity: 1
+            quantity: {
+                R: 1,
+                L: 2
+            }
         },
         { item: "黒糖ソース" }
     ],
@@ -239,8 +244,8 @@ export const quizAnswers: QuizAnswer = {
         {
             item: "エスプレッソ",
             sizeDependent: {
-                R: { item: "エスプレッソ", attributes: { "サイズ": "M" } },
-                L: { item: "エスプレッソ", attributes: { "サイズ": "L" } }
+                R: "M",
+                L: "L"
             }
         }
     ],
@@ -262,13 +267,16 @@ export const quizAnswers: QuizAnswer = {
         {
             item: "エスプレッソ",
             sizeDependent: {
-                R: { item: "エスプレッソ", attributes: { "サイズ": "M" } },
-                L: { item: "エスプレッソ", attributes: { "サイズ": "L" } }
+                R: "M",
+                L: "L"
             }
         },
         {
             item: "ホイップクリーム",
-            quantity: 1
+            quantity: {
+                R: 2,
+                L: 3
+            }
         },
         { item: "カプチーノパウダー" }
     ],
@@ -359,7 +367,10 @@ export const quizAnswers: QuizAnswer = {
         { item: "ココアベース" },
         {
             item: "ホイップクリーム",
-            quantity: 1
+            quantity: {
+                R: 1,
+                L: 2
+            }
         }
     ],
     "アイス沖縄黒糖ラテ": [
@@ -374,7 +385,10 @@ export const quizAnswers: QuizAnswer = {
         { item: "黒糖ベース" },
         {
             item: "ホイップクリーム",
-            quantity: 1
+            quantity: {
+                R: 1,
+                L: 2
+            }
         },
         { item: "黒糖ソース" }
     ],
@@ -441,8 +455,8 @@ export const quizAnswers: QuizAnswer = {
         {
             item: "エスプレッソ",
             sizeDependent: {
-                R: { item: "エスプレッソ", attributes: { "サイズ": "M" } },
-                L: { item: "エスプレッソ", attributes: { "サイズ": "L" } }
+                R: "M",
+                L: "L"
             }
         }
     ],
@@ -492,13 +506,16 @@ export const quizAnswers: QuizAnswer = {
         { item: "ココアベース" },
         {
             item: "ホイップクリーム",
-            quantity: 1
+            quantity: {
+                R: 2,
+                L: 3
+            }
         },
         {
             item: "エスプレッソ",
             sizeDependent: {
-                R: { item: "エスプレッソ", attributes: { "サイズ": "M" } },
-                L: { item: "エスプレッソ", attributes: { "サイズ": "L" } }
+                R: "M",
+                L: "L"
             }
         },
         { item: "カプチーノパウダー" }
@@ -559,12 +576,20 @@ export function getQuizAnswerByProduct(product: Product): QuizAnswerItem[] {
     const answer = quizAnswers[product.name];
     if (!answer) return [];
 
-    return answer.flatMap(item => {
+    return answer.map(item => {
         if (item.sizeDependent) {
-            return product.sizes.map(size => ({
-                item: item.item,
-                sizeDependent: { [size]: item.sizeDependent[size] || null }
-            }));
+            const sizeDependent: { [size: string]: string | null } = {};
+            product.sizes.forEach(size => {
+                sizeDependent[size] = item.sizeDependent?.[size] || null;
+            });
+            return { ...item, sizeDependent };
+        }
+        if (item.quantity && typeof item.quantity === 'object') {
+            const quantity: { [size: string]: number } = {};
+            product.sizes.forEach(size => {
+                quantity[size] = (item.quantity as { [size: string]: number })[size] || 0;
+            });
+            return { ...item, quantity };
         }
         return item;
     });
