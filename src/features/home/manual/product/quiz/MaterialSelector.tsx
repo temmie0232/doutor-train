@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { categories } from '@/data/materials';
 import { Product } from '@/data/products';
 import { QuizAnswerItem } from '@/data/quizAnswers';
-import { Label } from '@radix-ui/react-label';
 
 interface MaterialSelectorProps {
     correctAnswer: QuizAnswerItem[];
@@ -87,16 +87,20 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         if (!selectedItem || !correctItem) return false;
 
         if (item === 'カップ') {
-            if (correctItem.sizeDependent) {
-                return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
-                    const selectedCupForSize = selectedItems.find(i => i.item === 'カップ' && i.size === size);
-                    return selectedCupForSize?.attributes?.subType === value;
-                });
-            } else {
-                return selectedItem.attributes?.type === product.category;
-            }
-        }
+            const selectedType = selectedItem.attributes?.type;
+            const correctType = correctItem.attributes?.type;
 
+            if (selectedType === correctType) {
+                if (correctType === 'hot' && correctItem.sizeDependent) {
+                    return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
+                        const selectedCupForSize = selectedItems.find(i => i.item === 'カップ' && i.size === size);
+                        return selectedCupForSize?.attributes?.subType === value;
+                    });
+                }
+                return true;
+            }
+            return false;
+        }
 
         if (item === "エスプレッソ" && correctItem.sizeDependent) {
             return Object.entries(correctItem.sizeDependent).every(([size, value]) =>
@@ -144,7 +148,7 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                             variant={selectedCup === 'hot' ? "default" : "outline"}
                             onClick={() => !submitted && handleCupSelection('hot')}
                             className={`
-                                ${submitted && isCorrect('カップ') ? "bg-green-500 hover:bg-green-600" : ""}
+                                ${submitted && isCorrect('カップ') && selectedCup === 'hot' ? "bg-green-500 hover:bg-green-600" : ""}
                                 ${submitted && selectedCup === 'hot' && !isCorrect('カップ') ? "bg-red-500 hover:bg-red-600" : ""}
                             `}
                             disabled={submitted}
@@ -155,7 +159,7 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                             variant={selectedCup === 'ice' ? "default" : "outline"}
                             onClick={() => !submitted && handleCupSelection('ice')}
                             className={`
-                                ${submitted && isCorrect('カップ') ? "bg-green-500 hover:bg-green-600" : ""}
+                                ${submitted && isCorrect('カップ') && selectedCup === 'ice' ? "bg-green-500 hover:bg-green-600" : ""}
                                 ${submitted && selectedCup === 'ice' && !isCorrect('カップ') ? "bg-red-500 hover:bg-red-600" : ""}
                             `}
                             disabled={submitted}
@@ -226,22 +230,24 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
             {category === "カップ/容器" && selectedCup === 'hot' && (
                 <div className="mt-2 border p-2 rounded">
                     <h4 className="font-bold mb-2">ホットカップの種類</h4>
-                    {product.sizes.map(size => (
-                        <div key={size} className="mb-2">
-                            <h5 className="font-semibold">{size}サイズ</h5>
-                            <RadioGroup
-                                value={hotCupTypes[size]}
-                                onValueChange={(value) => handleHotCupTypeSelection(size, value)}
-                            >
-                                {['デミタスカップ', 'アメリカンカップ', 'Mホットカップ', 'Lホットカップ'].map((cupType) => (
-                                    <div key={`${size}-${cupType}`} className="flex items-center space-x-2">
-                                        <RadioGroupItem value={cupType} id={`${size}-${cupType}`} />
-                                        <Label htmlFor={`${size}-${cupType}`}>{cupType}</Label>
-                                    </div>
-                                ))}
-                            </RadioGroup>
-                        </div>
-                    ))}
+                    <div className="flex">
+                        {product.sizes.map(size => (
+                            <div key={size} className="flex-1 px-2">
+                                <h5 className="font-semibold mb-1">{size}サイズ</h5>
+                                <RadioGroup
+                                    value={hotCupTypes[size]}
+                                    onValueChange={(value) => handleHotCupTypeSelection(size, value)}
+                                >
+                                    {['デミタスカップ', 'アメリカンカップ', 'Mホットカップ', 'Lホットカップ'].map((cupType) => (
+                                        <div key={`${size}-${cupType}`} className="flex items-center space-x-2">
+                                            <RadioGroupItem value={cupType} id={`${size}-${cupType}`} />
+                                            <Label htmlFor={`${size}-${cupType}`}>{cupType}</Label>
+                                        </div>
+                                    ))}
+                                </RadioGroup>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
             {category === "機械/設備" && selectedItems.some(i => i.item === "ジェットスチーマー") && (

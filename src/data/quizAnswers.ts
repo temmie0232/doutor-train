@@ -13,6 +13,7 @@ export const quizAnswers: QuizAnswer = {
     "ブレンドコーヒー": [
         {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "アメリカンカップ",
                 L: "Lホットカップ"
@@ -23,6 +24,7 @@ export const quizAnswers: QuizAnswer = {
     "アメリカンコーヒー": [
         {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -34,6 +36,7 @@ export const quizAnswers: QuizAnswer = {
     "ティー": [
         {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: null
@@ -45,6 +48,7 @@ export const quizAnswers: QuizAnswer = {
     "ルイボスティー": [
         {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -55,13 +59,8 @@ export const quizAnswers: QuizAnswer = {
     ],
     "ロイヤルミルクティー": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -69,17 +68,16 @@ export const quizAnswers: QuizAnswer = {
         },
         { item: "ホットティー用ティーバッグ" },
         { item: "熱湯" },
-        { item: "牛乳" }
+        { item: "牛乳" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
+        }
     ],
     "豆乳ティー": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -87,49 +85,46 @@ export const quizAnswers: QuizAnswer = {
         },
         { item: "ホットティー用ティーバッグ" },
         { item: "熱湯" },
-        { item: "豆乳" }
+        { item: "豆乳" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
+        }
     ],
     "ホットミルク": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
             }
         },
-        { item: "牛乳" }
+        { item: "牛乳" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
+        }
     ],
     "ホット豆乳": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
             }
         },
-        { item: "豆乳" }
+        { item: "豆乳" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
+        }
     ],
     "ココア": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -142,17 +137,16 @@ export const quizAnswers: QuizAnswer = {
                 R: 1,
                 L: 2
             }
+        },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
         }
     ],
     "沖縄黒糖ラテ": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -166,17 +160,16 @@ export const quizAnswers: QuizAnswer = {
                 L: 2
             }
         },
-        { item: "黒糖ソース" }
+        { item: "黒糖ソース" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
+        }
     ],
     "ハニーカフェ・オレ": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -185,20 +178,17 @@ export const quizAnswers: QuizAnswer = {
         { item: "ハニーベース" },
         {
             item: "エスプレッソ",
-            attributes: {
-                "サイズ": "S"
-            }
+            attributes: { "サイズ": "S" }
+        },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
         }
     ],
     "宇治抹茶ラテ": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "あり"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -206,17 +196,16 @@ export const quizAnswers: QuizAnswer = {
         },
         { item: "抹茶ベース" },
         { item: "牛乳" },
-        { item: "抹茶パウダー" }
+        { item: "抹茶パウダー" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "あり" }
+        }
     ],
     "宇治抹茶豆乳ラテ": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "あり"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -224,17 +213,16 @@ export const quizAnswers: QuizAnswer = {
         },
         { item: "抹茶ベース" },
         { item: "豆乳" },
-        { item: "抹茶パウダー" }
+        { item: "抹茶パウダー" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "あり" }
+        }
     ],
     "豆乳ラテ": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "あり"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -247,17 +235,16 @@ export const quizAnswers: QuizAnswer = {
                 R: "M",
                 L: "L"
             }
+        },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "あり" }
         }
     ],
     "カフェモカ": [
         {
-            item: "ジェットスチーマー",
-            attributes: {
-                "泡立て": "なし"
-            }
-        },
-        {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
@@ -278,9 +265,20 @@ export const quizAnswers: QuizAnswer = {
                 L: 3
             }
         },
-        { item: "カプチーノパウダー" }
+        { item: "カプチーノパウダー" },
+        {
+            item: "ジェットスチーマー",
+            attributes: { "泡立て": "なし" }
+        }
     ],
     "エスプレッソコーヒー": [
+        {
+            item: "カップ",
+            attributes: { type: "hot" },
+            sizeDependent: {
+                R: "デミタスカップ",
+            }
+        },
         {
             item: "エスプレッソ",
             sizeDependent: {
@@ -291,22 +289,28 @@ export const quizAnswers: QuizAnswer = {
     "カフェ・ラテ": [
         {
             item: "カップ",
+            attributes: { type: "hot" },
             sizeDependent: {
                 R: "Mホットカップ",
                 L: "Lホットカップ"
             }
-        }
+        },
+        { item: "カフェラテ" }
     ],
     "本日のコーヒー": [
-        { item: "アメリカンカップ" }
+        {
+            item: "カップ",
+            attributes: { type: "hot" },
+            sizeDependent: {
+                R: "アメリカンカップ",
+            }
+        },
+        { item: "本日のコーヒー" }
     ],
     "アイスコーヒー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "アイスコーヒー" }
@@ -314,10 +318,7 @@ export const quizAnswers: QuizAnswer = {
     "アイスティー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "アイスティー" }
@@ -325,43 +326,15 @@ export const quizAnswers: QuizAnswer = {
     "アイスルイボスティー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "アイスルイボスティー" }
     ],
-    "みかんジュース": [
-        {
-            item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
-        },
-        { item: "氷" },
-        { item: "みかんジュース" }
-    ],
-    "リンゴジュース": [
-        {
-            item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
-        },
-        { item: "氷" },
-        { item: "リンゴジュース" }
-    ],
     "アイスココア": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "ココアベース" },
@@ -376,10 +349,7 @@ export const quizAnswers: QuizAnswer = {
     "アイス沖縄黒糖ラテ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "黒糖ベース" },
@@ -395,10 +365,7 @@ export const quizAnswers: QuizAnswer = {
     "アイス豆乳ラテ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "豆乳" },
@@ -407,10 +374,7 @@ export const quizAnswers: QuizAnswer = {
     "アイスハニーカフェ・オレ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "ハニーベース" },
@@ -419,10 +383,7 @@ export const quizAnswers: QuizAnswer = {
     "アイス宇治抹茶ラテ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "牛乳" },
@@ -432,10 +393,7 @@ export const quizAnswers: QuizAnswer = {
     "アイス宇治抹茶豆乳ラテ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "豆乳" },
@@ -445,10 +403,7 @@ export const quizAnswers: QuizAnswer = {
     "アイスカフェ・ラテ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "牛乳" },
@@ -463,20 +418,15 @@ export const quizAnswers: QuizAnswer = {
     "プレミアムアイスカフェ・ラテ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: null
-            }
+            attributes: { type: "ice" }
         },
-        { item: "氷" }
+        { item: "氷" },
+        { item: "プレミアムアイスラテ" }
     ],
     "アイスロイヤルミルクティー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "牛乳" },
@@ -485,10 +435,7 @@ export const quizAnswers: QuizAnswer = {
     "アイス豆乳ティー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "豆乳" },
@@ -497,10 +444,7 @@ export const quizAnswers: QuizAnswer = {
     "アイスカフェ・モカ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: "Lアイスカップ"
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "ココアベース" },
@@ -514,8 +458,7 @@ export const quizAnswers: QuizAnswer = {
         {
             item: "エスプレッソ",
             sizeDependent: {
-                R: "M",
-                L: "L"
+                R: "M", L: "L"
             }
         },
         { item: "カプチーノパウダー" }
@@ -523,10 +466,7 @@ export const quizAnswers: QuizAnswer = {
     "タピオカ黒糖ミルク": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: null
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "タピオカ" },
@@ -536,10 +476,7 @@ export const quizAnswers: QuizAnswer = {
     "タピオカロイヤルミルクティー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: null
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "タピオカ" },
@@ -549,10 +486,7 @@ export const quizAnswers: QuizAnswer = {
     "レモンスカッシュ": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: null
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "レモン（袋入り）" },
@@ -561,10 +495,7 @@ export const quizAnswers: QuizAnswer = {
     "グリーンレモティーハニー": [
         {
             item: "カップ",
-            sizeDependent: {
-                R: "Mアイスカップ",
-                L: null
-            }
+            attributes: { type: "ice" }
         },
         { item: "氷" },
         { item: "レモン（袋入り）" },
@@ -577,6 +508,16 @@ export function getQuizAnswerByProduct(product: Product): QuizAnswerItem[] {
     if (!answer) return [];
 
     return answer.map(item => {
+        if (item.item === "カップ") {
+            if (item.attributes?.type === "hot" && item.sizeDependent) {
+                const sizeDependent: { [size: string]: string | null } = {};
+                product.sizes.forEach(size => {
+                    sizeDependent[size] = item.sizeDependent?.[size] || null;
+                });
+                return { ...item, sizeDependent };
+            }
+            return item;
+        }
         if (item.sizeDependent) {
             const sizeDependent: { [size: string]: string | null } = {};
             product.sizes.forEach(size => {
