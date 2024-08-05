@@ -1,16 +1,15 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import Layout from '@/components/layout/Layout';
 import { products, Product } from '@/data/products';
 import { productInstructions, Instruction } from '@/data/productInstructions';
-import { CiImageOff } from 'react-icons/ci';
+import ProductInfo from '@/features/home/manual/product/ProductInfo';
+import InstructionSteps from '@/features/home/manual/product/InstructionSteps';
+import ProductActions from '@/features/home/manual/product/ProductActions';
+import UnderDevelopmentDialog from '@/components/elements/UnderDevelopmentDialog';
 
 interface ProductDetailPageProps {
     params: { productID: string };
@@ -22,10 +21,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     const [product, setProduct] = useState<Product | null>(null);
     const [instructions, setInstructions] = useState<string[][]>([]);
     const [loading, setLoading] = useState(true);
+    const [showDialog, setShowDialog] = useState(false);
 
     useEffect(() => {
         const decodedProductName = decodeURIComponent(productID);
-        // 完全一致で商品を検索
         const foundProduct = products.find(p => p.name === decodedProductName);
 
         if (foundProduct) {
@@ -68,94 +67,11 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                     <div className="w-16 h-1 bg-black rounded-lg"></div>
                 </div>
 
-                {/* 商品情報 */}
-                <div className="mb-10">
-                    <h2 className="text-2xl font-semibold mb-4">商品情報</h2>
-                    <div className="mb-4">
-                        {product.image ? (
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="w-full max-h-64 object-contain rounded-lg shadow-md"
-                            />
-                        ) : (
-                            <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-lg shadow-md">
-                                <CiImageOff size={64} className="text-gray-400" />
-                            </div>
-                        )}
-                    </div>
-                    <div className="space-y-2">
-                        <div className="flex items-center">
-                            <span className="w-24 font-medium">サイズ:</span>
-                            <div>
-                                {product.sizes.map(size => (
-                                    <Badge key={size} variant="outline" className="mr-1">{size}</Badge>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex items-center">
-                            <span className="w-24 font-medium">販売タイプ:</span>
-                            <Badge variant="outline">
-                                {product.isLimited ? '期間限定' : '一般販売'}
-                            </Badge>
-                        </div>
-                        <div className="flex items-center">
-                            <span className="w-24 font-medium">販売状況:</span>
-                            <Badge variant="outline">
-                                {product.isOnSale ? '販売中' : '販売終了'}
-                            </Badge>
-                        </div>
-                    </div>
-                </div>
-
-                {/* セパレータ */}
-                <Separator className="my-8" />
-
-                {/* 作り方セクション */}
-                <h2 className="text-2xl font-semibold mb-4">作り方</h2>
-                <div className="space-y-6">
-                    {instructions.map((step, index) => (
-                        <Card key={index}>
-                            <CardHeader>
-                                <CardTitle>ステップ {index + 1}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="relative w-full">
-                                    <Image
-                                        src={`/manual/${encodeURIComponent(product!.name)}/${index + 1}.png`}
-                                        alt={`${product!.name}の作り方 ステップ${index + 1}`}
-                                        width={500}
-                                        height={300}
-                                        layout="responsive"
-                                        objectFit="contain"
-                                        className="rounded-lg"
-                                        onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.style.display = 'none';
-                                            const fallback = target.nextElementSibling as HTMLDivElement;
-                                            if (fallback) fallback.style.display = 'flex';
-                                        }}
-                                    />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg" style={{ display: 'none' }}>
-                                        <CiImageOff size={48} className="text-gray-400" />
-                                    </div>
-                                </div>
-                                <div className="mt-2 text-sm text-gray-600">
-                                    {step.map((line, lineIndex) => (
-                                        <p key={lineIndex} className={lineIndex > 0 ? "mt-1" : ""}>
-                                            {line}
-                                        </p>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-
-                <div className="mt-8">
-                    <Button onClick={() => router.back()} className="w-full">商品リストに戻る</Button>
-                </div>
+                <ProductInfo product={product} />
+                <InstructionSteps product={product} instructions={instructions} />
+                <ProductActions onQuizClick={() => setShowDialog(true)} onBackClick={() => router.back()} />
             </div>
+            <UnderDevelopmentDialog open={showDialog} onOpenChange={setShowDialog} />
         </Layout>
     );
 };

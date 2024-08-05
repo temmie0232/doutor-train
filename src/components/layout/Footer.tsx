@@ -3,8 +3,9 @@
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { MdMenuBook, MdOutlineCoffeeMaker } from 'react-icons/md';
+import { MdHome, MdMenuBook, MdOutlineCoffeeMaker } from 'react-icons/md';
 import { BiHelpCircle } from 'react-icons/bi';
+import { FaGraduationCap } from 'react-icons/fa';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import AccountRequiredAlert from '@/components/elements/AccountRequiredAlert';
 
@@ -24,23 +25,39 @@ const Footer: React.FC = () => {
 
     // パス名から現在のタブ値を決定
     const getCurrentTab = () => {
+        if (pathname === '/home') return 'home';
+        if (pathname.includes('/basics')) return 'basics';
         if (pathname.includes('/manual')) return 'manual';
         if (pathname.includes('/training')) return 'training';
         if (pathname.includes('/help')) return 'help';
-        return 'manual'; // デフォルト値
+        return 'home'; // デフォルト値
     };
 
     const currentTab = getCurrentTab();
 
     const getIconSize = (tabName: string) => {
-        return currentTab === tabName ? 32 : 24; // 選択されたアイコンは32px、それ以外は24px
+        return currentTab === tabName ? 34 : 28;
     };
 
     return (
         <>
             <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
                 <Tabs value={currentTab} className="w-full">
-                    <TabsList className="flex justify-around h-16 bg-transparent">
+                    <TabsList className="flex justify-around h-14 bg-transparent">
+                        <TabsTrigger
+                            value="home"
+                            onClick={() => handleNavigation('/home')}
+                            className={`flex flex-col items-center ${currentTab === 'home' ? 'text-zinc-950' : ''}`}
+                        >
+                            <MdHome size={getIconSize('home')} />
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="basics"
+                            onClick={() => handleNavigation('/home/basics')}
+                            className={`flex flex-col items-center ${currentTab === 'basics' ? 'text-zinc-950' : ''}`}
+                        >
+                            <FaGraduationCap size={getIconSize('basics')} />
+                        </TabsTrigger>
                         <TabsTrigger
                             value="manual"
                             onClick={() => handleNavigation('/home/manual')}

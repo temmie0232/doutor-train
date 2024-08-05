@@ -5,7 +5,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const HelpPage: React.FC = () => {
     return (
         <Layout>
-            <h1 className="text-2xl font-bold mb-4">ヘルプ</h1>
             <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                     <AccordionTrigger>マニュアルについて</AccordionTrigger>

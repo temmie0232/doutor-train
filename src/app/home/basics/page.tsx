@@ -4,20 +4,24 @@ import Layout from '@/components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import UnderDevelopmentDialog from '@/components/elements/UnderDevelopmentDialog';
 
-const TrainingPage: React.FC = () => {
+const BasicsPage: React.FC = () => {
     const [showDialog, setShowDialog] = useState(false);
     const sections = [
         {
-            title: "ホットドリンク編",
-            description: "ホットドリンクの作り方を中心に復習します。",
+            title: "1. 接客の基本",
+            description: "お客様への挨拶、オーダーの取り方、商品の受け渡し方など",
         },
         {
-            title: "アイスドリンク編",
-            description: "アイスドリンクの作り方を中心に復習します。",
+            title: "2. レジの使い方",
+            description: "注文の入力、会計のやり方など",
         },
         {
-            title: "フード編",
-            description: "フードの作り方を中心に復習します。",
+            title: "3. セットアップについて",
+            description: "注文に対応した取り揃えのやり方",
+        },
+        {
+            title: "4. ドリンクの基礎知識",
+            description: "グラス・カップのサイズ、商品の対応しているサイズなど",
         }
     ];
 
@@ -28,7 +32,7 @@ const TrainingPage: React.FC = () => {
                     <section key={index} className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-semibold mb-2">{section.title}</h2>
                         <p className="mb-4">{section.description}</p>
-                        <Button variant="outline" onClick={() => setShowDialog(true)}>開始する</Button>
+                        <Button variant="outline" onClick={() => setShowDialog(true)}>詳細を見る</Button>
                     </section>
                 ))}
             </div>
@@ -37,4 +41,4 @@ const TrainingPage: React.FC = () => {
     );
 };
 
-export default TrainingPage;
+export default BasicsPage;

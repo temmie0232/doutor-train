@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { IoMdArrowBack } from 'react-icons/io';
 import { IoSettingsOutline } from 'react-icons/io5';
@@ -13,6 +13,7 @@ import AccountRequiredAlert from '@/components/elements/AccountRequiredAlert';
 
 const Header: React.FC = () => {
     const router = useRouter();
+    const pathname = usePathname();
     const { user, logOut } = useAuth();
     const [showAlert, setShowAlert] = useState(false);
 
@@ -33,17 +34,54 @@ const Header: React.FC = () => {
         }
     };
 
+    const getPageTitle = () => {
+        switch (true) {
+            case pathname === '/home':
+                return 'ホーム';
+            case pathname.includes('/basics'):
+                return '基礎編';
+            case pathname.includes('/manual'):
+                return 'マニュアル';
+            case pathname.includes('/training'):
+                return 'トレーニング';
+            case pathname.includes('/help'):
+                return 'ヘルプ';
+            default:
+                return '';
+        }
+    };
+
+    const buttonClass = `
+        p-2 
+        rounded-full 
+        transition-all 
+        duration-300 
+        ease-in-out 
+        hover:bg-gray-200 
+        focus:outline-none 
+        focus:ring-0 
+        active:scale-95
+    `;
+
     return (
         <>
-            <header className="fixed top-0 left-0 right-0 flex justify-between items-center p-4 bg-transparent">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                    <IoMdArrowBack className="h-6 w-6" />
-                </Button>
+            <header className="fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-3 bg-white bg-opacity-90 backdrop-blur-sm shadow-md z-50 rounded-b-2xl">
+                <button
+                    onClick={() => router.back()}
+                    className={buttonClass}
+                >
+                    <IoMdArrowBack className="h-6 w-6 text-gray-700" />
+                </button>
+                <h1 className="text-2xl font-semibold text-gray-800">
+                    {getPageTitle()}
+                </h1>
                 <Popover>
                     <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <IoSettingsOutline className="h-6 w-6" />
-                        </Button>
+                        <button
+                            className={buttonClass}
+                        >
+                            <IoSettingsOutline className="h-6 w-6 text-gray-700" />
+                        </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80">
                         <div className="flex items-center space-x-4">
@@ -59,9 +97,6 @@ const Header: React.FC = () => {
                         <Separator className="my-4" />
                         <Button variant="outline" onClick={handleLogout} className="w-full">
                             ログアウト
-                        </Button>
-                        <Button variant="outline" onClick={handleTrainingClick} className="w-full mt-2">
-                            トレーニング
                         </Button>
                     </PopoverContent>
                 </Popover>
