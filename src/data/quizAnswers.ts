@@ -54,7 +54,7 @@ export const quizAnswers: QuizAnswer = {
                 L: "Lホットカップ"
             }
         },
-        { item: "ホットティー用ティーバッグ" },
+        { item: "ルイボスティー用ティーバッグ" },
         { item: "熱湯" }
     ],
     "ロイヤルミルクティー": [

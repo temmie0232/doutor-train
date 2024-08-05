@@ -22,7 +22,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ productName }) =>
                 onClick={() => router.push('/home/manual')}
                 className="flex-1 bg-black text-white hover:bg-gray-800"
             >
-                商品マニュアルリストに戻る
+                商品リストに戻る
             </Button>
         </div>
     );

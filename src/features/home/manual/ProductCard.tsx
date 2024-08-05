@@ -2,14 +2,16 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { CiImageOff } from 'react-icons/ci';
 import EnhancedBadge from './EnhancedBadge';
+import UnderstandingBadge from './UnderstandingBadge';
 import { Product } from '@/data/products';
 
 interface ProductCardProps {
     product: Product;
     onClick: (productName: string) => void;
+    quizResult: { score: number; totalQuestions: number } | null;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, quizResult }) => {
     return (
         <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => onClick(product.name)}>
             <CardContent className="p-2">
@@ -37,6 +39,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
                             期間限定
                         </EnhancedBadge>
                     )}
+                    <div className="absolute top-2 right-2">
+                        <UnderstandingBadge
+                            score={quizResult?.score ?? null}
+                            totalQuestions={quizResult?.totalQuestions ?? 0}
+                        />
+                    </div>
                     <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
                         {product.sizes.map(size => (
                             <EnhancedBadge key={size} variant="secondary">

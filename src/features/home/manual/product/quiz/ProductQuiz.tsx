@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Product, products } from '@/data/products';
 import { getQuizAnswerByProduct, QuizAnswerItem } from '@/data/quizAnswers';
+import { saveQuizResult } from '@/lib/firebase';
 import ProductImage from './ProductImage';
 import MaterialSelector from './MaterialSelector';
 import QuizResult from './QuizResult';
@@ -18,6 +20,7 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [score, setScore] = useState<number>(0);
     const product: Product | undefined = products.find(p => p.name === productName);
     const router = useRouter();
+    const { user } = useAuth();
 
     useEffect(() => {
         if (product) {
@@ -26,9 +29,13 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
         }
     }, [productName, product]);
 
-    const handleSubmit = (quizScore: number) => {
+    const handleSubmit = async (quizScore: number) => {
         setSubmitted(true);
         setScore(quizScore);
+
+        if (user && product) {
+            await saveQuizResult(user.uid, product.name, quizScore, correctAnswer.length);
+        }
     };
 
     return (

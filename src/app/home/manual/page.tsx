@@ -1,8 +1,10 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Product, products } from '@/data/products';
+import { getQuizResults } from '@/lib/firebase';
 import SearchBar from '@/features/home/manual/SearchBar';
 import ProductGrid from '@/features/home/manual/ProductGrid';
 
@@ -10,7 +12,9 @@ const ManualListPage: React.FC = () => {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState<'ice' | 'hot' | 'food' | 'all'>('all');
+    const [quizResults, setQuizResults] = useState<{ [key: string]: { score: number; totalQuestions: number } }>({});
     const router = useRouter();
+    const { user } = useAuth();
 
     useEffect(() => {
         const filtered = products.filter(product =>
@@ -20,9 +24,19 @@ const ManualListPage: React.FC = () => {
         setFilteredProducts(filtered);
     }, [searchTerm, sortBy]);
 
+    useEffect(() => {
+        const fetchQuizResults = async () => {
+            if (user) {
+                const results = await getQuizResults(user.uid);
+                setQuizResults(results || {});
+            }
+        };
+        fetchQuizResults();
+    }, [user]);
+
     const handleProductClick = (productName: string) => {
         const productID = encodeURIComponent(productName);
-        console.log("Encoded productID:", productID); // デバッグ用ログ
+        console.log("Encoded productID:", productID);
         router.push(`/home/manual/${productID}`);
     };
 
@@ -34,7 +48,11 @@ const ManualListPage: React.FC = () => {
                 sortBy={sortBy}
                 setSortBy={setSortBy}
             />
-            <ProductGrid products={filteredProducts} onProductClick={handleProductClick} />
+            <ProductGrid
+                products={filteredProducts}
+                onProductClick={handleProductClick}
+                quizResults={quizResults}
+            />
         </Layout>
     );
 };
