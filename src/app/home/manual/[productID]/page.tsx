@@ -9,7 +9,6 @@ import { productInstructions, Instruction } from '@/data/productInstructions';
 import ProductInfo from '@/features/home/manual/product/ProductInfo';
 import InstructionSteps from '@/features/home/manual/product/InstructionSteps';
 import ProductActions from '@/features/home/manual/product/ProductActions';
-import UnderDevelopmentDialog from '@/components/elements/UnderDevelopmentDialog';
 
 interface ProductDetailPageProps {
     params: { productID: string };
@@ -21,7 +20,6 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     const [product, setProduct] = useState<Product | null>(null);
     const [instructions, setInstructions] = useState<string[][]>([]);
     const [loading, setLoading] = useState(true);
-    const [showDialog, setShowDialog] = useState(false);
 
     useEffect(() => {
         const decodedProductName = decodeURIComponent(productID);
@@ -36,6 +34,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
             setLoading(false);
         }
     }, [productID]);
+
+    const handleQuizClick = () => {
+        router.push(`/home/manual/${productID}/quiz`);
+    };
 
     if (loading) {
         return (
@@ -69,9 +71,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
 
                 <ProductInfo product={product} />
                 <InstructionSteps product={product} instructions={instructions} />
-                <ProductActions onQuizClick={() => setShowDialog(true)} onBackClick={() => router.back()} />
+                <ProductActions onQuizClick={handleQuizClick} onBackClick={() => router.back()} />
             </div>
-            <UnderDevelopmentDialog open={showDialog} onOpenChange={setShowDialog} />
         </Layout>
     );
 };
