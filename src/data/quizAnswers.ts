@@ -66,7 +66,7 @@ export const quizAnswers: QuizAnswer = {
                 L: "Lホットカップ"
             }
         },
-        { item: "ホットティー用ティーバッグ" },
+        { item: "ミルクティー用ティーバッグ" },
         { item: "熱湯" },
         { item: "牛乳" },
         {
@@ -83,7 +83,7 @@ export const quizAnswers: QuizAnswer = {
                 L: "Lホットカップ"
             }
         },
-        { item: "ホットティー用ティーバッグ" },
+        { item: "ミルクティー用ティーバッグ" },
         { item: "熱湯" },
         { item: "豆乳" },
         {
@@ -130,7 +130,7 @@ export const quizAnswers: QuizAnswer = {
                 L: "Lホットカップ"
             }
         },
-        { item: "ココア" },
+        { item: "ココアベース" },
         {
             item: "ホイップクリーム",
             quantity: {
@@ -250,7 +250,7 @@ export const quizAnswers: QuizAnswer = {
                 L: "Lホットカップ"
             }
         },
-        { item: "ココア" },
+        { item: "ココアベース" },
         {
             item: "エスプレッソ",
             sizeDependent: {

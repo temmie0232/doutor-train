@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Product, products } from '@/data/products';
 import { getQuizAnswerByProduct, QuizAnswerItem } from '@/data/quizAnswers';
@@ -50,7 +49,11 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                         />
                     )}
                     {submitted && (
-                        <QuizResult score={score} correctAnswer={correctAnswer} />
+                        <QuizResult
+                            score={score}
+                            correctAnswer={correctAnswer}
+                            productName={productName}
+                        />
                     )}
                 </CardContent>
             </Card>
