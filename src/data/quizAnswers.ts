@@ -283,8 +283,8 @@ export const quizAnswers: QuizAnswer = {
     "エスプレッソコーヒー": [
         {
             item: "エスプレッソ",
-            attributes: {
-                "サイズ": "L"
+            sizeDependent: {
+                R: "L",
             }
         }
     ],

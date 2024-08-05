@@ -32,6 +32,9 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     const [whippedCreamCount, setWhippedCreamCount] = useState<{ [size: string]: number }>(
         product.sizes.reduce((acc, size) => ({ ...acc, [size]: 0 }), {})
     );
+    const [espressoSize, setEspressoSize] = useState<{ [size: string]: string }>(
+        product.sizes.reduce((acc, size) => ({ ...acc, [size]: 'S' }), {})
+    );
 
     const toggleItem = (item: string, size?: string) => {
         setSelectedItems(prev => {
@@ -45,17 +48,28 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                     newItem.attributes = { "泡立て": jetSteamerFoam ? "あり" : "なし" };
                 } else if (item === "ホイップクリーム") {
                     newItem.quantity = whippedCreamCount;
+                } else if (item === "エスプレッソ") {
+                    newItem.attributes = product.sizes.reduce((acc, size) => ({
+                        ...acc,
+                        [size]: espressoSize[size]
+                    }), {});
                 }
                 return [...prev, newItem];
             }
         });
     };
 
-    const isCorrect = (item: string, size?: string): boolean => {
-        const selectedItem = selectedItems.find(i => i.item === item && (!size || i.size === size));
+    const isCorrect = (item: string): boolean => {
+        const selectedItem = selectedItems.find(i => i.item === item);
         const correctItem = correctAnswer.find(answer => answer.item === item);
 
         if (!selectedItem || !correctItem) return false;
+
+        if (item === "エスプレッソ" && correctItem.sizeDependent) {
+            return Object.entries(correctItem.sizeDependent).every(([size, value]) =>
+                selectedItem.attributes && selectedItem.attributes[size] === value
+            );
+        }
 
         if (correctItem.attributes) {
             return Object.entries(correctItem.attributes).every(([key, value]) =>
@@ -63,7 +77,9 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
             );
         }
         if (correctItem.sizeDependent) {
-            return selectedItem.size === size && correctItem.sizeDependent[size as string] !== null;
+            return Object.entries(correctItem.sizeDependent).every(([size, value]) =>
+                selectedItem.size === size && value === selectedItem.attributes?.[size]
+            );
         }
         if (correctItem.quantity !== undefined) {
             if (typeof correctItem.quantity === 'object') {
@@ -81,33 +97,7 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
 
     const handleSubmit = () => {
         setSubmitted(true);
-        const score = correctAnswer.filter(answer => {
-            const selectedItem = selectedItems.find(item => item.item === answer.item);
-            if (!selectedItem) return false;
-            if (answer.attributes) {
-                return Object.entries(answer.attributes).every(([key, value]) =>
-                    selectedItem.attributes && selectedItem.attributes[key] === value
-                );
-            }
-            if (answer.sizeDependent) {
-                return Object.entries(answer.sizeDependent).every(([size, value]) =>
-                    (selectedItem.size === size && value !== null) === (selectedItems.some(i => i.item === answer.item && i.size === size))
-                );
-            }
-            if (answer.quantity !== undefined) {
-                if (typeof answer.quantity === 'object') {
-                    return Object.entries(answer.quantity).every(([size, count]) =>
-                        selectedItem.quantity && selectedItem.quantity[size] === count
-                    );
-                } else if (typeof answer.quantity === 'number') {
-                    const selectedTotal = selectedItem.quantity ?
-                        Object.values(selectedItem.quantity).reduce((sum, count) => sum + count, 0) : 0;
-                    return selectedTotal === answer.quantity;
-                }
-            }
-            return true;
-        }).length;
-
+        const score = correctAnswer.filter(answer => isCorrect(answer.item)).length;
         onSubmit(score);
     };
 
@@ -116,6 +106,25 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
             <h3 className="font-bold mb-2">{category}</h3>
             <div className="flex flex-wrap gap-2">
                 {items.map(item => {
+                    if (category === "5000s(ボタン)" && item === "エスプレッソ") {
+                        return (
+                            <Button
+                                key={item}
+                                variant={selectedItems.some(i => i.item === item) ? "default" : "outline"}
+                                onClick={() => !submitted && toggleItem(item)}
+                                className={`
+                                    ${submitted && isCorrect(item) ? "bg-green-500 hover:bg-green-600" : ""}
+                                    ${submitted && selectedItems.some(i => i.item === item) && !isCorrect(item) ? "bg-red-500 hover:bg-red-600" : ""}
+                                `}
+                                disabled={submitted}
+                            >
+                                {item}
+                            </Button>
+                        );
+                    }
+                    if (category === "飲料原料" && item === "エスプレッソ") {
+                        return null; // 飲料原料カテゴリーではエスプレッソを表示しない
+                    }
                     const sizes = product.sizes.filter(size =>
                         correctAnswer.some(answer =>
                             answer.item === item &&
@@ -130,8 +139,8 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                                 variant={selectedItems.some(i => i.item === item && i.size === size) ? "default" : "outline"}
                                 onClick={() => !submitted && toggleItem(item, size)}
                                 className={`
-                                    ${submitted && isCorrect(item, size) ? "bg-green-500 hover:bg-green-600" : ""}
-                                    ${submitted && selectedItems.some(i => i.item === item && i.size === size) && !isCorrect(item, size) ? "bg-red-500 hover:bg-red-600" : ""}
+                                    ${submitted && isCorrect(item) ? "bg-green-500 hover:bg-green-600" : ""}
+                                    ${submitted && selectedItems.some(i => i.item === item && i.size === size) && !isCorrect(item) ? "bg-red-500 hover:bg-red-600" : ""}
                                 `}
                                 disabled={submitted}
                             >
@@ -201,6 +210,39 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                                         <div key={`${size}-${count}`} className="flex items-center space-x-2">
                                             <RadioGroupItem value={count.toString()} id={`${size}-${count}`} />
                                             <Label htmlFor={`${size}-${count}`}>{count}個</Label>
+                                        </div>
+                                    ))}
+                                </RadioGroup>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {category === "5000s(ボタン)" && selectedItems.some(i => i.item === "エスプレッソ") && (
+                <div className="mt-2 border p-2 rounded">
+                    <h4 className="font-bold mb-2">(オプション) エスプレッソのサイズ</h4>
+                    <Separator className="my-2" />
+                    <div className="flex">
+                        {product.sizes.map(size => (
+                            <div key={size} className="flex-1 px-2">
+                                <h5 className="font-semibold mb-1">{size}サイズ</h5>
+                                <RadioGroup
+                                    value={espressoSize[size]}
+                                    onValueChange={(value) => {
+                                        setEspressoSize(prev => ({ ...prev, [size]: value }));
+                                        setSelectedItems(prev =>
+                                            prev.map(item =>
+                                                item.item === "エスプレッソ"
+                                                    ? { ...item, attributes: { ...item.attributes, [size]: value } }
+                                                    : item
+                                            )
+                                        );
+                                    }}
+                                >
+                                    {['S', 'M', 'L'].map((espSize) => (
+                                        <div key={`${size}-${espSize}`} className="flex items-center space-x-2">
+                                            <RadioGroupItem value={espSize} id={`${size}-${espSize}`} />
+                                            <Label htmlFor={`${size}-${espSize}`}>{espSize}</Label>
                                         </div>
                                     ))}
                                 </RadioGroup>
