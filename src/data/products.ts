@@ -13,7 +13,7 @@ export const products: Product[] = [
     { name: 'アメリカンコーヒー', image: '/images/2.jpg', category: 'hot', sizes: ['R'], isOnSale: true, description: '苦味が少なく、すっきりとした味わいのコーヒーです。' },
     { name: 'ティー', image: '/images/3.jpg', category: 'hot', sizes: ['R'], isOnSale: true, description: 'ダージリン、アッサムなどをブレンドしてバランスをとった、すっきりと飲みやすい紅茶です。' },
     { name: 'ルイボスティー', image: '/images/4.jpg', category: 'hot', sizes: ['R'], isOnSale: true, description: 'データがありません。' },
-    { name: 'ロイヤルミルクティー', image: '/images/5.jpg', category: 'hot', sizes: ['R'], isOnSale: true, description: '紅茶の上品な香りとミルクのコクが楽しめます。' },
+    { name: 'ロイヤルミルクティー', image: '/images/5.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true, description: '紅茶の上品な香りとミルクのコクが楽しめます。' },
     { name: '豆乳ティー', image: '/images/6.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true, description: '豆乳でつくったロイヤルミルクティーです。' },
     { name: 'ホットミルク', image: '/images/7.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true, description: 'データがありません。' },
     { name: 'ホット豆乳', image: '/images/8.jpg', category: 'hot', sizes: ['R', 'L'], isOnSale: true, description: 'データがありません。' },

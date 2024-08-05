@@ -10,12 +10,21 @@ interface ProductActionsProps {
 const ProductActions: React.FC<ProductActionsProps> = ({ onQuizClick, onBackClick }) => {
     return (
         <>
-            <Separator className="my-10" />
-            <div className="mt-8">
-                <Button onClick={onQuizClick} className="w-full mb-4">
+            <Separator className="my-8" />
+            <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                    onClick={onQuizClick}
+                    className="flex-1 bg-zinc-800 text-white"
+                >
                     クイズに挑戦
                 </Button>
-                <Button onClick={onBackClick} className="w-full">商品リストに戻る</Button>
+                <Button
+                    onClick={onBackClick}
+                    className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800"
+                    variant="outline"
+                >
+                    商品リストに戻る
+                </Button>
             </div>
         </>
     );

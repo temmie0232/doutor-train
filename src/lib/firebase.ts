@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,3 +17,26 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 export { app, auth, db };
+
+export const saveQuizResult = async (userId: string, productName: string, score: number, totalQuestions: number) => {
+    const quizResultRef = doc(db, 'users', userId, 'quizResults', productName);
+    await setDoc(quizResultRef, {
+        score,
+        totalQuestions,
+        lastAttemptDate: new Date()
+    });
+};
+
+export const getQuizResults = async (userId: string) => {
+    const quizResultsRef = collection(db, 'users', userId, 'quizResults');
+    const snapshot = await getDocs(quizResultsRef);
+    const results: { [key: string]: { score: number; totalQuestions: number } } = {};
+    snapshot.forEach((doc) => {
+        const data = doc.data();
+        results[doc.id] = {
+            score: data.score,
+            totalQuestions: data.totalQuestions
+        };
+    });
+    return results;
+};
