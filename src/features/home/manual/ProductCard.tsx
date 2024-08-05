@@ -13,12 +13,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
     return (
         <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => onClick(product.name)}>
             <CardContent className="p-2">
-                <div className="relative w-full h-48 mb-2">
+                <div className="relative w-full h-34 mb-2">
                     {product.image ? (
                         <img
                             src={product.image}
                             alt={product.name}
-                            className="w-full h-full object-cover rounded"
+                            className="w-full  object-cover rounded"
                             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                                 const target = e.currentTarget;
                                 target.style.display = 'none';
