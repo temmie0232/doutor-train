@@ -3,9 +3,10 @@ import { User } from 'firebase/auth';
 
 interface WelcomeMessageProps {
     user: User | null;
+    userName: string | null;
 }
 
-const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ user }) => {
+const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ user, userName }) => {
     if (!user) {
         return <p className="text-xl font-semibold">ログインしていません</p>;
     }
@@ -21,7 +22,7 @@ const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ user }) => {
 
     return (
         <p className="text-2xl font-semibold">
-            ようこそ、{user.displayName || user.email || 'ユーザー'}さん！
+            ようこそ、{userName || user.displayName || user.email || 'ユーザー'}さん！
         </p>
     );
 };

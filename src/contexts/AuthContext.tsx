@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider, signInAnonymously } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { saveUserName, getUserName } from '@/lib/firebase';
 
 type AuthContextType = {
     user: User | null;
@@ -12,6 +13,8 @@ type AuthContextType = {
     logOut: () => Promise<void>;
     signInWithGoogle: () => Promise<void>;
     signInAsGuest: () => Promise<void>;
+    saveUserName: (name: string) => Promise<void>;
+    getUserName: () => Promise<string | null>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logOut,
         signInWithGoogle,
         signInAsGuest,
+        saveUserName: (name: string) => saveUserName(user?.uid ?? '', name),
+        getUserName: () => getUserName(user?.uid ?? ''),
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -40,3 +40,17 @@ export const getQuizResults = async (userId: string) => {
     });
     return results;
 };
+
+export const saveUserName = async (userId: string, name: string) => {
+    const userRef = doc(db, 'users', userId);
+    await setDoc(userRef, { name }, { merge: true });
+};
+
+export const getUserName = async (userId: string): Promise<string | null> => {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+        return userDoc.data().name || null;
+    }
+    return null;
+};
