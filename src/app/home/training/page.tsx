@@ -1,11 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import UnderDevelopmentDialog from '@/components/elements/UnderDevelopmentDialog';
 
 const TrainingPage: React.FC = () => {
-    const [showDialog, setShowDialog] = useState(false);
+    const [showDialog, setShowDialog] = useState(true);
     const sections = [
         {
             title: "ホットドリンク編",
@@ -20,6 +20,10 @@ const TrainingPage: React.FC = () => {
             description: "フードの作り方を中心に復習します。",
         }
     ];
+
+    useEffect(() => {
+        setShowDialog(true);
+    }, []);
 
     return (
         <Layout>

@@ -19,9 +19,9 @@ const UnderDevelopmentDialog: React.FC<UnderDevelopmentDialogProps> = ({ open, o
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>開発中</AlertDialogTitle>
+                    <AlertDialogTitle>作成中</AlertDialogTitle>
                     <AlertDialogDescription>
-                        この機能は現在開発中です。もうしばらくお待ちください。
+                        この機能は作成中です。
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

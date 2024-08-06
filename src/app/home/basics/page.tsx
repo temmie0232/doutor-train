@@ -1,11 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import UnderDevelopmentDialog from '@/components/elements/UnderDevelopmentDialog';
 
 const BasicsPage: React.FC = () => {
-    const [showDialog, setShowDialog] = useState(false);
+    const [showDialog, setShowDialog] = useState(true);
     const sections = [
         {
             title: "1. 接客の基本",
@@ -24,6 +24,10 @@ const BasicsPage: React.FC = () => {
             description: "グラス・カップのサイズ、商品の対応しているサイズなど",
         }
     ];
+
+    useEffect(() => {
+        setShowDialog(true);
+    }, []);
 
     return (
         <Layout>
