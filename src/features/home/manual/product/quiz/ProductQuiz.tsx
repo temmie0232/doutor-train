@@ -69,7 +69,7 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
             <Card className="mb-8">
                 <CardHeader>
                     <CardTitle className="text-2xl text-center">
-                        "{productName}"を作るためには？
+                        {productName} を作るためには？
                     </CardTitle>
                     <p className="text-sm text-gray-500 text-center mt-2">
                         コツ : 作る工程を頭で想像しながら順番に選択しよう
