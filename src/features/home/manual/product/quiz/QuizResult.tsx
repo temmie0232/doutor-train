@@ -16,9 +16,10 @@ interface QuizResultProps {
     score: number;
     correctAnswer: QuizAnswerItem[];
     productName: string;
+    answerChecked: boolean;
 }
 
-const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName }) => {
+const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName, answerChecked }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const formatAnswer = (answer: QuizAnswerItem): JSX.Element => {
@@ -86,7 +87,11 @@ const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productNa
                 </DialogContent>
             </Dialog>
             <Separator className="my-4" />
-            <p className="text-sm text-gray-600">今回のテスト結果は、商品リストの右上に反映されます。</p>
+            <p className="text-sm text-gray-600">
+                {answerChecked
+                    ? "答えを確認したため、今回の結果は反映されません。"
+                    : "今回のテスト結果は、商品リストの右上に反映されます。"}
+            </p>
         </div>
     );
 };

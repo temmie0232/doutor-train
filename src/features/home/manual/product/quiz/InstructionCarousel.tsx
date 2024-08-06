@@ -9,6 +9,8 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CiImageOff } from 'react-icons/ci';
+import { FaRegHandPointRight } from 'react-icons/fa';
+import { Separator } from '@radix-ui/react-select';
 
 interface InstructionCarouselProps {
     productName: string;
@@ -53,6 +55,10 @@ const InstructionCarousel: React.FC<InstructionCarouselProps> = ({ productName, 
                                                 {line}
                                             </p>
                                         ))}
+                                    </div>
+                                    <div className="mt-6 text-sm text-gray-400 flex items-center">
+                                        <span>横にスライドでページ移動</span>
+                                        <FaRegHandPointRight className="ml-2" />
                                     </div>
                                 </CardContent>
                             </Card>
