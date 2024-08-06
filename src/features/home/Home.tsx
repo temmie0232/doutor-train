@@ -33,11 +33,13 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto p-4 pt-16 pb-20 flex flex-col justify-center">
-        <div className="mb-16 text-center">
-          <WelcomeMessage user={user} userName={userName} />
+      <div className="flex flex-col h-[calc(100vh-8rem)] justify-between">
+        <div className="flex-grow flex flex-col justify-center items-center">
+          <div className="text-center mb-8">
+            <WelcomeMessage user={user} userName={userName} />
+          </div>
+          <MenuButtons />
         </div>
-        <MenuButtons />
       </div>
       <NameInputModal isOpen={showNameModal} onClose={handleNameSubmit} />
     </Layout>

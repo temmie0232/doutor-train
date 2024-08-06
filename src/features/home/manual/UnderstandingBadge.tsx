@@ -9,7 +9,7 @@ interface UnderstandingBadgeProps {
 
 const UnderstandingBadge: React.FC<UnderstandingBadgeProps> = ({ score, totalQuestions, showPercentage = false }) => {
     if (score === null) {
-        return <Badge className="bg-gray-400 border-2 border-white">未受験</Badge>;
+        return <Badge className="bg-gray-400 border-2 border-white">未</Badge>;
     }
 
     const percentage = (score / totalQuestions) * 100;
