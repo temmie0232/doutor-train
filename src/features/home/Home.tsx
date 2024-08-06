@@ -5,6 +5,7 @@ import Layout from '@/components/layout/Layout';
 import WelcomeMessage from '@/features/home/WelcomeMessage';
 import MenuButtons from '@/features/home/MenuButtons';
 import NameInputModal from '@/features/home/NameInputModal';
+import { MdCoffee } from 'react-icons/md';
 
 const HomePage = () => {
   const { user, saveUserName, getUserName } = useAuth();
@@ -33,9 +34,10 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col h-[calc(100vh-8rem)] justify-between">
+      <div className="flex flex-col h-full justify-between px-4">
         <div className="flex-grow flex flex-col justify-center items-center">
-          <div className="text-center mb-8">
+          <div className="mb-8 text-center">
+            <MdCoffee className="text-6xl mt-10 mb-3 mx-auto text-brown-600" />
             <WelcomeMessage user={user} userName={userName} />
           </div>
           <MenuButtons />

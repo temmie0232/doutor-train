@@ -76,7 +76,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
 
     return (
         <Layout>
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto px-8 sm:px-8 lg:px-10"> {/* この行を変更 */}
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-3xl font-bold">{product.name}</h1>
                     {quizResult && (

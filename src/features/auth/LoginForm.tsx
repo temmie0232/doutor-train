@@ -13,8 +13,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Separator } from '@/components/ui/separator'
-import GuestLoginButton from '@/features/auth/GuestLoginButton';
 
 const LoginForm: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -35,18 +33,14 @@ const LoginForm: React.FC = () => {
 
     return (
         <div>
-            {/*カード全体*/}
             <Card className="w-full">
-                {/*タイトル*/}
                 <CardHeader className='text-center'>
                     <CardTitle>ログイン</CardTitle>
-                    {/*アンダーライン*/}
                     <div className="flex justify-center mt-2">
                         <div className="w-12 h-1 bg-black rounded-lg"></div>
                     </div>
                 </CardHeader>
 
-                {/*内容*/}
                 <CardContent>
                     <form onSubmit={handleSubmit}>
                         <div className="grid w-full items-center gap-4">
@@ -77,11 +71,8 @@ const LoginForm: React.FC = () => {
                     </form>
                 </CardContent>
 
-                {/*フッター*/}
                 <CardFooter className="flex justify-center flex-col">
                     <Button type="submit" size="sm" className="w-4/6 text-sm" onClick={handleSubmit}>ログイン</Button>
-                    <Separator className="my-4" />
-                    <GuestLoginButton />
                 </CardFooter>
             </Card>
         </div>
