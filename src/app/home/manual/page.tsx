@@ -9,6 +9,8 @@ import SearchBar from '@/features/home/manual/SearchBar';
 import ProductGrid from '@/features/home/manual/ProductGrid';
 import SortDropdown from '@/features/home/manual/SortDropdown';
 import { Separator } from '@/components/ui/separator';
+import { Button } from "@/components/ui/button";
+import { IoReload } from "react-icons/io5";
 
 const ManualListPage: React.FC = () => {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
@@ -50,28 +52,37 @@ const ManualListPage: React.FC = () => {
     }, [searchTerm, selectedTypes, selectedUnderstandings, quizResults]);
 
     const handleTypeToggle = (option: string) => {
-        setSelectedTypes(prev =>
-            option === 'すべて'
-                ? ['すべて']
-                : prev.includes(option)
-                    ? prev.filter(t => t !== option && t !== 'すべて')
-                    : [...prev.filter(t => t !== 'すべて'), option]
-        );
+        setSelectedTypes(prev => {
+            if (option === 'すべて') {
+                return ['すべて'];
+            }
+            const newSelection = prev.includes(option)
+                ? prev.filter(t => t !== option)
+                : [...prev.filter(t => t !== 'すべて'), option];
+            return newSelection.length === 0 ? ['すべて'] : newSelection;
+        });
     };
 
     const handleUnderstandingToggle = (option: string) => {
-        setSelectedUnderstandings(prev =>
-            option === 'すべて'
-                ? ['すべて']
-                : prev.includes(option)
-                    ? prev.filter(u => u !== option && u !== 'すべて')
-                    : [...prev.filter(u => u !== 'すべて'), option]
-        );
+        setSelectedUnderstandings(prev => {
+            if (option === 'すべて') {
+                return ['すべて'];
+            }
+            const newSelection = prev.includes(option)
+                ? prev.filter(u => u !== option)
+                : [...prev.filter(u => u !== 'すべて'), option];
+            return newSelection.length === 0 ? ['すべて'] : newSelection;
+        });
     };
 
     const handleProductClick = (productName: string) => {
         const productID = encodeURIComponent(productName);
         router.push(`/home/manual/${productID}`);
+    };
+
+    const resetFilters = () => {
+        setSelectedTypes(['すべて']);
+        setSelectedUnderstandings(['すべて']);
     };
 
     return (
@@ -80,19 +91,24 @@ const ManualListPage: React.FC = () => {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
             />
-            <div className="flex space-x-4 my-4">
+            <div className="flex items-center space-x-4 my-4">
                 <SortDropdown
                     title="種類"
                     options={typeOptions}
                     selectedOptions={selectedTypes}
                     onOptionToggle={handleTypeToggle}
+                    allOption="すべて"
                 />
                 <SortDropdown
                     title="理解度"
                     options={understandingOptions}
                     selectedOptions={selectedUnderstandings}
                     onOptionToggle={handleUnderstandingToggle}
+                    allOption="すべて"
                 />
+                <Button onClick={resetFilters} variant="outline" size="icon">
+                    <IoReload />
+                </Button>
             </div>
             <Separator className="my-4" />
             <ProductGrid
