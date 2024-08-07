@@ -73,21 +73,24 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     return (
         <Layout>
             <div className="max-w-2xl mx-auto px-8 sm:px-8 lg:px-10">
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-3xl font-bold">{product.name}</h1>
-                    {quizResult && (
-                        <UnderstandingBadge
-                            score={quizResult.score}
-                            totalQuestions={quizResult.totalQuestions}
-                            showPercentage={true}
-                        />
-                    )}
-                </div>
+                <h1 className="text-3xl font-bold mb-4 justify-items-center">{product.name}</h1>
                 <div className="flex justify-center mt-1 mb-8">
                     <div className="w-16 h-1 bg-black rounded-lg"></div>
                 </div>
 
-                <ProductInfo product={product} />
+                <div className="relative mb-6">
+                    {quizResult && (
+                        <div className="absolute top-2 right-2 z-10">
+                            <UnderstandingBadge
+                                score={quizResult.score}
+                                totalQuestions={quizResult.totalQuestions}
+                                showPercentage={true}
+                            />
+                        </div>
+                    )}
+                    <ProductInfo product={product} />
+                </div>
+
                 <InstructionSteps product={product} instructions={product.instructions} />
                 <ProductActions onQuizClick={handleQuizClick} onBackClick={() => router.back()} />
             </div>
