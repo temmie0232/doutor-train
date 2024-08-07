@@ -5,22 +5,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Product } from '@/data/productData';
+import { QuizState, SelectedItem } from '@/types/types';
 
-export interface SelectedItem {
-    item: string;
-    attributes?: { [key: string]: string };
-    size?: string;
-    quantity?: { [size: string]: number };
-}
 
-export interface QuizState {
-    selectedItems: SelectedItem[];
-    jetSteamerFoam: boolean;
-    whippedCreamCount: { [size: string]: number };
-    espressoSize: { [size: string]: string };
-    selectedCup: 'hot' | 'ice' | null;
-    hotCupTypes: { [size: string]: string };
-}
 
 export interface QuizActions {
     toggleItem: (item: string, size?: string) => void;

@@ -1,10 +1,12 @@
-// src/features/home/manual/product/quiz/MaterialSelector.tsx
-
 import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { categories } from '@/data/materials';
-import { Product } from '@/data/productData';
-import { QuizAnswerItem } from '@/data/productData';
+import {
+    MaterialSelectorProps,
+    QuizState,
+    SelectedItem,
+    QuizContextType
+} from '@/types/types';
 import {
     Category,
     CupSelector,
@@ -12,17 +14,9 @@ import {
     JetSteamerOption,
     WhippedCreamOption,
     EspressoOption,
-    QuizContext,
-    SelectedItem,
-    QuizState,
-    QuizContextType
+    QuizContext
 } from './QuizComponents';
 
-interface MaterialSelectorProps {
-    correctAnswer: QuizAnswerItem[];
-    product: Product;
-    onSubmit: (score: number) => void;
-}
 
 const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     correctAnswer,
@@ -246,7 +240,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
             </Button>
         </QuizContext.Provider>
     );
-
 };
 
 export default MaterialSelector;

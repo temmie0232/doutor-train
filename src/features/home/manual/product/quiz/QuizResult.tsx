@@ -10,13 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import InstructionCarousel from './InstructionCarousel';
 import { Separator } from '@/components/ui/separator';
+import { QuizResultProps } from '@/types/types';
 
-interface QuizResultProps {
-    score: number;
-    correctAnswer: QuizAnswerItem[];
-    productName: string;
-    answerChecked: boolean;
-}
 
 const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName, answerChecked }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);

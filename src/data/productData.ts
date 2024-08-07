@@ -1,4 +1,10 @@
-// productData.ts
+
+export interface QuizAnswerItem {
+    item: string;
+    attributes?: { [key: string]: string };
+    sizeDependent?: { [size: string]: string | null };
+    quantity?: number | { [size: string]: number };
+}
 
 export interface Product {
     name: string;
@@ -10,13 +16,6 @@ export interface Product {
     description: string;
     instructions: string[][];
     quizAnswers: QuizAnswerItem[];
-}
-
-export interface QuizAnswerItem {
-    item: string;
-    attributes?: { [key: string]: string };
-    sizeDependent?: { [size: string]: string | null };
-    quantity?: number | { [size: string]: number };
 }
 
 export const productData: Product[] = [
@@ -1279,3 +1278,4 @@ export function getProductByName(name: string): Product | undefined {
 export function getQuizAnswerByProduct(product: Product): QuizAnswerItem[] {
     return product.quizAnswers;
 }
+

@@ -1,13 +1,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
-import { Product } from '@/data/productData';
+import { ProductGridProps } from '@/types/types';
 
-
-interface ProductGridProps {
-    products: Product[];
-    onProductClick: (productName: string) => void;
-    quizResults: { [key: string]: { score: number; totalQuestions: number } };
-}
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, onProductClick, quizResults }) => {
     return (

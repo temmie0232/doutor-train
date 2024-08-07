@@ -3,13 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CiImageOff } from 'react-icons/ci';
 import EnhancedBadge from './EnhancedBadge';
 import UnderstandingBadge from './UnderstandingBadge';
-import { Product } from '@/data/productData';
+import { ProductCardProps } from '@/types/types';
 
-interface ProductCardProps {
-    product: Product;
-    onClick: (productName: string) => void;
-    quizResult: { score: number; totalQuestions: number } | null;
-}
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, quizResult }) => {
     return (

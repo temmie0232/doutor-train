@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { productData, Product, getQuizAnswerByProduct, QuizAnswerItem } from '@/data/productData';
+import { Product, QuizAnswerItem, getQuizAnswerByProduct, productData } from '@/data/productData';
 import { saveQuizResult } from '@/lib/firebase';
 import ProductImage from './ProductImage';
 import MaterialSelector from './MaterialSelector';
@@ -20,10 +20,8 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import InstructionCarousel from './InstructionCarousel';
+import { ProductQuizProps } from '@/types/types';
 
-interface ProductQuizProps {
-    productName: string;
-}
 
 const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [submitted, setSubmitted] = useState<boolean>(false);

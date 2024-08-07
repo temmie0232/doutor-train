@@ -4,17 +4,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { saveUserName, getUserName } from '@/lib/firebase';
+import { AuthContextType } from '@/types/types';
 
-type AuthContextType = {
-    user: User | null;
-    loading: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string) => Promise<void>;
-    logOut: () => Promise<void>;
-    signInWithGoogle: () => Promise<void>;
-    saveUserName: (name: string) => Promise<void>;
-    getUserName: () => Promise<string | null>;
-};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

@@ -1,11 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { CiImageOff } from 'react-icons/ci';
-import { Product } from '@/data/productData';
+import { ProductImageProps } from '@/types/types';
 
-interface ProductImageProps {
-    product: Product | undefined;
-}
 
 const ProductImage: React.FC<ProductImageProps> = ({ product }) => {
     return (

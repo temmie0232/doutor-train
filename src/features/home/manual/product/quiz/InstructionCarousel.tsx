@@ -10,11 +10,8 @@ import {
 } from "@/components/ui/carousel";
 import { CiImageOff } from 'react-icons/ci';
 import { FaRegHandPointRight } from 'react-icons/fa';
+import { InstructionCarouselProps } from '@/types/types';
 
-interface InstructionCarouselProps {
-    productName: string;
-    instructions: string[][];
-}
 
 const InstructionCarousel: React.FC<InstructionCarouselProps> = ({ productName, instructions }) => {
     const totalPages = instructions.length;

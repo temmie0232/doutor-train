@@ -1,10 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
+import { NavigationButtonsProps } from '@/types/types';
 
-interface NavigationButtonsProps {
-    productName: string;
-}
 
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ productName }) => {
     const router = useRouter();
