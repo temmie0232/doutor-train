@@ -1057,8 +1057,8 @@ export const productData: Product[] = [
         instructions: [
             ["ブレンダーのカップに氷を入れる", "R : 190g", "L : 220g"],
             ["ブレンダーのカップにフローズンベースを入れる", "R : 190g", "L:220g"],
-            ["ブレンダーを回す", "R : Rボタン", "L : Lボタン"],
-            ["カップを回しながらレモンソースを3周(たぶん)かける"],
+            ["ブレンダーに容器をセットしてを回す", "R : Rボタン", "L : Lボタン"],
+            ["カップを回しながら容器のフチにレモンソースを3周(たぶん)かける"],
             ["ブレンダー内のヨーグルンをカップに移す"],
         ],
         quizAnswers: [
@@ -1083,8 +1083,8 @@ export const productData: Product[] = [
         instructions: [
             ["ブレンダーのカップに氷を入れる", "R : 190g", "L : 220g"],
             ["ブレンダーのカップにフローズンベースを入れる", "R : 190g", "L:220g"],
-            ["ブレンダーを回す", "R : Rボタン", "L : Lボタン"],
-            ["カップを回しながらマスカットソースを3周(たぶん)かける"],
+            ["ブレンダーに容器をセットしてを回す", "R : Rボタン", "L : Lボタン"],
+            ["カップを回しながら容器のフチにマスカットソースを3周(たぶん)かける"],
             ["ブレンダー内のヨーグルンをカップに移す"],
         ],
         quizAnswers: [
@@ -1106,9 +1106,19 @@ export const productData: Product[] = [
         isOnSale: true,
         description: 'さっぱりとした優しい味わいの生ハムロースはそのままで、しっかりとした味わいのボンレスハムと、粗挽きブラックペッパーの効いたボローニャソーセージは肉の配合を見直し、マヨソースを調整することで、肉の旨味をより感じられるよう仕上げました。',
         instructions: [
-            ["工事中"],
+            ["ミラノパンをトースターで焼く", "内側を上に向ける。"],
+            ["レタス二枚を並べる", "8x16cmを２枚(25g)"],
+            ["ハムのセットアップ(事前に作ってあるもの)をレタスに乗せる"],
+            ["焼いたミラノパンにマヨネーズをのせる", "2山×2 + 1本線"],
+            ["具材にクラウンを被せ、持ち上げてヒールにのせる", "クラウン : 上側のパン", "ヒール : 下側のパン"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "レタス" },
+            { item: "Aサンド用ハム" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: 'チーズ in ミラノサンドA',
@@ -1118,9 +1128,21 @@ export const productData: Product[] = [
         isOnSale: true,
         description: 'さっぱりとした優しい味わいの生ハムロースはそのままで、しっかりとした味わいのボンレスハムと、粗挽きブラックペッパーの効いたボローニャソーセージは肉の配合を見直し、マヨソースを調整することで、肉の旨味をより感じられるよう仕上げました。コクのあるチェダーチーズと絶妙にマッチ！',
         instructions: [
-            ["工事中"],
+            ["ミラノパンをトースターで焼く", "内側を上に向ける。"],
+            ["レタス二枚を並べる", "8x16cmを２枚(25g)"],
+            ["レタスの上にスライス赤チーズ(1/2)を2切れ並べる"],
+            ["ハムのセットアップ(事前に作ってあるもの)をレタス・赤チーズに乗せる"],
+            ["焼いたミラノパンにマヨネーズをのせる", "2山×2 + 1本線"],
+            ["具材にクラウンを被せ、持ち上げてヒールにのせる", "クラウン : 上側のパン", "ヒール : 下側のパン"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "レタス" },
+            { item: "赤チーズ" },
+            { item: "Aサンド用ハム" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: 'ミラノサンドB',
@@ -1130,9 +1152,31 @@ export const productData: Product[] = [
         isOnSale: true,
         description: '王道の組み合わせであるサーモンとクリームチーズを合わせたフィリングとエビ・アボカドのトッピングはそのままに、卵の風味とコク、玉ねぎのシャキシャキした食感を活かしたタルタルソースを合わせました。シーフードサラダ感覚で食べられる仕立てになっています',
         instructions: [
-            ["工事中"],
+            ["ミラノパンをトースターで焼く", "内側を上に向ける。"],
+            ["レタス二枚を並べる", "8x8を２枚(13g)"],
+            ["レタスの上にサーモンクリームチーズをのせる", "25g"],
+            ["ボイルむきえびをのせる", "3尾"],
+            ["アボカドをのせる", "3切れ"],
+            ["タルタルソースを上に乗せる", "20g"],
+            ["ドレッシングをかける", "4g"],
+            ["ブラックペッパーをかける", "0.2g"],
+            ["ドライパセリをかける", "0.03g"],
+            ["焼いたミラノパンにマヨネーズをのせる", "2山×2"],
+            ["具材にクラウンを被せ、持ち上げてヒールにのせる", "クラウン : 上側のパン", "ヒール : 下側のパン"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "レタス" },
+            { item: "サーモンクリームチーズ" },
+            { item: "えび" },
+            { item: "アボカド" },
+            { item: "タルタルソース" },
+            { item: "ドレッシング" },
+            { item: "ブラックペッパー" },
+            { item: "ドライパセリ" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: '牛カルビ',
@@ -1145,7 +1189,15 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "ウェーブスター" },
+            { item: "レタス" },
+            { item: "カルビ" },
+            { item: "ブラックペッパー" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: '牛カルビ 濃厚チーズソース',
@@ -1158,7 +1210,16 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "ウェーブスター" },
+            { item: "レタス" },
+            { item: "カルビ" },
+            { item: "チーズソース" },
+            { item: "ブラックペッパー" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: '牛カルビ ねぎ塩レモン',
@@ -1171,7 +1232,17 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "ウェーブスター" },
+            { item: "レタス" },
+            { item: "カルビ" },
+            { item: "ネギ塩ソース" },
+            { item: "レモンスライス" },
+            { item: "ブラックペッパー" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: '牛カルビ ハラペーニョ',
@@ -1184,7 +1255,16 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "トースター" },
+            { item: "ウェーブスター" },
+            { item: "レタス" },
+            { item: "カルビ" },
+            { item: "ハラペーニョ" },
+            { item: "ブラックペッパー" },
+            { item: "マヨネーズ" },
+        ]
     },
     {
         name: 'トースト',
@@ -1196,7 +1276,10 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "トースト" },
+            { item: "トースター" },
+        ]
     },
     {
         name: 'チーズトースト',
@@ -1208,7 +1291,11 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "トースト" },
+            { item: "ウェーブスター" },
+            { item: "ゴーダチーズ" },
+        ]
     },
     {
         name: 'ツナチェダーチーズ',
@@ -1220,7 +1307,13 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "ウェーブスター" },
+            { item: "ツナフィリング" },
+            { item: "ブラックペッパー" },
+            { item: "チェダーチーズ" },
+        ]
     },
     {
         name: 'カルツォーネ',
@@ -1233,7 +1326,10 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ウェーブスター" },
+            { item: "カルツォーネ" }
+        ]
     },
     {
         name: 'ジャーマンドック',
@@ -1245,7 +1341,11 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ジャーマンドックパン" },
+            { item: "ソーセージ" },
+            { item: "マスタード" },
+        ]
     },
     {
         name: 'レタスドッグ',
@@ -1257,7 +1357,12 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "ジャーマンドックパン" },
+            { item: "ソーセージ" },
+            { item: "レタス" },
+            { item: "ムータルド" },
+        ]
     },
     {
         name: '全粒粉サンド',
@@ -1269,7 +1374,16 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "全粒粉入りパン" },
+            { item: "トースター" },
+            { item: "ウェーブスター" },
+            { item: "レタス" },
+            { item: "大豆ミート" },
+            { item: "トマト" },
+            { item: "トマト煮" },
+            { item: "ピリ辛ソース" },
+        ]
     },
     {
         name: 'フレンチトースト ハニーメープル',
@@ -1281,7 +1395,13 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "フレンチトースト" },
+            { item: "ウェーブスター" },
+            { item: "ソフトクリーム" },
+            { item: "ケーキシロップ" },
+            { item: "粉糖" },
+        ]
     },
     {
         name: 'フレンチトースト チョコバナナ',
@@ -1293,7 +1413,14 @@ export const productData: Product[] = [
         instructions: [
             ["工事中"],
         ],
-        quizAnswers: []
+        quizAnswers: [
+            { item: "フレンチトースト" },
+            { item: "ウェーブスター" },
+            { item: "ソフトクリーム" },
+            { item: "バナナ" },
+            { item: "チョコソース" },
+            { item: "粉糖" },
+        ]
     }
 ];
 
