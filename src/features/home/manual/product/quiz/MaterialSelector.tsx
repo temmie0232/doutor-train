@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
-import { categories } from '@/data/materials';
+import { hotCategories } from '@/data/materials_hot';
+import { iceCategories } from '@/data/materials_ice';
+import { foodCategories } from '@/data/materials_food';
 import {
     MaterialSelectorProps,
     QuizState,
@@ -9,14 +11,12 @@ import {
 } from '@/types/types';
 import {
     Category,
-    CupSelector,
-    HotCupTypeSelector,
+    HotCupSelector,
     JetSteamerOption,
     WhippedCreamOption,
     EspressoOption,
     QuizContext
 } from './QuizComponents';
-
 
 const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     correctAnswer,
@@ -28,7 +28,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         jetSteamerFoam: false,
         whippedCreamCount: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 0 }), {}),
         espressoSize: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 'S' }), {}),
-        selectedCup: null,
         hotCupTypes: product.sizes.reduce((acc, size) => ({ ...acc, [size]: '' }), {})
     });
 
@@ -92,17 +91,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         }));
     }, []);
 
-    const handleCupSelection = useCallback((cupType: 'hot' | 'ice') => {
-        setState(prev => ({
-            ...prev,
-            selectedCup: cupType,
-            selectedItems: prev.selectedItems.filter(item => item.item !== 'カップ').concat({
-                item: 'カップ',
-                attributes: { type: cupType }
-            })
-        }));
-    }, []);
-
     const handleHotCupTypeSelection = useCallback((size: string, type: string) => {
         setState(prev => ({
             ...prev,
@@ -122,19 +110,13 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         if (!selectedItem || !correctItem) return false;
 
         if (item === 'カップ') {
-            const selectedType = selectedItem.attributes?.type;
-            const correctType = correctItem.attributes?.type;
-
-            if (selectedType === correctType) {
-                if (correctType === 'hot' && correctItem.sizeDependent) {
-                    return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
-                        const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
-                        return selectedCupForSize?.attributes?.subType === value;
-                    });
-                }
-                return true;
+            if (correctItem.sizeDependent) {
+                return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
+                    const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
+                    return selectedCupForSize?.attributes?.subType === value;
+                });
             }
-            return false;
+            return true;
         }
 
         if (item === "エスプレッソ" && correctItem.sizeDependent) {
@@ -177,39 +159,37 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     }, [correctAnswer, isCorrect, onSubmit]);
 
     const quizContextValue: QuizContextType = {
-        ...state,
+        selectedItems: state.selectedItems,
+        jetSteamerFoam: state.jetSteamerFoam,
+        whippedCreamCount: state.whippedCreamCount,
+        espressoSize: state.espressoSize,
+        hotCupTypes: state.hotCupTypes,
         submitted,
         isCorrect,
         toggleItem,
         setJetSteamerFoam,
         setWhippedCreamCount,
         setEspressoSize,
-        handleCupSelection,
         handleHotCupTypeSelection,
     };
 
+    // 製品のカテゴリに基づいて適切な材料カテゴリを選択
+    const categories = product.category === 'hot' ? hotCategories :
+        product.category === 'ice' ? iceCategories :
+            foodCategories;
+
     return (
         <QuizContext.Provider value={quizContextValue}>
+            {product.category === 'hot' && (
+                <HotCupSelector
+                    product={product}
+                    hotCupTypes={state.hotCupTypes}
+                    handleHotCupTypeSelection={handleHotCupTypeSelection}
+                />
+            )}
             {Object.entries(categories).map(([category, items]) => (
                 <React.Fragment key={category}>
-                    {category === "カップ/容器" ? (
-                        <>
-                            <h3 className="font-bold mb-2">{category}</h3>
-                            <CupSelector
-                                selectedCup={state.selectedCup}
-                                handleCupSelection={handleCupSelection}
-                                submitted={submitted}
-                                isCorrect={isCorrect}
-                            />
-                            {state.selectedCup === 'hot' && (
-                                <HotCupTypeSelector
-                                    product={product}
-                                    hotCupTypes={state.hotCupTypes}
-                                    handleHotCupTypeSelection={handleHotCupTypeSelection}
-                                />
-                            )}
-                        </>
-                    ) : (
+                    {category !== "カップ" && (
                         <Category
                             category={category}
                             items={items}
@@ -220,7 +200,7 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                             product={product}
                         />
                     )}
-                    {category === "機械/設備" && state.selectedItems.some(i => i.item === "ジェットスチーマー") && (
+                    {category === "機械" && state.selectedItems.some(i => i.item === "ジェットスチーマー") && (
                         <JetSteamerOption />
                     )}
                     {category === "トッピング/ソース" && state.selectedItems.some(i => i.item === "ホイップクリーム") && (

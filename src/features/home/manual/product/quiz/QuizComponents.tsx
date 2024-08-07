@@ -7,14 +7,11 @@ import { Separator } from "@/components/ui/separator";
 import { Product } from '@/data/productData';
 import { QuizState, SelectedItem } from '@/types/types';
 
-
-
 export interface QuizActions {
     toggleItem: (item: string, size?: string) => void;
     setJetSteamerFoam: (value: boolean) => void;
     setWhippedCreamCount: (size: string, count: number) => void;
     setEspressoSize: (size: string, espressoSize: string) => void;
-    handleCupSelection: (cupType: 'hot' | 'ice') => void;
     handleHotCupTypeSelection: (size: string, type: string) => void;
 }
 
@@ -103,71 +100,32 @@ export const Category: React.FC<CategoryProps> = ({
     );
 };
 
-interface CupSelectorProps {
-    selectedCup: 'hot' | 'ice' | null;
-    handleCupSelection: (cupType: 'hot' | 'ice') => void;
-    submitted: boolean;
-    isCorrect: (item: string) => boolean;
-}
-
-export const CupSelector: React.FC<CupSelectorProps> = ({
-    selectedCup,
-    handleCupSelection,
-    submitted,
-    isCorrect
-}) => {
-    return (
-        <>
-            <Button
-                variant={selectedCup === 'hot' ? "default" : "outline"}
-                onClick={() => !submitted && handleCupSelection('hot')}
-                className={`
-          ${submitted && isCorrect('カップ') && selectedCup === 'hot' ? "bg-green-500 hover:bg-green-600" : ""}
-          ${submitted && selectedCup === 'hot' && !isCorrect('カップ') ? "bg-red-500 hover:bg-red-600" : ""}
-        `}
-                disabled={submitted}
-            >
-                ホットカップ
-            </Button>
-            <Button
-                variant={selectedCup === 'ice' ? "default" : "outline"}
-                onClick={() => !submitted && handleCupSelection('ice')}
-                className={`
-          ${submitted && isCorrect('カップ') && selectedCup === 'ice' ? "bg-green-500 hover:bg-green-600" : ""}
-          ${submitted && selectedCup === 'ice' && !isCorrect('カップ') ? "bg-red-500 hover:bg-red-600" : ""}
-        `}
-                disabled={submitted}
-            >
-                アイスカップ
-            </Button>
-        </>
-    );
-};
-
-interface HotCupTypeSelectorProps {
+interface HotCupSelectorProps {
     product: Product;
     hotCupTypes: { [size: string]: string };
     handleHotCupTypeSelection: (size: string, type: string) => void;
 }
 
-export const HotCupTypeSelector: React.FC<HotCupTypeSelectorProps> = ({
+export const HotCupSelector: React.FC<HotCupSelectorProps> = ({
     product,
     hotCupTypes,
     handleHotCupTypeSelection
 }) => {
+    const cupTypes = ['デミタスカップ', 'アメリカンカップ', 'Mホットカップ', 'Lホットカップ'];
+
     return (
-        <div className="mt-2 border p-2 rounded">
-            <h4 className="font-bold mb-2">ホットカップの種類</h4>
-            <div className="flex">
+        <div className="mt-4 mb-6">
+            <h4 className="font-bold mb-3">カップ</h4>
+            <div className="flex flex-wrap -mx-2">
                 {product.sizes.map(size => (
-                    <div key={size} className="flex-1 px-2">
-                        <h5 className="font-semibold mb-1">{size}サイズ</h5>
+                    <div key={size} className="w-full sm:w-1/2 px-2 mb-4">
+                        <h5 className="font-semibold mb-2">{size}サイズのカップの種類</h5>
                         <RadioGroup
                             value={hotCupTypes[size]}
                             onValueChange={(value) => handleHotCupTypeSelection(size, value)}
                         >
-                            {['デミタスカップ', 'アメリカンカップ', 'Mホットカップ', 'Lホットカップ'].map((cupType) => (
-                                <div key={`${size}-${cupType}`} className="flex items-center space-x-2">
+                            {cupTypes.map((cupType) => (
+                                <div key={`${size}-${cupType}`} className="flex items-center space-x-2 mb-1">
                                     <RadioGroupItem value={cupType} id={`${size}-${cupType}`} />
                                     <Label htmlFor={`${size}-${cupType}`}>{cupType}</Label>
                                 </div>

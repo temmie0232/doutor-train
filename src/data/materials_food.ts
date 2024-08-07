@@ -1,4 +1,4 @@
-export const categories = {
+export const foodCategories = {
     "パン": ["ジャーマンドックパン", "ミラノパン", "全粒粉入りパン", "トースト", "フレンチトースト"],
     "機械": ["トースター", "ウェブスター"],
     "材料": ["レタス", "トマト", "バナナ", "レモンスライス", "ハラペーニョ", "トマト煮", "Aサンド用ハム",
@@ -9,6 +9,6 @@ export const categories = {
         "チョコソース", "粉糖", "アイスクリーム",],
 };
 
-export type Material = keyof typeof categories;
+export type FoodMaterial = keyof typeof foodCategories;
 
-export const allMaterials = Object.values(categories).flat();
+export const allFoodMaterials = Object.values(foodCategories).flat();

@@ -34,22 +34,17 @@ export interface QuizState {
     jetSteamerFoam: boolean;
     whippedCreamCount: { [size: string]: number };
     espressoSize: { [size: string]: string };
-    selectedCup: 'hot' | 'ice' | null;
     hotCupTypes: { [size: string]: string };
 }
 
-export interface QuizActions {
+export interface QuizContextType extends QuizState {
+    submitted: boolean;
+    isCorrect: (item: string) => boolean;
     toggleItem: (item: string, size?: string) => void;
     setJetSteamerFoam: (value: boolean) => void;
     setWhippedCreamCount: (size: string, count: number) => void;
     setEspressoSize: (size: string, espressoSize: string) => void;
-    handleCupSelection: (cupType: 'hot' | 'ice') => void;
     handleHotCupTypeSelection: (size: string, type: string) => void;
-}
-
-export interface QuizContextType extends QuizState, QuizActions {
-    submitted: boolean;
-    isCorrect: (item: string) => boolean;
 }
 
 // Component prop types
@@ -133,14 +128,6 @@ export interface CategoryProps {
     submitted: boolean;
     isCorrect: (item: string) => boolean;
     product: Product;
-}
-
-// CupSelector component props
-export interface CupSelectorProps {
-    selectedCup: 'hot' | 'ice' | null;
-    handleCupSelection: (cupType: 'hot' | 'ice') => void;
-    submitted: boolean;
-    isCorrect: (item: string) => boolean;
 }
 
 // HotCupTypeSelector component props

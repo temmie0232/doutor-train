@@ -1,4 +1,4 @@
-export const categories = {
+export const iceCategories = {
     "カップ": ["Mアイスカップ", "Lアイスカップ"],
     "5000s(ボタン)": ["エスプレッソ", "カフェラテ"],
     "その他の材料": ["氷", "熱湯", "タピオカ", "レモン（袋入り）"],
@@ -12,6 +12,6 @@ export const categories = {
     "トッピング/ソース": ["ホイップクリーム", "黒糖ソース", "レモンソース", "マスカットソース", "カプチーノパウダー", "抹茶パウダー"],
 };
 
-export type Material = keyof typeof categories;
+export type IceMaterial = keyof typeof iceCategories;
 
-export const allMaterials = Object.values(categories).flat();
+export const allIceMaterials = Object.values(iceCategories).flat();

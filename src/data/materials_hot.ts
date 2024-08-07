@@ -1,4 +1,4 @@
-export const categories = {
+export const hotCategories = {
     "カップ": ["デミタスカップ", "アメリカンカップ", "Mホットカップ", "Lホットカップ"],
     "5000s(ボタン)": ["エスプレッソ", "カフェラテ", "本日のコーヒー"],
     "その他の材料": ["熱湯"],
@@ -12,6 +12,6 @@ export const categories = {
     "トッピング/ソース": ["ホイップクリーム", "黒糖ソース", "カプチーノパウダー", "抹茶パウダー"],
 };
 
-export type Material = keyof typeof categories;
+export type HotMaterial = keyof typeof hotCategories;
 
-export const allMaterials = Object.values(categories).flat();
+export const allHotMaterials = Object.values(hotCategories).flat();
