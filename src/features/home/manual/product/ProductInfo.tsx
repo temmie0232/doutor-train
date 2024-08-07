@@ -1,5 +1,5 @@
 import React from 'react';
-import { Product } from '@/data/products';
+import { Product } from '@/data/productData';
 import { CiImageOff } from 'react-icons/ci';
 import EnhancedBadge from '@/features/home/manual/EnhancedBadge';
 

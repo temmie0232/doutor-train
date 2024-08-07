@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QuizAnswerItem } from '@/data/quizAnswers';
+import { productData, QuizAnswerItem } from '@/data/productData';
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -9,7 +9,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import InstructionCarousel from './InstructionCarousel';
-import { productInstructions } from '@/data/productInstructions';
 import { Separator } from '@/components/ui/separator';
 
 interface QuizResultProps {
@@ -81,7 +80,7 @@ const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productNa
                     <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
                         <InstructionCarousel
                             productName={productName}
-                            instructions={productInstructions[productName] || []}
+                            instructions={productData.find(p => p.name === productName)?.instructions || []}
                         />
                     </div>
                 </DialogContent>

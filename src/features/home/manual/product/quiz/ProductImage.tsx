@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { CiImageOff } from 'react-icons/ci';
-import { Product } from '@/data/products';
+import { Product } from '@/data/productData';
 
 interface ProductImageProps {
     product: Product | undefined;

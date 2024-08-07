@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from "@/components/ui/button";
 import Layout from '@/components/layout/Layout';
-import { products, Product } from '@/data/products';
-import { productInstructions, Instruction } from '@/data/productInstructions';
+import { productData, Product } from '@/data/productData';
 import { getQuizResults } from '@/lib/firebase';
 import ProductInfo from '@/features/home/manual/product/ProductInfo';
 import InstructionSteps from '@/features/home/manual/product/InstructionSteps';
@@ -22,18 +21,15 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     const { user } = useAuth();
     const { productID } = params;
     const [product, setProduct] = useState<Product | null>(null);
-    const [instructions, setInstructions] = useState<string[][]>([]);
     const [loading, setLoading] = useState(true);
     const [quizResult, setQuizResult] = useState<{ score: number; totalQuestions: number } | null>(null);
 
     useEffect(() => {
         const decodedProductName = decodeURIComponent(productID);
-        const foundProduct = products.find(p => p.name === decodedProductName);
+        const foundProduct = productData.find(p => p.name === decodedProductName);
 
         if (foundProduct) {
             setProduct(foundProduct);
-            const productSteps = productInstructions[foundProduct.name] || [];
-            setInstructions(productSteps);
             setLoading(false);
         } else {
             setLoading(false);
@@ -76,7 +72,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
 
     return (
         <Layout>
-            <div className="max-w-2xl mx-auto px-8 sm:px-8 lg:px-10"> {/* この行を変更 */}
+            <div className="max-w-2xl mx-auto px-8 sm:px-8 lg:px-10">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-3xl font-bold">{product.name}</h1>
                     {quizResult && (
@@ -92,7 +88,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                 </div>
 
                 <ProductInfo product={product} />
-                <InstructionSteps product={product} instructions={instructions} />
+                <InstructionSteps product={product} instructions={product.instructions} />
                 <ProductActions onQuizClick={handleQuizClick} onBackClick={() => router.back()} />
             </div>
         </Layout>

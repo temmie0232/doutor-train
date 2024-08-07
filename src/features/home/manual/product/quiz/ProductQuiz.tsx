@@ -3,8 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Product, products } from '@/data/products';
-import { getQuizAnswerByProduct, QuizAnswerItem } from '@/data/quizAnswers';
+import { productData, Product, getQuizAnswerByProduct, QuizAnswerItem } from '@/data/productData';
 import { saveQuizResult } from '@/lib/firebase';
 import ProductImage from './ProductImage';
 import MaterialSelector from './MaterialSelector';
@@ -21,7 +20,6 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import InstructionCarousel from './InstructionCarousel';
-import { productInstructions } from '@/data/productInstructions';
 
 interface ProductQuizProps {
     productName: string;
@@ -34,7 +32,7 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
     const [showInstructionCarousel, setShowInstructionCarousel] = useState<boolean>(false);
     const [answerChecked, setAnswerChecked] = useState<boolean>(false);
-    const product: Product | undefined = products.find(p => p.name === productName);
+    const product: Product | undefined = productData.find(p => p.name === productName);
     const router = useRouter();
     const { user } = useAuth();
 
@@ -121,7 +119,7 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                     </AlertDialogHeader>
                     <InstructionCarousel
                         productName={productName}
-                        instructions={productInstructions[productName] || []}
+                        instructions={product?.instructions || []}
                     />
                     <AlertDialogFooter>
                         <AlertDialogAction onClick={() => setShowInstructionCarousel(false)}>

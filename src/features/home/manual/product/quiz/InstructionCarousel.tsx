@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 import { CiImageOff } from 'react-icons/ci';
 import { FaRegHandPointRight } from 'react-icons/fa';
-import { Separator } from '@radix-ui/react-select';
 
 interface InstructionCarouselProps {
     productName: string;

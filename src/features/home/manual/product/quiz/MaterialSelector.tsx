@@ -3,8 +3,8 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { categories } from '@/data/materials';
-import { Product } from '@/data/products';
-import { QuizAnswerItem } from '@/data/quizAnswers';
+import { Product } from '@/data/productData';
+import { QuizAnswerItem } from '@/data/productData';
 import {
     Category,
     CupSelector,

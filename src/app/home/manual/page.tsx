@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
-import { Product, products } from '@/data/products';
+import { productData, Product } from '@/data/productData';
 import { getQuizResults } from '@/lib/firebase';
 import SearchBar from '@/features/home/manual/SearchBar';
 import ProductGrid from '@/features/home/manual/ProductGrid';
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { IoReload } from "react-icons/io5";
 
 const ManualListPage: React.FC = () => {
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>(productData);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTypes, setSelectedTypes] = useState<string[]>(['すべて']);
     const [selectedUnderstandings, setSelectedUnderstandings] = useState<string[]>(['すべて']);
@@ -35,7 +35,7 @@ const ManualListPage: React.FC = () => {
     }, [user]);
 
     useEffect(() => {
-        const filtered = products.filter(product => {
+        const filtered = productData.filter(product => {
             const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesType = selectedTypes.includes('すべて') || selectedTypes.includes(product.category);
             const quizResult = quizResults[product.name];

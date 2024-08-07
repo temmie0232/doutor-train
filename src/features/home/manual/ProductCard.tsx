@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CiImageOff } from 'react-icons/ci';
 import EnhancedBadge from './EnhancedBadge';
 import UnderstandingBadge from './UnderstandingBadge';
-import { Product } from '@/data/products';
+import { Product } from '@/data/productData';
 
 interface ProductCardProps {
     product: Product;
