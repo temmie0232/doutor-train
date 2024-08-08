@@ -12,6 +12,7 @@ export class CardManager {
     constructor(cards: Card[], config: StudySessionConfig) {
         this.distributeCards(cards);
         this.config = config;
+        this.checkAndResetDailyCount();
     }
 
     private distributeCards(cards: Card[]) {
@@ -27,11 +28,6 @@ export class CardManager {
 
     private sortReviewCards() {
         this.reviewCards.sort((a, b) => getReviewPriority(b) - getReviewPriority(a));
-    }
-
-    public restoreState(savedState: any): void {
-        this.todayNewCardCount = savedState.newCardsStudied;
-        this.todayReviewCardCount = savedState.reviewCardsStudied;
     }
 
     public getNextNewCard(): Card | null {
@@ -65,7 +61,6 @@ export class CardManager {
                 updatedCard.reviewCount = 1;
                 updatedCard.interval = 1; // 1 day
                 updatedCard.nextReviewDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
-                updatedCard.lastReviewDate = new Date();
                 this.reviewCards.push(updatedCard);
                 this.sortReviewCards();
             } else {
@@ -108,7 +103,17 @@ export class CardManager {
         return this.reviewCards.filter(isCardDueForReview).length;
     }
 
+    public getTodayNewCardCount(): number {
+        return this.todayNewCardCount;
+    }
+
     public getTodayReviewCardCount(): number {
         return this.todayReviewCardCount;
+    }
+
+    public restoreState(savedState: any): void {
+        this.todayNewCardCount = savedState.newCardsStudied;
+        this.todayReviewCardCount = savedState.reviewCardsStudied;
+        this.lastStudyDate = new Date(savedState.lastStudyDate);
     }
 }

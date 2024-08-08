@@ -12,31 +12,35 @@ import InstructionCarousel from './InstructionCarousel';
 import { Separator } from '@/components/ui/separator';
 import { QuizResultProps } from '@/types/types';
 
-
 const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName, answerChecked }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const formatAnswer = (answer: QuizAnswerItem): JSX.Element => {
         let details: string[] = [];
 
-        if (answer.attributes) {
-            // カップの場合は type 属性を除外
-            if (answer.item === 'カップ') {
-                details.push(...Object.entries(answer.attributes)
-                    .filter(([key]) => key !== 'type')
-                    .map(([key, value]) => `${key}: ${value}`));
-            } else {
-                details.push(...Object.entries(answer.attributes).map(([key, value]) => `${key}: ${value}`));
-            }
+        if (answer.item === 'カップ' && answer.sizeDependent) {
+            details = Object.entries(answer.sizeDependent)
+                .filter(([_, value]) => value !== null)
+                .map(([size, value]) => `${size}サイズ: ${value}`);
+        } else if (answer.attributes) {
+            details = Object.entries(answer.attributes)
+                .filter(([key]) => key !== 'type')
+                .map(([key, value]) => `${key}: ${value}`);
         }
-        if (answer.sizeDependent) {
-            details.push(...Object.entries(answer.sizeDependent).map(([size, value]) => `${size}サイズ: ${value}`));
+
+        if (answer.sizeDependent && answer.item !== 'カップ') {
+            details.push(...Object.entries(answer.sizeDependent)
+                .filter(([_, value]) => value !== null)
+                .map(([size, value]) => `${size}サイズ: ${value}`));
         }
+
         if (answer.quantity) {
             if (typeof answer.quantity === 'number') {
                 details.push(`数量: ${answer.quantity}`);
             } else {
-                details.push(...Object.entries(answer.quantity).map(([size, count]) => `${size}サイズ: ${count}個`));
+                details.push(...Object.entries(answer.quantity)
+                    .filter(([_, count]) => count !== null && count !== 0)
+                    .map(([size, count]) => `${size}サイズ: ${count}個`));
             }
         }
 

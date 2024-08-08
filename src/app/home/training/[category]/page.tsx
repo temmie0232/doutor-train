@@ -74,7 +74,7 @@ const TrainingQuizPage: React.FC<TrainingQuizPageProps> = ({ params }) => {
                 }
 
                 const sessionConfig = {
-                    maxNewCardsPerDay: 10,
+                    maxNewCardsPerDay: 3,
                     maxReviewCardsPerDay: 20,
                     newCardPriority: 3,
                 };
@@ -112,7 +112,11 @@ const TrainingQuizPage: React.FC<TrainingQuizPageProps> = ({ params }) => {
 
             // Save session state to Firebase
             if (user) {
-                updateStudySession(user.uid, session.getSessionState());
+                const sessionState = session.getSessionState();
+                updateStudySession(user.uid, {
+                    ...sessionState,
+                    lastStudyDate: new Date().toISOString()
+                });
             }
         } else {
             // No more cards to study

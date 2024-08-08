@@ -4,7 +4,6 @@ import { CardManager } from './cardManager';
 export class StudySession {
     private cardManager: CardManager;
     private config: StudySessionConfig;
-    private newCardsStudiedThisSession: number = 0;
 
     constructor(cards: Card[], config: StudySessionConfig) {
         this.config = config;
@@ -12,23 +11,16 @@ export class StudySession {
     }
 
     public getNextCard(): Card | null {
-        // Prioritize new cards until we reach the newCardPriority limit
-        if (this.newCardsStudiedThisSession < this.config.newCardPriority) {
+        // Prioritize new cards until we reach the daily limit
+        if (this.cardManager.getTodayNewCardCount() < this.config.maxNewCardsPerDay) {
             const newCard = this.cardManager.getNextNewCard();
             if (newCard) {
-                this.newCardsStudiedThisSession++;
                 return newCard;
             }
         }
 
         // If no new cards or we've reached the limit, get a review card
-        const reviewCard = this.cardManager.getNextReviewCard();
-        if (reviewCard) {
-            return reviewCard;
-        }
-
-        // If no review cards, try to get a new card again
-        return this.cardManager.getNextNewCard();
+        return this.cardManager.getNextReviewCard();
     }
 
     public answerNewCard(card: Card, isCorrect: boolean): Card {
@@ -39,17 +31,6 @@ export class StudySession {
         return this.cardManager.answerReviewCard(card, grade);
     }
 
-    public getProgress(): { newCards: number; reviewCards: number } {
-        return {
-            newCards: this.cardManager.getNewCardCount(),
-            reviewCards: this.cardManager.getReviewCardCount(),
-        };
-    }
-
-    public resetSession(): void {
-        this.newCardsStudiedThisSession = 0;
-    }
-
     public getSessionState(): {
         newCardsStudied: number;
         reviewCardsStudied: number;
@@ -57,7 +38,7 @@ export class StudySession {
         totalReviewCards: number;
     } {
         return {
-            newCardsStudied: this.newCardsStudiedThisSession,
+            newCardsStudied: this.cardManager.getTodayNewCardCount(),
             reviewCardsStudied: this.cardManager.getTodayReviewCardCount(),
             totalNewCards: this.cardManager.getNewCardCount(),
             totalReviewCards: this.cardManager.getReviewCardCount(),
@@ -65,7 +46,6 @@ export class StudySession {
     }
 
     public restoreSession(savedState: any): void {
-        this.newCardsStudiedThisSession = savedState.newCardsStudied;
         this.cardManager.restoreState(savedState);
     }
 }

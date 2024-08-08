@@ -112,6 +112,8 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         if (item === 'カップ') {
             if (correctItem.sizeDependent) {
                 return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
+                    // If the value is null, it means this size doesn't exist for this product
+                    if (value === null) return true;
                     const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
                     return selectedCupForSize?.attributes?.subType === value;
                 });
@@ -120,9 +122,11 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         }
 
         if (item === "エスプレッソ" && correctItem.sizeDependent) {
-            return Object.entries(correctItem.sizeDependent).every(([size, value]) =>
-                selectedItem.attributes && selectedItem.attributes[size] === value
-            );
+            return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
+                // If the value is null, it means this size doesn't exist for this product
+                if (value === null) return true;
+                return selectedItem.attributes && selectedItem.attributes[size] === value;
+            });
         }
 
         if (correctItem.attributes) {
