@@ -58,7 +58,7 @@ export const productData: Product[] = [
                 attributes: { type: "hot" },
                 sizeDependent: {
                     R: "Mホットカップ",
-                    L: "Lホットカップ"
+                    L: null
                 }
             },
             { item: "ブレンドコーヒー" },
