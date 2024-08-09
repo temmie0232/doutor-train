@@ -12,7 +12,10 @@ import InstructionCarousel from './InstructionCarousel';
 import { Separator } from '@/components/ui/separator';
 import { QuizResultProps } from '@/types/types';
 
-const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName, answerChecked }) => {
+
+
+
+const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName, answerChecked, onNextQuestion }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const formatAnswer = (answer: QuizAnswerItem): JSX.Element => {
@@ -68,28 +71,13 @@ const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productNa
                     {correctAnswer.map(formatAnswer)}
                 </ul>
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                    <Button className="mt-4" variant="outline">作り方を確認</Button>
-                </DialogTrigger>
-                <DialogContent className="w-5/6 max-w-5xl rounded-lg overflow-hidden">
-                    <DialogHeader className="text-center">
-                        <DialogTitle className="text-2xl">{productName}の作り方</DialogTitle>
-                    </DialogHeader>
-                    <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
-                        <InstructionCarousel
-                            productName={productName}
-                            instructions={productData.find(p => p.name === productName)?.instructions || []}
-                        />
-                    </div>
-                </DialogContent>
-            </Dialog>
             <Separator className="my-4" />
-            <p className="text-sm text-gray-600">
-                {answerChecked
-                    ? "答えを確認したため、今回の結果は反映されません。"
-                    : "今回のテスト結果は、商品リストの右上に反映されます。"}
-            </p>
+            <Button
+                onClick={onNextQuestion}
+                className="w-full mt-4 bg-black text-white hover:bg-gray-800"
+            >
+                次の問題
+            </Button>
         </div>
     );
 };

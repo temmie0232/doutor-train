@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { hotCategories } from '@/data/materials_hot';
 import { iceCategories } from '@/data/materials_ice';
@@ -21,7 +21,8 @@ import {
 const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     correctAnswer,
     product,
-    onSubmit
+    onSubmit,
+    submitted
 }) => {
     const [state, setState] = useState<QuizState>({
         selectedItems: [],
@@ -31,7 +32,16 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         hotCupTypes: product.sizes.reduce((acc, size) => ({ ...acc, [size]: '' }), {})
     });
 
-    const [submitted, setSubmitted] = useState<boolean>(false);
+    useEffect(() => {
+        // Reset state when product changes
+        setState({
+            selectedItems: [],
+            jetSteamerFoam: false,
+            whippedCreamCount: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 0 }), {}),
+            espressoSize: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 'S' }), {}),
+            hotCupTypes: product.sizes.reduce((acc, size) => ({ ...acc, [size]: '' }), {})
+        });
+    }, [product]);
 
     const toggleItem = useCallback((item: string, size?: string) => {
         setState(prev => {
@@ -112,7 +122,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         if (item === 'カップ') {
             if (correctItem.sizeDependent) {
                 return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
-                    // If the value is null, it means this size doesn't exist for this product
                     if (value === null) return true;
                     const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
                     return selectedCupForSize?.attributes?.subType === value;
@@ -123,7 +132,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
 
         if (item === "エスプレッソ" && correctItem.sizeDependent) {
             return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
-                // If the value is null, it means this size doesn't exist for this product
                 if (value === null) return true;
                 return selectedItem.attributes && selectedItem.attributes[size] === value;
             });
@@ -157,7 +165,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     }, [state.selectedItems, correctAnswer]);
 
     const handleSubmit = useCallback(() => {
-        setSubmitted(true);
         const score = correctAnswer.filter(answer => isCorrect(answer.item)).length;
         onSubmit(score);
     }, [correctAnswer, isCorrect, onSubmit]);
@@ -177,7 +184,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         handleHotCupTypeSelection,
     };
 
-    // 製品のカテゴリに基づいて適切な材料カテゴリを選択
     const categories = product.category === 'hot' ? hotCategories :
         product.category === 'ice' ? iceCategories :
             foodCategories;

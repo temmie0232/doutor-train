@@ -56,6 +56,7 @@ export interface MaterialSelectorProps {
     correctAnswer: QuizAnswerItem[];
     product: Product;
     onSubmit: (score: number) => void;
+    submitted: boolean;
 }
 
 export interface QuizResultProps {
@@ -63,6 +64,7 @@ export interface QuizResultProps {
     correctAnswer: QuizAnswerItem[];
     productName: string;
     answerChecked: boolean;
+    onNextQuestion: () => void;  // 新しく追加したプロパティ
 }
 
 export interface ProductImageProps {
