@@ -1,34 +1,37 @@
-export type Difficulty = 1 | 2 | 3 | 4;
-export type Grade = 1 | 2 | 3 | 4;
-
 export interface Card {
     id: string;
     question: string;
-    answer: string;
-    difficulty: Difficulty;
+    correctAnswers: number;
+    userAnswers: number;
+    isNew: boolean;
     nextReviewDate: Date;
-    reviewCount: number;
-    correctCount: number;
-    lastReviewGrade?: Grade;
-    interval: number; // in days
     lastReviewDate: Date;
-    lowGradeCount: number; // Count of grades 1 and 2
+    correctCount: number;
+    interval: number;
+    difficulty: number;
+    reviewCount: number;  // Added this line
+    reviewHistory: {
+        date: Date;
+        score: number;
+        selfEvaluation?: number;
+    }[];
 }
 
-export interface StudySession {
-    newCardsStudied: number;
-    reviewCardsStudied: number;
-    date: Date;
-}
-
-export interface UserProgress {
-    masteredCards: number;
-    totalCards: number;
-    studySessions: StudySession[];
-}
+export type Grade = 1 | 2 | 3 | 4;
 
 export interface StudySessionConfig {
     maxNewCardsPerDay: number;
     maxReviewCardsPerDay: number;
-    newCardPriority: number; // Number of new cards to study before switching to review cards
+}
+
+export interface ProgressData {
+    totalCards: number;
+    masteredCards: number;
+    newCardsCount: number;
+    reviewCardsCount: number;
+    scoreHistory: { date: string; score: number }[];
+    averageScores: { date: string; averageScore: number }[];
+    streakDays: number;
+    weeklyCardCounts: { [week: string]: number };
+    monthlyCardCounts: { [month: string]: number };
 }

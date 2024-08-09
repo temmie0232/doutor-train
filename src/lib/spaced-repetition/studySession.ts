@@ -1,34 +1,28 @@
-import { Card, Grade, StudySessionConfig } from './types';
-import { CardManager } from './cardManager';
+import SpacedRepetitionSystem from './spacedRepetitionSystem';
+import { Card, Grade, StudySessionConfig, ProgressData } from './types';
 
 export class StudySession {
-    private cardManager: CardManager;
-    private config: StudySessionConfig;
+    private srs: SpacedRepetitionSystem;
 
     constructor(cards: Card[], config: StudySessionConfig) {
-        this.config = config;
-        this.cardManager = new CardManager(cards, config);
+        this.srs = new SpacedRepetitionSystem(config);
+        cards.forEach(card => this.srs.addNewCard(card));
     }
 
-    public getNextCard(): Card | null {
-        // Prioritize new cards until we reach the daily limit
-        if (this.cardManager.getTodayNewCardCount() < this.config.maxNewCardsPerDay) {
-            const newCard = this.cardManager.getNextNewCard();
-            if (newCard) {
-                return newCard;
-            }
-        }
 
-        // If no new cards or we've reached the limit, get a review card
-        return this.cardManager.getNextReviewCard();
+    public getNextCard(): Card | null {
+        return this.srs.getNextCard();
     }
 
     public answerNewCard(card: Card, isCorrect: boolean): Card {
-        return this.cardManager.answerNewCard(card, isCorrect);
+        const userAnswers = isCorrect ? card.correctAnswers : 0;
+        this.srs.submitAnswer(card, userAnswers);
+        return card;
     }
 
     public answerReviewCard(card: Card, grade: Grade): Card {
-        return this.cardManager.answerReviewCard(card, grade);
+        this.srs.submitSelfEvaluation(card, grade);
+        return card;
     }
 
     public getSessionState(): {
@@ -38,14 +32,22 @@ export class StudySession {
         totalReviewCards: number;
     } {
         return {
-            newCardsStudied: this.cardManager.getTodayNewCardCount(),
-            reviewCardsStudied: this.cardManager.getTodayReviewCardCount(),
-            totalNewCards: this.cardManager.getNewCardCount(),
-            totalReviewCards: this.cardManager.getReviewCardCount(),
+            newCardsStudied: this.srs.getTodayNewCardCount(),
+            reviewCardsStudied: this.srs.getTodayReviewCardCount(),
+            totalNewCards: this.srs.getNewCardCount(),
+            totalReviewCards: this.srs.getReviewCardCount(),
         };
     }
 
     public restoreSession(savedState: any): void {
-        this.cardManager.restoreState(savedState);
+        this.srs.restoreState(savedState);
+    }
+
+    public getProgressData(): ProgressData {
+        return this.srs.getProgressData();
+    }
+
+    public updateConfig(newConfig: StudySessionConfig): void {
+        this.srs.updateConfig(newConfig);
     }
 }
