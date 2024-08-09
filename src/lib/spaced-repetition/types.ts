@@ -1,6 +1,7 @@
 export interface Card {
     id: string;
     question: string;
+    answer: string;
     correctAnswers: number;
     userAnswers: number;
     isNew: boolean;
@@ -9,14 +10,13 @@ export interface Card {
     correctCount: number;
     interval: number;
     difficulty: number;
-    reviewCount: number;  // Added this line
+    reviewCount: number;
     reviewHistory: {
         date: Date;
         score: number;
         selfEvaluation?: number;
     }[];
 }
-
 export type Grade = 1 | 2 | 3 | 4;
 
 export interface StudySessionConfig {

@@ -236,6 +236,9 @@ class SpacedRepetitionSystem {
     submitAnswer(card: Card, userAnswers: number) {
         card.userAnswers = userAnswers;
         const score = userAnswers / card.correctAnswers;
+        if (!card.reviewHistory) {
+            card.reviewHistory = [];
+        }
         card.reviewHistory.push({ date: new Date(), score });
 
         if (score === 1) {

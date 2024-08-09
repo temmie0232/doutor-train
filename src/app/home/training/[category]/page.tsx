@@ -57,13 +57,16 @@ const TrainingQuizPage: React.FC<TrainingQuizPageProps> = ({ params }) => {
                             id: product.name,
                             question: product.name,
                             answer: JSON.stringify(getQuizAnswerByProduct(product)),
-                            difficulty: 2, // Default difficulty
+                            correctAnswers: result ? result.totalQuestions : 0,
+                            userAnswers: result ? result.score : 0,
+                            isNew: !result,
+                            difficulty: 2,
                             nextReviewDate: new Date(),
                             reviewCount: result ? 1 : 0,
                             correctCount: result ? result.score : 0,
                             interval: 1,
                             lastReviewDate: result ? result.lastAttemptDate : new Date(),
-                            lowGradeCount: 0,
+                            reviewHistory: result ? [{ date: result.lastAttemptDate, score: result.score / result.totalQuestions }] : []
                         };
                     });
 
@@ -76,7 +79,6 @@ const TrainingQuizPage: React.FC<TrainingQuizPageProps> = ({ params }) => {
                 const sessionConfig = {
                     maxNewCardsPerDay: 3,
                     maxReviewCardsPerDay: 20,
-                    newCardPriority: 3,
                 };
 
                 const savedSession = await getStudySession(user.uid);
