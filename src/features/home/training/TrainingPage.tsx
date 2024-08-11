@@ -6,17 +6,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/components/ui/dialog";
 import { productData, Product } from '@/data/productData';
 import { getUserProgress } from '@/lib/spaced-repetition';
 import { Timestamp } from 'firebase/firestore';
+import ReviewInfoDialog from './ReviewInfoDialog';
 
 interface CardDetails {
     productId: string;
@@ -66,40 +59,11 @@ const TrainingPage: React.FC = () => {
         router.push(`/home/training/${category}`);
     };
 
-    const CardDetailsDialog = () => (
-        <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-            <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>全カテゴリーカード詳細</DialogTitle>
-                </DialogHeader>
-                <DialogDescription>
-                    {['hot', 'ice', 'food'].map((cat) => (
-                        <div key={cat} className="mb-4">
-                            <h3 className="text-lg font-semibold mb-2">{cat === 'hot' ? 'ホット' : cat === 'ice' ? 'アイス' : 'フード'}</h3>
-                            <ul className="space-y-1">
-                                {cardDetails
-                                    .filter(card => card.category === cat)
-                                    .map((card) => (
-                                        <li key={card.productId} className="flex justify-between items-center text-sm">
-                                            <span className="w-1/3 truncate">{card.productId}</span>
-                                            <span className="w-1/4 text-center">{card.isNew ? '新規' : '復習'}</span>
-                                            <span className="w-1/3 text-right">
-                                                {Math.ceil((card.dueDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}日後
-                                                ({card.dueDate.toLocaleDateString()})
-                                            </span>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                        </div>
-                    ))}
-                </DialogDescription>
-                <DialogFooter>
-                    <Button onClick={() => setShowDetailsDialog(false)}>閉じる</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
+    const getNextDueDays = (dueDate: Date): number => {
+        const now = new Date();
+        const diffTime = dueDate.getTime() - now.getTime();
+        return Math.ceil(diffTime / (1000 * 3600 * 24));
+    };
 
     return (
         <Layout>
@@ -125,7 +89,12 @@ const TrainingPage: React.FC = () => {
                         詳細を確認
                     </Button>
                 </div>
-                <CardDetailsDialog />
+                <ReviewInfoDialog
+                    isOpen={showDetailsDialog}
+                    onClose={() => setShowDetailsDialog(false)}
+                    cardDetails={cardDetails}
+                    getNextDueDays={getNextDueDays}
+                />
             </div>
         </Layout>
     );
