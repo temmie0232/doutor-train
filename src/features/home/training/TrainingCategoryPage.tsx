@@ -149,7 +149,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                     </Button>
                                     <Separator className="my-4" />
                                     <h4 className="text-lg font-semibold mt-4">あなたの理解度は？</h4>
-                                    {['全くわからない', '難しい', '今回は正解', '楽勝'].map((label, index) => (
+                                    {['完全に忘れていた', '思い出すのに苦労した', '少し努力して思い出し正解(100%)', '完璧に覚えていた'].map((label, index) => (
                                         <Button key={index} onClick={() => handleRating(index + 1)} className="w-full max-w-xs">
                                             {label}
                                         </Button>

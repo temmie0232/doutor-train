@@ -1,7 +1,7 @@
-// lib/spaced-repetition.ts
-
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, Timestamp } from 'firebase/firestore';
 import { Product, productData } from '@/data/productData';
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+
+const db = getFirestore();
 
 interface CardData {
     productId: string;
@@ -13,8 +13,6 @@ interface CardData {
 interface UserProgress {
     cards: { [productId: string]: CardData };
 }
-
-const db = getFirestore();
 
 export async function getUserProgress(userId: string): Promise<UserProgress> {
     const userDoc = await getDoc(doc(db, 'userProgress', userId));
@@ -48,20 +46,36 @@ export async function updateUserProgress(userId: string, productId: string, qual
         dueDate: new Date()
     };
 
-    // SM-2 algorithm
-    if (quality >= 3) {
-        if (card.interval === 0) {
-            card.interval = 1;
-        } else if (card.interval === 1) {
-            card.interval = 6;
-        } else {
-            card.interval = Math.round(card.interval * card.easeFactor);
-        }
-    } else {
-        card.interval = 0;
+    switch (quality) {
+        case 1:
+            card.interval = 0;
+            break;
+        case 2:
+            card.interval = Math.max(1, Math.floor(card.interval * 0.5));
+            break;
+        case 3:
+            if (card.interval === 0) {
+                card.interval = 1;
+            } else if (card.interval === 1) {
+                card.interval = 3;
+            } else {
+                card.interval = Math.round(card.interval * card.easeFactor);
+            }
+            break;
+        case 4:
+            if (card.interval === 0) {
+                card.interval = 2;
+            } else if (card.interval === 1) {
+                card.interval = 4;
+            } else {
+                card.interval = Math.round(card.interval * card.easeFactor * 1.2);
+            }
+            break;
     }
 
-    card.easeFactor = Math.max(1.3, card.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+    const easeDelta = 0.1 - (4 - quality) * (0.08 + (4 - quality) * 0.02);
+    card.easeFactor = Math.max(1.3, Math.min(2.5, card.easeFactor + easeDelta));
+
     card.dueDate = new Date(Date.now() + card.interval * 24 * 60 * 60 * 1000);
 
     userProgress.cards[productId] = card;
