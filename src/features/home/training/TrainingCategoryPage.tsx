@@ -3,9 +3,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { productData, Product } from '@/data/productData';
+import { Separator } from "@/components/ui/separator";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { productData, Product, QuizAnswerItem } from '@/data/productData';
 import ProductImage from '@/features/home/manual/product/quiz/ProductImage';
 import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelector';
+import InstructionCarousel from '@/features/home/manual/product/quiz/InstructionCarousel';
 import { getUserProgress, updateUserProgress, getNextDueCard } from '@/lib/spaced-repetition';
 
 interface TrainingCategoryPageProps {
@@ -17,6 +25,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const [submitted, setSubmitted] = useState(false);
     const [score, setScore] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [showInstructions, setShowInstructions] = useState(false);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -39,6 +48,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         }
         setSubmitted(false);
         setScore(0);
+        setShowInstructions(false);
         setLoading(false);
     };
 
@@ -51,6 +61,24 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         if (!user || !currentProduct) return;
         await updateUserProgress(user.uid, currentProduct.name, rating);
         loadNextCard();
+    };
+
+    const formatAnswer = (answer: QuizAnswerItem): string => {
+        let result = answer.item;
+        if (answer.attributes) {
+            result += ` (${Object.entries(answer.attributes).map(([key, value]) => `${key}: ${value}`).join(', ')})`;
+        }
+        if (answer.sizeDependent) {
+            result += ` (${Object.entries(answer.sizeDependent).filter(([_, value]) => value !== null).map(([size, value]) => `${size}: ${value}`).join(', ')})`;
+        }
+        if (answer.quantity) {
+            if (typeof answer.quantity === 'number') {
+                result += ` (数量: ${answer.quantity})`;
+            } else {
+                result += ` (${Object.entries(answer.quantity).filter(([_, count]) => count !== 0).map(([size, count]) => `${size}: ${count}`).join(', ')})`;
+            }
+        }
+        return result;
     };
 
     if (loading) {
@@ -102,11 +130,27 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                             submitted={submitted}
                         />
                         {submitted && (
-                            <div className="mt-4">
-                                <h3 className="text-xl font-bold mb-2">あなたの理解度は？</h3>
-                                <div className="flex justify-between">
+                            <div className="mt-8">
+                                <h3 className="text-xl font-bold mb-4 text-center">結果</h3>
+                                <p className="text-center mb-4">
+                                    スコア: {score} / {currentProduct.quizAnswers.length} ({Math.round(score / currentProduct.quizAnswers.length * 100)}%)
+                                </p>
+                                <div className="mb-4">
+                                    <h4 className="text-lg font-semibold mb-2">正解:</h4>
+                                    <ul className="list-disc list-inside">
+                                        {currentProduct.quizAnswers.map((answer, index) => (
+                                            <li key={index}>{formatAnswer(answer)}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className="flex flex-col items-center space-y-4">
+                                    <Button onClick={() => setShowInstructions(true)}>
+                                        作り方を確認する
+                                    </Button>
+                                    <Separator className="my-4" />
+                                    <h4 className="text-lg font-semibold mt-4">あなたの理解度は？</h4>
                                     {['全くわからない', '難しい', '今回は正解', '楽勝'].map((label, index) => (
-                                        <Button key={index} onClick={() => handleRating(index + 1)}>
+                                        <Button key={index} onClick={() => handleRating(index + 1)} className="w-full max-w-xs">
                                             {label}
                                         </Button>
                                     ))}
@@ -116,6 +160,17 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                     </CardContent>
                 </Card>
             </div>
+            <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+                <DialogContent className="max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>{currentProduct.name}の作り方</DialogTitle>
+                    </DialogHeader>
+                    <InstructionCarousel
+                        productName={currentProduct.name}
+                        instructions={currentProduct.instructions}
+                    />
+                </DialogContent>
+            </Dialog>
         </Layout>
     );
 };
