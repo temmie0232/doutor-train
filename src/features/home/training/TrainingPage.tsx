@@ -10,13 +10,7 @@ import { productData, Product } from '@/data/productData';
 import { getUserProgress } from '@/lib/spaced-repetition';
 import { Timestamp } from 'firebase/firestore';
 import ReviewInfoDialog from './ReviewInfoDialog';
-
-interface CardDetails {
-    productId: string;
-    category: 'hot' | 'ice' | 'food';
-    isNew: boolean;
-    dueDate: Date;
-}
+import { CardDetails } from '@/types/types';
 
 const TrainingPage: React.FC = () => {
     const router = useRouter();
@@ -46,11 +40,12 @@ const TrainingPage: React.FC = () => {
     const loadCardDetails = async () => {
         if (!user) return;
         const progress = await getUserProgress(user.uid);
-        const details = productData.map(product => ({
+        const details: CardDetails[] = productData.map(product => ({
             productId: product.name,
             category: product.category as 'hot' | 'ice' | 'food',
             isNew: progress.cards[product.name]?.isNew ?? true,
-            dueDate: convertToDate(progress.cards[product.name]?.dueDate ?? new Date())
+            dueDate: convertToDate(progress.cards[product.name]?.dueDate ?? new Date()),
+            easeFactor: progress.cards[product.name]?.easeFactor ?? 2.5
         }));
         setCardDetails(details);
     };

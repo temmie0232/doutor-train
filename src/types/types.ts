@@ -148,3 +148,11 @@ export interface WhippedCreamOptionProps {
 export interface EspressoOptionProps {
     product: Product;
 }
+
+export interface CardDetails {
+    productId: string;
+    category: 'hot' | 'ice' | 'food';
+    isNew: boolean;
+    dueDate: Date;
+    easeFactor: number;
+}
