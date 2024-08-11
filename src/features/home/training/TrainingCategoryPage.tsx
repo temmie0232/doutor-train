@@ -8,7 +8,11 @@ import ProductImage from '@/features/home/manual/product/quiz/ProductImage';
 import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelector';
 import { getUserProgress, updateUserProgress, getNextDueCard } from '@/lib/spaced-repetition';
 
-const TrainingCategoryPage: React.FC = () => {
+interface TrainingCategoryPageProps {
+    category: 'hot' | 'ice' | 'food';
+}
+
+const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category }) => {
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
     const [submitted, setSubmitted] = useState(false);
     const [score, setScore] = useState(0);
@@ -19,15 +23,16 @@ const TrainingCategoryPage: React.FC = () => {
         if (user) {
             loadNextCard();
         }
-    }, [user]);
+    }, [user, category]);
 
     const loadNextCard = async () => {
         if (!user) return;
         setLoading(true);
         const progress = await getUserProgress(user.uid);
-        const nextProductId = getNextDueCard(progress);
+        const filteredProducts = productData.filter(p => p.category === category);
+        const nextProductId = getNextDueCard(progress, filteredProducts);
         if (nextProductId) {
-            const product = productData.find(p => p.name === nextProductId);
+            const product = filteredProducts.find(p => p.name === nextProductId);
             setCurrentProduct(product || null);
         } else {
             setCurrentProduct(null);
@@ -62,20 +67,17 @@ const TrainingCategoryPage: React.FC = () => {
         return (
             <Layout>
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">問題の読み込みに失敗しました</h1>
-                    <p>しばらくしてからもう一度お試しください。</p>
-                    <Button onClick={loadNextCard} className="mt-4">再読み込み</Button>
-                </div>
-            </Layout>
-        );
-    }
-
-    if (!currentProduct) {
-        return (
-            <Layout>
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-4">全ての復習が完了しました！</h1>
-                    <p>新しい復習カードが利用可能になるまでお待ちください。</p>
+                    <h1 className="text-2xl font-bold mb-4">
+                        {loading ? "問題の読み込みに失敗しました" : "全ての復習が完了しました！"}
+                    </h1>
+                    <p>
+                        {loading
+                            ? "しばらくしてからもう一度お試しください。"
+                            : "新しい復習カードが利用可能になるまでお待ちください。"}
+                    </p>
+                    {loading && (
+                        <Button onClick={loadNextCard} className="mt-4">再読み込み</Button>
+                    )}
                 </div>
             </Layout>
         );

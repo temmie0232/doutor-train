@@ -1,6 +1,6 @@
 // lib/spaced-repetition.ts
 
-import { productData } from '@/data/productData';
+import { Product, productData } from '@/data/productData';
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 interface CardData {
@@ -68,12 +68,17 @@ export async function updateUserProgress(userId: string, productId: string, qual
     await setDoc(doc(db, 'userProgress', userId), userProgress);
 }
 
-export function getNextDueCard(userProgress: UserProgress): string | null {
+export function getNextDueCard(userProgress: UserProgress, filteredProducts: Product[]): string | null {
     const now = new Date();
-    const dueCards = Object.values(userProgress.cards).filter(card => card.dueDate <= now);
+    const dueCards = Object.values(userProgress.cards)
+        .filter(card => filteredProducts.some(p => p.name === card.productId))
+        .filter(card => card.dueDate <= now);
+
     if (dueCards.length === 0) {
-        // すべてのカードが未来の日付の場合、最も早い日付のカードを返す
-        const earliestCard = Object.values(userProgress.cards).reduce((a, b) => a.dueDate < b.dueDate ? a : b);
+        // すべてのカードが未来の日付の場合、フィルタリングされた商品の中で最も早い日付のカードを返す
+        const earliestCard = Object.values(userProgress.cards)
+            .filter(card => filteredProducts.some(p => p.name === card.productId))
+            .reduce((a, b) => a.dueDate < b.dueDate ? a : b);
         return earliestCard.productId;
     }
     return dueCards.reduce((a, b) => a.dueDate < b.dueDate ? a : b).productId;
