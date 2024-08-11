@@ -1,5 +1,6 @@
 import { Product } from '@/data/productData';
 import { User } from 'firebase/auth';
+import { Timestamp } from 'firebase/firestore';
 
 // AuthContext types
 export interface AuthContextType {
@@ -155,4 +156,8 @@ export interface CardDetails {
     isNew: boolean;
     dueDate: Date;
     easeFactor: number;
+    learningHistory: {
+        date: Timestamp;
+        score: number;
+    }[];
 }

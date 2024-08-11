@@ -3,12 +3,18 @@ import { Product, productData } from '@/data/productData';
 
 const db = getFirestore();
 
+interface LearningHistoryItem {
+    date: Date | Timestamp;
+    score: number;
+}
+
 interface CardData {
     productId: string;
     easeFactor: number;
     interval: number;
     dueDate: Date | Timestamp;
     isNew: boolean;
+    learningHistory: LearningHistoryItem[];
 }
 
 interface UserProgress {
@@ -37,7 +43,8 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
                 easeFactor: 2.5,
                 interval: 0,
                 dueDate: new Date(),
-                isNew: true
+                isNew: true,
+                learningHistory: []
             };
         });
         const initialProgress: UserProgress = {
@@ -56,7 +63,11 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
         cards: Object.entries(data.cards).reduce((acc, [key, card]) => {
             acc[key] = {
                 ...card,
-                dueDate: convertFirestoreTimestampToDate(card.dueDate)
+                dueDate: convertFirestoreTimestampToDate(card.dueDate),
+                learningHistory: card.learningHistory.map(item => ({
+                    date: convertFirestoreTimestampToDate(item.date),
+                    score: item.score
+                }))
             };
             return acc;
         }, {} as { [productId: string]: CardData })
@@ -72,9 +83,11 @@ export async function updateUserProgress(userId: string, productId: string, qual
         easeFactor: 2.5,
         interval: 0,
         dueDate: new Date(),
-        isNew: true
+        isNew: true,
+        learningHistory: []
     };
 
+    // Update interval based on quality
     switch (quality) {
         case 1:
             card.interval = 0;
@@ -102,15 +115,23 @@ export async function updateUserProgress(userId: string, productId: string, qual
             break;
     }
 
+    // Update ease factor
     const easeDelta = 0.1 - (4 - quality) * (0.08 + (4 - quality) * 0.02);
     card.easeFactor = Math.max(1.3, Math.min(2.5, card.easeFactor + easeDelta));
 
+    // Update due date
     card.dueDate = new Date(Date.now() + card.interval * 24 * 60 * 60 * 1000);
     card.isNew = false;
 
+    // Add new learning history item
+    card.learningHistory.push({
+        date: new Date(),
+        score: quality * 25 // Convert quality (1-4) to a score (25-100)
+    });
+
     userProgress.cards[productId] = card;
 
-    // 新規カードのカウントを更新
+    // Update new card count
     const today = new Date();
     const lastNewCardDate = convertFirestoreTimestampToDate(userProgress.lastNewCardDate);
     if (today.toDateString() !== lastNewCardDate.toDateString()) {
@@ -120,13 +141,18 @@ export async function updateUserProgress(userId: string, productId: string, qual
 
     userProgress.newCardCount = updatedNewCardCount;
 
+    // Update Firestore
     await setDoc(doc(db, 'userProgress', userId), {
         ...userProgress,
         lastNewCardDate: Timestamp.fromDate(convertFirestoreTimestampToDate(userProgress.lastNewCardDate)),
         cards: Object.entries(userProgress.cards).reduce((acc, [key, card]) => {
             acc[key] = {
                 ...card,
-                dueDate: Timestamp.fromDate(convertFirestoreTimestampToDate(card.dueDate))
+                dueDate: Timestamp.fromDate(convertFirestoreTimestampToDate(card.dueDate)),
+                learningHistory: card.learningHistory.map(item => ({
+                    date: Timestamp.fromDate(convertFirestoreTimestampToDate(item.date)),
+                    score: item.score
+                }))
             };
             return acc;
         }, {} as { [productId: string]: CardData })

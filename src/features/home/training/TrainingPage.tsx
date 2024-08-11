@@ -45,8 +45,13 @@ const TrainingPage: React.FC = () => {
             category: product.category as 'hot' | 'ice' | 'food',
             isNew: progress.cards[product.name]?.isNew ?? true,
             dueDate: convertToDate(progress.cards[product.name]?.dueDate ?? new Date()),
-            easeFactor: progress.cards[product.name]?.easeFactor ?? 2.5
+            easeFactor: progress.cards[product.name]?.easeFactor ?? 2.5,
+            learningHistory: progress.cards[product.name]?.learningHistory?.map(item => ({
+                date: item.date instanceof Timestamp ? item.date : Timestamp.fromDate(item.date),
+                score: item.score
+            })) ?? []
         }));
+
         setCardDetails(details);
     };
 

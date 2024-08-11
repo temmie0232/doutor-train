@@ -2,6 +2,7 @@ import React from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { CardDetails } from '@/types/types';
+import LearningHistoryChart from './LearningHistoryChart';
 
 interface CardDetailDrawerProps {
     isOpen: boolean;
@@ -25,13 +26,20 @@ const CardDetailDrawer: React.FC<CardDetailDrawerProps> = ({
         <Drawer open={isOpen} onOpenChange={onClose}>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle className='mt-3'>{card.productId}</DrawerTitle>
-                    <DrawerDescription className='my-5'>
+                    <DrawerTitle className='my-3'>{card.productId}</DrawerTitle>
+                    <DrawerDescription>
                         <p>状態: {card.isNew ? '新規' : '復習'}</p>
                         <p>次回の出題日: {getNextDueDays(card.dueDate)}日後 ({nextDueDate.toLocaleDateString()})</p>
                         <p>難易度係数: {card.easeFactor.toFixed(2)}</p>
                     </DrawerDescription>
                 </DrawerHeader>
+                <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2">学習履歴</h3>
+                    <LearningHistoryChart history={card.learningHistory?.map(item => ({
+                        date: item.date.toDate(),
+                        score: item.score
+                    })) || []} />
+                </div>
             </DrawerContent>
         </Drawer>
     );
