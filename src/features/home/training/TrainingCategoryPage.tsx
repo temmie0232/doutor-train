@@ -1,4 +1,7 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +21,7 @@ import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelect
 import { InstructionDialog } from '@/features/home/manual/product/quiz/InstructionCarousel';
 import { getUserProgress, updateUserProgress, getNextDueCard } from '@/lib/spaced-repetition';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
+import { useToast } from "@/components/ui/use-toast";
 
 interface TrainingCategoryPageProps {
     category: 'hot' | 'ice' | 'food';
@@ -31,7 +35,10 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const [showInstructions, setShowInstructions] = useState(false);
     const [showInfoDialog, setShowInfoDialog] = useState(false);
     const [currentCardData, setCurrentCardData] = useState<{ easeFactor: number, interval: number } | null>(null);
+    const [newCardCount, setNewCardCount] = useState(0);
     const { user } = useAuth();
+    const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         if (user) {
@@ -44,11 +51,12 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         setLoading(true);
         const progress = await getUserProgress(user.uid);
         const filteredProducts = productData.filter(p => p.category === category);
-        const nextProductId = getNextDueCard(progress, filteredProducts);
-        if (nextProductId) {
-            const product = filteredProducts.find(p => p.name === nextProductId);
+        const { productId, updatedNewCardCount } = getNextDueCard(progress, filteredProducts, category);
+        setNewCardCount(updatedNewCardCount);
+        if (productId) {
+            const product = filteredProducts.find(p => p.name === productId);
             setCurrentProduct(product || null);
-            setCurrentCardData(progress.cards[nextProductId]);
+            setCurrentCardData(progress.cards[productId]);
         } else {
             setCurrentProduct(null);
             setCurrentCardData(null);
@@ -66,8 +74,16 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
 
     const handleRating = async (rating: number) => {
         if (!user || !currentProduct) return;
-        await updateUserProgress(user.uid, currentProduct.name, rating);
-        loadNextCard();
+        await updateUserProgress(user.uid, currentProduct.name, rating, newCardCount);
+        if (newCardCount >= 6) {
+            toast({
+                title: "本日の新規カード学習が完了しました",
+                description: "明日また新しいカードが利用可能になります。",
+            });
+            router.push('/home');
+        } else {
+            loadNextCard();
+        }
     };
 
     const getNextDueDays = (rating: number) => {
@@ -130,12 +146,12 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
             <Layout>
                 <div className="text-center">
                     <h1 className="text-2xl font-bold mb-4">
-                        {loading ? "問題の読み込みに失敗しました" : "全ての復習が完了しました！"}
+                        {loading ? "問題の読み込みに失敗しました" : "本日の学習は完了しました！"}
                     </h1>
                     <p>
                         {loading
                             ? "しばらくしてからもう一度お試しください。"
-                            : "新しい復習カードが利用可能になるまでお待ちください。"}
+                            : "明日また新しいカードが利用可能になります。"}
                     </p>
                     {loading && (
                         <Button onClick={loadNextCard} className="mt-4">再読み込み</Button>
@@ -192,7 +208,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                             <IoIosInformationCircleOutline size={24} />
                                         </Button>
                                     </div>
-                                    {['完全に忘れていた', '思い出すのに苦労した', '少し努力して思い出し正解(100%)', '完璧に覚えていた'].map((label, index) => (
+                                    {['完全に忘れていた', '思い出すのに苦労した', '少し努力して思い出した', '完璧に覚えていた'].map((label, index) => (
                                         <Button
                                             key={index}
                                             onClick={() => handleRating(index + 1)}
@@ -228,7 +244,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                         <ul className="list-disc list-inside mb-4">
                             <li>完全に忘れていた: {getNextDueDays(1)}日後</li>
                             <li>思い出すのに苦労した: {getNextDueDays(2)}日後</li>
-                            <li>少し努力して思い出し正解(100%): {getNextDueDays(3)}日後</li>
+                            <li>少し努力して思い出した: {getNextDueDays(3)}日後</li>
                             <li>完璧に覚えていた: {getNextDueDays(4)}日後</li>
                         </ul>
                         <p>※ これらの日数は、カードの現在の状態に基づいて計算されています。</p>

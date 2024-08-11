@@ -7,11 +7,21 @@ interface CardData {
     productId: string;
     easeFactor: number;
     interval: number;
-    dueDate: Date;
+    dueDate: Date | Timestamp;
+    isNew: boolean;
 }
 
 interface UserProgress {
     cards: { [productId: string]: CardData };
+    lastNewCardDate: Date | Timestamp;
+    newCardCount: number;
+}
+
+function convertFirestoreTimestampToDate(timestamp: Date | Timestamp): Date {
+    if (timestamp instanceof Timestamp) {
+        return timestamp.toDate();
+    }
+    return timestamp;
 }
 
 export async function getUserProgress(userId: string): Promise<UserProgress> {
@@ -26,24 +36,43 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
                 productId: product.name,
                 easeFactor: 2.5,
                 interval: 0,
-                dueDate: new Date()
+                dueDate: new Date(),
+                isNew: true
             };
         });
-        const initialProgress: UserProgress = { cards: initialCards };
+        const initialProgress: UserProgress = {
+            cards: initialCards,
+            lastNewCardDate: new Date(),
+            newCardCount: 0
+        };
         await setDoc(doc(db, 'userProgress', userId), initialProgress);
         return initialProgress;
     }
 
-    return data;
+    // Firestore のタイムスタンプを Date オブジェクトに変換
+    const convertedData: UserProgress = {
+        ...data,
+        lastNewCardDate: convertFirestoreTimestampToDate(data.lastNewCardDate),
+        cards: Object.entries(data.cards).reduce((acc, [key, card]) => {
+            acc[key] = {
+                ...card,
+                dueDate: convertFirestoreTimestampToDate(card.dueDate)
+            };
+            return acc;
+        }, {} as { [productId: string]: CardData })
+    };
+
+    return convertedData;
 }
 
-export async function updateUserProgress(userId: string, productId: string, quality: number): Promise<void> {
+export async function updateUserProgress(userId: string, productId: string, quality: number, updatedNewCardCount: number): Promise<void> {
     const userProgress = await getUserProgress(userId);
     const card = userProgress.cards[productId] || {
         productId,
         easeFactor: 2.5,
         interval: 0,
-        dueDate: new Date()
+        dueDate: new Date(),
+        isNew: true
     };
 
     switch (quality) {
@@ -77,23 +106,77 @@ export async function updateUserProgress(userId: string, productId: string, qual
     card.easeFactor = Math.max(1.3, Math.min(2.5, card.easeFactor + easeDelta));
 
     card.dueDate = new Date(Date.now() + card.interval * 24 * 60 * 60 * 1000);
+    card.isNew = false;
 
     userProgress.cards[productId] = card;
-    await setDoc(doc(db, 'userProgress', userId), userProgress);
+
+    // 新規カードのカウントを更新
+    const today = new Date();
+    const lastNewCardDate = convertFirestoreTimestampToDate(userProgress.lastNewCardDate);
+    if (today.toDateString() !== lastNewCardDate.toDateString()) {
+        userProgress.lastNewCardDate = today;
+        userProgress.newCardCount = 0;
+    }
+
+    userProgress.newCardCount = updatedNewCardCount;
+
+    await setDoc(doc(db, 'userProgress', userId), {
+        ...userProgress,
+        lastNewCardDate: Timestamp.fromDate(convertFirestoreTimestampToDate(userProgress.lastNewCardDate)),
+        cards: Object.entries(userProgress.cards).reduce((acc, [key, card]) => {
+            acc[key] = {
+                ...card,
+                dueDate: Timestamp.fromDate(convertFirestoreTimestampToDate(card.dueDate))
+            };
+            return acc;
+        }, {} as { [productId: string]: CardData })
+    });
 }
 
-export function getNextDueCard(userProgress: UserProgress, filteredProducts: Product[]): string | null {
+export function getNextDueCard(userProgress: UserProgress, filteredProducts: Product[], category: string): { productId: string | null; updatedNewCardCount: number } {
     const now = new Date();
     const dueCards = Object.values(userProgress.cards)
-        .filter(card => filteredProducts.some(p => p.name === card.productId))
-        .filter(card => card.dueDate <= now);
+        .filter(card => filteredProducts.some(p => p.name === card.productId && p.category === category))
+        .filter(card => convertFirestoreTimestampToDate(card.dueDate) <= now || card.isNew);
+
+    // 新規カードの数を制限
+    const today = new Date();
+    const lastNewCardDate = convertFirestoreTimestampToDate(userProgress.lastNewCardDate);
+    if (today.toDateString() !== lastNewCardDate.toDateString()) {
+        userProgress.lastNewCardDate = today;
+        userProgress.newCardCount = 0;
+    }
+
+    let newCardCount = userProgress.newCardCount;
 
     if (dueCards.length === 0) {
         // すべてのカードが未来の日付の場合、フィルタリングされた商品の中で最も早い日付のカードを返す
         const earliestCard = Object.values(userProgress.cards)
-            .filter(card => filteredProducts.some(p => p.name === card.productId))
-            .reduce((a, b) => a.dueDate < b.dueDate ? a : b);
-        return earliestCard.productId;
+            .filter(card => filteredProducts.some(p => p.name === card.productId && p.category === category))
+            .reduce((a, b) => convertFirestoreTimestampToDate(a.dueDate) < convertFirestoreTimestampToDate(b.dueDate) ? a : b);
+        return { productId: earliestCard.productId, updatedNewCardCount: newCardCount };
     }
-    return dueCards.reduce((a, b) => a.dueDate < b.dueDate ? a : b).productId;
+
+    // 新規カードと復習カードを分離
+    const newCards = dueCards.filter(card => card.isNew);
+    const reviewCards = dueCards.filter(card => !card.isNew);
+
+    // 新規カードの数が6未満の場合、新規カードを優先
+    if (newCardCount < 6 && newCards.length > 0) {
+        newCardCount++;
+        return { productId: newCards[0].productId, updatedNewCardCount: newCardCount };
+    }
+
+    // 復習カードがある場合、最も早い期日のカードを返す
+    if (reviewCards.length > 0) {
+        return {
+            productId: reviewCards.reduce((a, b) =>
+                convertFirestoreTimestampToDate(a.dueDate) < convertFirestoreTimestampToDate(b.dueDate) ? a : b
+            ).productId,
+            updatedNewCardCount: newCardCount
+        };
+    }
+
+    // 新規カードの制限に達した場合や復習カードがない場合はnullを返す
+    return { productId: null, updatedNewCardCount: newCardCount };
 }
