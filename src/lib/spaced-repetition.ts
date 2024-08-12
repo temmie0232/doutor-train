@@ -19,8 +19,17 @@ interface CardData {
 
 interface UserProgress {
     cards: { [productId: string]: CardData };
-    lastNewCardDate: Date | Timestamp;
-    newCardCount: number;
+    lastStudyDate: Date | Timestamp;
+    newCardCount: {
+        hot: number;
+        ice: number;
+        food: number;
+    };
+    totalCardCount: {
+        hot: number;
+        ice: number;
+        food: number;
+    };
 }
 
 function convertFirestoreTimestampToDate(timestamp: Date | Timestamp): Date {
@@ -49,8 +58,17 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
         });
         const initialProgress: UserProgress = {
             cards: initialCards,
-            lastNewCardDate: new Date(),
-            newCardCount: 0
+            lastStudyDate: new Date(),
+            newCardCount: {
+                hot: 0,
+                ice: 0,
+                food: 0
+            },
+            totalCardCount: {
+                hot: 0,
+                ice: 0,
+                food: 0
+            }
         };
         await setDoc(doc(db, 'userProgress', userId), initialProgress);
         return initialProgress;
@@ -59,7 +77,7 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
     // Firestore のタイムスタンプを Date オブジェクトに変換
     const convertedData: UserProgress = {
         ...data,
-        lastNewCardDate: convertFirestoreTimestampToDate(data.lastNewCardDate),
+        lastStudyDate: convertFirestoreTimestampToDate(data.lastStudyDate),
         cards: Object.entries(data.cards).reduce((acc, [key, card]) => {
             acc[key] = {
                 ...card,
@@ -76,7 +94,7 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
     return convertedData;
 }
 
-export async function updateUserProgress(userId: string, productId: string, quality: number, updatedNewCardCount: number): Promise<void> {
+export async function updateUserProgress(userId: string, productId: string, quality: number, category: 'hot' | 'ice' | 'food'): Promise<void> {
     const userProgress = await getUserProgress(userId);
     const card = userProgress.cards[productId] || {
         productId,
@@ -131,20 +149,24 @@ export async function updateUserProgress(userId: string, productId: string, qual
 
     userProgress.cards[productId] = card;
 
-    // Update new card count
+    // Update new card count and total card count
     const today = new Date();
-    const lastNewCardDate = convertFirestoreTimestampToDate(userProgress.lastNewCardDate);
-    if (today.toDateString() !== lastNewCardDate.toDateString()) {
-        userProgress.lastNewCardDate = today;
-        userProgress.newCardCount = 0;
+    const lastStudyDate = convertFirestoreTimestampToDate(userProgress.lastStudyDate);
+    if (today.toDateString() !== lastStudyDate.toDateString()) {
+        userProgress.lastStudyDate = today;
+        userProgress.newCardCount = { hot: 0, ice: 0, food: 0 };
+        userProgress.totalCardCount = { hot: 0, ice: 0, food: 0 };
     }
 
-    userProgress.newCardCount = updatedNewCardCount;
+    if (card.isNew) {
+        userProgress.newCardCount[category]++;
+    }
+    userProgress.totalCardCount[category]++;
 
     // Update Firestore
     await setDoc(doc(db, 'userProgress', userId), {
         ...userProgress,
-        lastNewCardDate: Timestamp.fromDate(convertFirestoreTimestampToDate(userProgress.lastNewCardDate)),
+        lastStudyDate: Timestamp.fromDate(convertFirestoreTimestampToDate(userProgress.lastStudyDate)),
         cards: Object.entries(userProgress.cards).reduce((acc, [key, card]) => {
             acc[key] = {
                 ...card,
@@ -159,28 +181,27 @@ export async function updateUserProgress(userId: string, productId: string, qual
     });
 }
 
-export function getNextDueCard(userProgress: UserProgress, filteredProducts: Product[], category: string): { productId: string | null; updatedNewCardCount: number } {
+export function getNextDueCard(userProgress: UserProgress, filteredProducts: Product[], category: 'hot' | 'ice' | 'food'): { productId: string | null; updatedNewCardCount: number; updatedTotalCardCount: number } {
     const now = new Date();
     const dueCards = Object.values(userProgress.cards)
         .filter(card => filteredProducts.some(p => p.name === card.productId && p.category === category))
         .filter(card => convertFirestoreTimestampToDate(card.dueDate) <= now || card.isNew);
 
-    // 新規カードの数を制限
+    // 新規カードと総カード数の制限をチェック
     const today = new Date();
-    const lastNewCardDate = convertFirestoreTimestampToDate(userProgress.lastNewCardDate);
-    if (today.toDateString() !== lastNewCardDate.toDateString()) {
-        userProgress.lastNewCardDate = today;
-        userProgress.newCardCount = 0;
+    const lastStudyDate = convertFirestoreTimestampToDate(userProgress.lastStudyDate);
+    if (today.toDateString() !== lastStudyDate.toDateString()) {
+        userProgress.lastStudyDate = today;
+        userProgress.newCardCount = { hot: 0, ice: 0, food: 0 };
+        userProgress.totalCardCount = { hot: 0, ice: 0, food: 0 };
     }
 
-    let newCardCount = userProgress.newCardCount;
+    let newCardCount = userProgress.newCardCount[category];
+    let totalCardCount = userProgress.totalCardCount[category];
 
-    if (dueCards.length === 0) {
-        // すべてのカードが未来の日付の場合、フィルタリングされた商品の中で最も早い日付のカードを返す
-        const earliestCard = Object.values(userProgress.cards)
-            .filter(card => filteredProducts.some(p => p.name === card.productId && p.category === category))
-            .reduce((a, b) => convertFirestoreTimestampToDate(a.dueDate) < convertFirestoreTimestampToDate(b.dueDate) ? a : b);
-        return { productId: earliestCard.productId, updatedNewCardCount: newCardCount };
+    // 総カード数が6に達した場合、nullを返す
+    if (totalCardCount >= 6) {
+        return { productId: null, updatedNewCardCount: newCardCount, updatedTotalCardCount: totalCardCount };
     }
 
     // 新規カードと復習カードを分離
@@ -190,19 +211,22 @@ export function getNextDueCard(userProgress: UserProgress, filteredProducts: Pro
     // 新規カードの数が6未満の場合、新規カードを優先
     if (newCardCount < 6 && newCards.length > 0) {
         newCardCount++;
-        return { productId: newCards[0].productId, updatedNewCardCount: newCardCount };
+        totalCardCount++;
+        return { productId: newCards[0].productId, updatedNewCardCount: newCardCount, updatedTotalCardCount: totalCardCount };
     }
 
     // 復習カードがある場合、最も早い期日のカードを返す
     if (reviewCards.length > 0) {
+        totalCardCount++;
         return {
             productId: reviewCards.reduce((a, b) =>
                 convertFirestoreTimestampToDate(a.dueDate) < convertFirestoreTimestampToDate(b.dueDate) ? a : b
             ).productId,
-            updatedNewCardCount: newCardCount
+            updatedNewCardCount: newCardCount,
+            updatedTotalCardCount: totalCardCount
         };
     }
 
     // 新規カードの制限に達した場合や復習カードがない場合はnullを返す
-    return { productId: null, updatedNewCardCount: newCardCount };
+    return { productId: null, updatedNewCardCount: newCardCount, updatedTotalCardCount: totalCardCount };
 }

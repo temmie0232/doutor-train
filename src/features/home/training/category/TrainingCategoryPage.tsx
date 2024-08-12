@@ -36,6 +36,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const [showInfoDialog, setShowInfoDialog] = useState(false);
     const [currentCardData, setCurrentCardData] = useState<{ easeFactor: number, interval: number } | null>(null);
     const [newCardCount, setNewCardCount] = useState(0);
+    const [totalCardCount, setTotalCardCount] = useState(0);
     const { user } = useAuth();
     const router = useRouter();
     const { toast } = useToast();
@@ -51,12 +52,13 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         setLoading(true);
         const progress = await getUserProgress(user.uid);
         const filteredProducts = productData.filter(p => p.category === category);
-        const { productId, updatedNewCardCount } = getNextDueCard(progress, filteredProducts, category);
-        setNewCardCount(updatedNewCardCount);
+        const { productId, updatedNewCardCount, updatedTotalCardCount } = getNextDueCard(progress, filteredProducts, category);
         if (productId) {
             const product = filteredProducts.find(p => p.name === productId);
             setCurrentProduct(product || null);
             setCurrentCardData(progress.cards[productId]);
+            setNewCardCount(updatedNewCardCount);
+            setTotalCardCount(updatedTotalCardCount);
         } else {
             setCurrentProduct(null);
             setCurrentCardData(null);
@@ -74,13 +76,13 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
 
     const handleRating = async (rating: number) => {
         if (!user || !currentProduct) return;
-        await updateUserProgress(user.uid, currentProduct.name, rating, newCardCount);
-        if (newCardCount >= 6) {
+        await updateUserProgress(user.uid, currentProduct.name, rating, category);
+        if (totalCardCount >= 6) {
             toast({
-                title: "本日の新規カード学習が完了しました",
+                title: `${category}カテゴリーの本日の学習が完了しました`,
                 description: "明日また新しいカードが利用可能になります。",
             });
-            router.push('/home');
+            router.push('/home/training');
         } else {
             loadNextCard();
         }
