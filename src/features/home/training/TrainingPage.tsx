@@ -11,7 +11,7 @@ import { getUserProgress, getNextDueCard } from '@/lib/spaced-repetition';
 import { Timestamp } from 'firebase/firestore';
 import ReviewInfoDialog from './ReviewInfoDialog';
 import ReviewQueueDialog from './ReviewQueueDialog';
-import { CardDetails } from '@/types/types';
+import { CardDetails, UserProgress } from '@/types/types';
 
 type CategoryQueue = {
     newCards: CardDetails[];
@@ -84,21 +84,29 @@ const TrainingPage: React.FC = () => {
 
         setCategoryQueues(queues);
     };
-
-    const getCategoryQueue = (details: CardDetails[], category: 'hot' | 'ice' | 'food', progress: any): CategoryQueue => {
+    const getCategoryQueue = (details: CardDetails[], category: 'hot' | 'ice' | 'food', progress: UserProgress): CategoryQueue => {
         const filteredProducts = productData.filter(p => p.category === category);
         const newCards: CardDetails[] = [];
         const reviewCards: CardDetails[] = [];
+        const selectedProductIds = new Set<string>();
 
         for (let i = 0; i < 6; i++) {
-            const { productId } = getNextDueCard(progress, filteredProducts, category);
-            if (productId) {
+            const { productId, updatedNewCardCount, updatedTotalCardCount } = getNextDueCard(progress, filteredProducts, category);
+            if (productId && !selectedProductIds.has(productId)) {
                 const card = details.find(d => d.productId === productId);
                 if (card) {
                     if (card.isNew) {
                         newCards.push(card);
                     } else {
                         reviewCards.push(card);
+                    }
+                    selectedProductIds.add(productId);
+
+                    // Update progress
+                    progress.newCardCount[category] = updatedNewCardCount;
+                    progress.totalCardCount[category] = updatedTotalCardCount;
+                    if (progress.cards[productId]) {
+                        progress.cards[productId].isNew = false;
                     }
                 }
             }

@@ -161,3 +161,32 @@ export interface CardDetails {
         score: number;
     }[];
 }
+
+export interface LearningHistoryItem {
+    date: Date | Timestamp;
+    score: number;
+}
+
+export interface CardData {
+    productId: string;
+    easeFactor: number;
+    interval: number;
+    dueDate: Date | Timestamp;
+    isNew: boolean;
+    learningHistory: LearningHistoryItem[];
+}
+
+export interface UserProgress {
+    cards: { [productId: string]: CardData };
+    lastStudyDate: Date | Timestamp;
+    newCardCount: {
+        hot: number;
+        ice: number;
+        food: number;
+    };
+    totalCardCount: {
+        hot: number;
+        ice: number;
+        food: number;
+    };
+}

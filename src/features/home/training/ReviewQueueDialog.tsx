@@ -47,15 +47,15 @@ const ReviewQueueDialog: React.FC<ReviewQueueDialogProps> = ({
                 <ScrollArea className="h-[60vh] mt-4 pr-4">
                     <h3 className="font-semibold mb-2">新規カード ({newCards.length})</h3>
                     <ul className="list-disc pl-5 mb-4">
-                        {newCards.map((card) => (
-                            <li key={card.productId}>{card.productId}</li>
+                        {newCards.map((card, index) => (
+                            <li key={`new-${card.productId}-${index}`}>{card.productId}</li>
                         ))}
                     </ul>
                     <Separator className="my-4" />
                     <h3 className="font-semibold mb-2">復習カード ({reviewCards.length})</h3>
                     <ul className="list-disc pl-5">
-                        {reviewCards.map((card) => (
-                            <li key={card.productId}>{card.productId}</li>
+                        {reviewCards.map((card, index) => (
+                            <li key={`review-${card.productId}-${index}`}>{card.productId}</li>
                         ))}
                     </ul>
                 </ScrollArea>

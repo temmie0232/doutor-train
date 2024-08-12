@@ -187,15 +187,6 @@ export function getNextDueCard(userProgress: UserProgress, filteredProducts: Pro
         .filter(card => filteredProducts.some(p => p.name === card.productId && p.category === category))
         .filter(card => convertFirestoreTimestampToDate(card.dueDate) <= now || card.isNew);
 
-    // 新規カードと総カード数の制限をチェック
-    const today = new Date();
-    const lastStudyDate = convertFirestoreTimestampToDate(userProgress.lastStudyDate);
-    if (today.toDateString() !== lastStudyDate.toDateString()) {
-        userProgress.lastStudyDate = today;
-        userProgress.newCardCount = { hot: 0, ice: 0, food: 0 };
-        userProgress.totalCardCount = { hot: 0, ice: 0, food: 0 };
-    }
-
     let newCardCount = userProgress.newCardCount[category];
     let totalCardCount = userProgress.totalCardCount[category];
 
