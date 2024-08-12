@@ -7,7 +7,7 @@ export interface QuizAnswerItem {
 }
 
 export interface Product {
-    id: number;
+    productID: number;
     name: string;
     image: string;
     category: 'ice' | 'hot' | 'food';
@@ -21,7 +21,7 @@ export interface Product {
 
 export const productData: Product[] = [
     {
-        id: 1,
+        productID: 1,
         name: 'ブレンドコーヒー',
         image: '/images/1.jpg',
         category: 'hot',
@@ -44,7 +44,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 2,
+        productID: 2,
         name: 'アメリカンコーヒー',
         image: '/images/2.jpg',
         category: 'hot',
@@ -69,7 +69,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 3,
+        productID: 3,
         name: 'ティー',
         image: '/images/3.jpg',
         category: 'hot',
@@ -94,7 +94,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 4,
+        productID: 4,
         name: 'ルイボスティー',
         image: '/images/4.jpg',
         category: 'hot',
@@ -119,7 +119,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 5,
+        productID: 5,
         name: 'ロイヤルミルクティー',
         image: '/images/5.jpg',
         category: 'hot',
@@ -151,7 +151,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 6,
+        productID: 6,
         name: '豆乳ティー',
         image: '/images/6.jpg',
         category: 'hot',
@@ -183,7 +183,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 7,
+        productID: 7,
         name: 'ホットミルク',
         image: '/images/7.jpg',
         category: 'hot',
@@ -211,7 +211,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 8,
+        productID: 8,
         name: 'ホット豆乳',
         image: '/images/8.jpg',
         category: 'hot',
@@ -239,7 +239,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 9,
+        productID: 9,
         name: 'ココア',
         image: '/images/9.jpg',
         category: 'hot',
@@ -275,7 +275,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 10,
+        productID: 10,
         name: '沖縄黒糖ラテ',
         image: '/images/10.jpg',
         category: 'hot',
@@ -313,7 +313,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 11,
+        productID: 11,
         name: 'ハニーカフェ・オレ',
         image: '/images/11.jpg',
         category: 'hot',
@@ -347,7 +347,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 12,
+        productID: 12,
         name: '宇治抹茶ラテ',
         image: '/images/12.jpg',
         category: 'hot',
@@ -379,7 +379,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 13,
+        productID: 13,
         name: '宇治抹茶豆乳ラテ',
         image: '/images/13.jpg',
         category: 'hot',
@@ -411,7 +411,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 14,
+        productID: 14,
         name: '豆乳ラテ',
         image: '/images/14.jpg',
         category: 'hot',
@@ -448,7 +448,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 15,
+        productID: 15,
         name: 'カフェモカ',
         image: '/images/15.jpg',
         category: 'hot',
@@ -495,7 +495,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 16,
+        productID: 16,
         name: 'エスプレッソコーヒー',
         image: '/images/16.jpg',
         category: 'hot',
@@ -523,7 +523,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 17,
+        productID: 17,
         name: 'カフェ・ラテ',
         image: '/images/17.jpg',
         category: 'hot',
@@ -546,7 +546,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 18,
+        productID: 18,
         name: '本日のコーヒー',
         image: '/images/18.jpg',
         category: 'hot',
@@ -569,7 +569,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 19,
+        productID: 19,
         name: 'アイスコーヒー',
         image: '/images/19.jpg',
         category: 'ice',
@@ -586,7 +586,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 20,
+        productID: 20,
         name: 'アイスティー',
         image: '/images/20.jpg',
         category: 'ice',
@@ -603,7 +603,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 21,
+        productID: 21,
         name: 'アイスルイボスティー',
         image: '/images/21.jpg',
         category: 'ice',
@@ -620,7 +620,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 22,
+        productID: 22,
         name: 'みかんジュース',
         image: '/images/22.jpg',
         category: 'ice',
@@ -637,7 +637,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 23,
+        productID: 23,
         name: 'リンゴジュース',
         image: '/images/23.jpg',
         category: 'ice',
@@ -654,7 +654,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 24,
+        productID: 24,
         name: 'アイスミルク',
         image: '/images/24.jpg',
         category: 'ice',
@@ -665,7 +665,7 @@ export const productData: Product[] = [
         quizAnswers: []
     },
     {
-        id: 25,
+        productID: 25,
         name: 'アイス豆乳',
         image: '/images/25.jpg',
         category: 'ice',
@@ -676,7 +676,7 @@ export const productData: Product[] = [
         quizAnswers: []
     },
     {
-        id: 26,
+        productID: 26,
         name: 'アイスココア',
         image: '/images/26.jpg',
         category: 'ice',
@@ -701,7 +701,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 27,
+        productID: 27,
         name: 'アイス沖縄黒糖ラテ',
         image: '/images/27.jpg',
         category: 'ice',
@@ -728,7 +728,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 28,
+        productID: 28,
         name: 'アイス豆乳ラテ',
         image: '/images/28.jpg',
         category: 'ice',
@@ -747,7 +747,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 29,
+        productID: 29,
         name: 'アイスハニーカフェ・オレ',
         image: '/images/29.jpg',
         category: 'ice',
@@ -766,7 +766,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 30,
+        productID: 30,
         name: 'アイス宇治抹茶ラテ',
         image: '/images/30.jpg',
         category: 'ice',
@@ -787,7 +787,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 31,
+        productID: 31,
         name: 'アイス宇治抹茶豆乳ラテ',
         image: '/images/31.jpg',
         category: 'ice',
@@ -808,7 +808,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 32,
+        productID: 32,
         name: 'アイスカフェ・ラテ',
         image: '/images/32.jpg',
         category: 'ice',
@@ -834,7 +834,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 33,
+        productID: 33,
         name: 'プレミアムアイスカフェ・ラテ',
         image: '/images/33.jpg',
         category: 'ice',
@@ -851,7 +851,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 34,
+        productID: 34,
         name: 'アイスロイヤルミルクティー',
         image: '/images/34.jpg',
         category: 'ice',
@@ -870,7 +870,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 35,
+        productID: 35,
         name: 'アイス豆乳ティー',
         image: '/images/35.jpg',
         category: 'ice',
@@ -889,7 +889,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 36,
+        productID: 36,
         name: 'アイスカフェ・モカ',
         image: '/images/36.jpg',
         category: 'ice',
@@ -924,7 +924,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 37,
+        productID: 37,
         name: 'タピオカ黒糖ミルク',
         image: '/images/37.jpg',
         category: 'ice',
@@ -946,7 +946,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 38,
+        productID: 38,
         name: 'タピオカロイヤルミルクティー',
         image: '/images/38.jpg',
         category: 'ice',
@@ -968,7 +968,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 39,
+        productID: 39,
         name: 'レモンスカッシュ',
         image: '/images/39.jpg',
         category: 'ice',
@@ -988,7 +988,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 40,
+        productID: 40,
         name: 'グリーンレモティーハニー',
         image: '/images/40.jpg',
         category: 'ice',
@@ -1008,7 +1008,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 41,
+        productID: 41,
         name: 'レモンヨーグルン',
         image: '/images/41.jpg',
         category: 'ice',
@@ -1031,7 +1031,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 42,
+        productID: 42,
         name: 'マスカットヨーグルン',
         image: '/images/42.jpg',
         category: 'ice',
@@ -1054,7 +1054,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 43,
+        productID: 43,
         name: 'ミラノサンドA',
         image: '/images/43.jpg',
         category: 'food',
@@ -1077,7 +1077,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 44,
+        productID: 44,
         name: 'チーズ in ミラノサンドA',
         image: '/images/44.jpg',
         category: 'food',
@@ -1102,7 +1102,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 45,
+        productID: 45,
         name: 'ミラノサンドB',
         image: '/images/45.jpg',
         category: 'food',
@@ -1137,7 +1137,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 46,
+        productID: 46,
         name: '牛カルビ',
         image: '/images/46.jpg',
         category: 'food',
@@ -1165,7 +1165,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 47,
+        productID: 47,
         name: '牛カルビ 濃厚チーズソース',
         image: '/images/47.jpg',
         category: 'food',
@@ -1195,7 +1195,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 48,
+        productID: 48,
         name: '牛カルビ ねぎ塩レモン',
         image: '/images/48.jpg',
         category: 'food',
@@ -1227,7 +1227,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 49,
+        productID: 49,
         name: '牛カルビ ハラペーニョ',
         image: '/images/49.jpg',
         category: 'food',
@@ -1257,7 +1257,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 50,
+        productID: 50,
         name: 'トースト',
         image: '/images/50.jpg',
         category: 'food',
@@ -1275,7 +1275,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 51,
+        productID: 51,
         name: 'チーズトースト',
         image: '/images/51.jpg',
         category: 'food',
@@ -1294,7 +1294,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 52,
+        productID: 52,
         name: 'ツナチェダーチーズ',
         image: '/images/52.jpg',
         category: 'food',
@@ -1318,7 +1318,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 53,
+        productID: 53,
         name: 'カルツォーネ',
         image: '/images/53.jpg',
         category: 'food',
@@ -1336,7 +1336,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 54,
+        productID: 54,
         name: 'ジャーマンドック',
         image: '/images/54.jpg',
         category: 'food',
@@ -1354,7 +1354,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 55,
+        productID: 55,
         name: 'レタスドッグ',
         image: '/images/55.jpg',
         category: 'food',
@@ -1375,7 +1375,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 56,
+        productID: 56,
         name: '全粒粉サンド',
         image: '/images/56.jpg',
         category: 'food',
@@ -1404,7 +1404,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 57,
+        productID: 57,
         name: 'フレンチトースト ハニーメープル',
         image: '/images/57.jpg',
         category: 'food',
@@ -1428,7 +1428,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        id: 58,
+        productID: 58,
         name: 'フレンチトースト チョコバナナ',
         image: '/images/58.jpg',
         category: 'food',
