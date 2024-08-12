@@ -561,10 +561,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "アイスコーヒー" }
         ]
@@ -581,10 +577,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までアイスティーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "アイスティー" }
         ]
@@ -601,10 +593,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までアイスルイボスティーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "アイスルイボスティー" }
         ]
@@ -621,10 +609,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までみかんジュースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "みかんジュース" }
         ]
@@ -641,10 +625,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までリンゴジュースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "リンゴジュース" }
         ]
@@ -682,10 +662,6 @@ export const productData: Product[] = [
             ["ホイップを上にのせる", "M : 1回", "L : 2回"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "ココアベース" },
             {
@@ -711,10 +687,6 @@ export const productData: Product[] = [
             ["黒糖ソースを格子状にかける", "※Mを描くように二回"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "黒糖ベース" },
             {
@@ -740,10 +712,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "豆乳" },
             { item: "アイスコーヒー" }
@@ -762,10 +730,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "ハニーベース" },
             { item: "アイスコーヒー" }
@@ -785,10 +749,6 @@ export const productData: Product[] = [
             ["抹茶パウダーをかける", "0.1g"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "牛乳" },
             { item: "抹茶ベース" },
@@ -809,10 +769,6 @@ export const productData: Product[] = [
             ["抹茶パウダーをかける", "0.1g"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "豆乳" },
             { item: "抹茶ベース" },
@@ -833,10 +789,6 @@ export const productData: Product[] = [
             ["エスプレッソを入れる"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "牛乳" },
             {
@@ -860,10 +812,6 @@ export const productData: Product[] = [
             ["プレミアムアイスラテを抽出"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "プレミアムアイスラテ" }
         ]
@@ -881,10 +829,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上までミルクを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "牛乳" },
             { item: "アイスロイヤルミルクティー用ベース" }
@@ -903,10 +847,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上まで豆乳を注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "豆乳" },
             { item: "アイスロイヤルミルクティー用ベース" }
@@ -928,10 +868,6 @@ export const productData: Product[] = [
             ["カプチーノパウダーをかける", "0.1g"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "ココアベース" },
             {
@@ -965,10 +901,6 @@ export const productData: Product[] = [
             ["ヘラで色が均一になるまで混ぜる"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "タピオカ" },
             { item: "黒糖ソース" },
@@ -990,10 +922,6 @@ export const productData: Product[] = [
             ["ヘラで色が均一になるまで混ぜる"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "タピオカ" },
             { item: "牛乳" },
@@ -1014,10 +942,6 @@ export const productData: Product[] = [
             ["ジンジャーエール(缶)を１本分カップに入れる"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "レモン（袋入り）" },
             { item: "ジンジャーエール" }
@@ -1037,10 +961,6 @@ export const productData: Product[] = [
             ["店内 : ", "ロゴ上まで緑茶ベースを注ぐ", "---------", "テイクアウト : ", " 下から二番目のでっぱり"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "レモン（袋入り）" },
             { item: "緑茶ベース" }
@@ -1062,10 +982,6 @@ export const productData: Product[] = [
             ["ブレンダー内のヨーグルンをカップに移す"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "フローズンベース" },
             { item: "レモンソース" },
@@ -1088,10 +1004,6 @@ export const productData: Product[] = [
             ["ブレンダー内のヨーグルンをカップに移す"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "ice" }
-            },
             { item: "氷" },
             { item: "フローズンベース" },
             { item: "マスカットソース" },
