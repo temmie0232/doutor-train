@@ -13,15 +13,6 @@ import ReviewInfoDialog from './ReviewInfoDialog';
 import ReviewQueueDialog from './ReviewQueueDialog';
 import { CardDetails, UserProgress } from '@/types/types';
 
-type CategoryQueue = {
-    newCards: CardDetails[];
-    reviewCards: CardDetails[];
-};
-
-type CategoryQueues = {
-    [key in 'hot' | 'ice' | 'food']: CategoryQueue;
-};
-
 const TrainingPage: React.FC = () => {
     const router = useRouter();
     const { user } = useAuth();
@@ -29,11 +20,7 @@ const TrainingPage: React.FC = () => {
     const [showQueueDialog, setShowQueueDialog] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<'hot' | 'ice' | 'food'>('hot');
     const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
-    const [categoryQueues, setCategoryQueues] = useState<CategoryQueues>({
-        hot: { newCards: [], reviewCards: [] },
-        ice: { newCards: [], reviewCards: [] },
-        food: { newCards: [], reviewCards: [] }
-    });
+    const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
     const categories = [
         { title: "ホットドリンク編", description: "ホットドリンクの作り方を中心に復習します。", category: "hot" as const },
@@ -57,62 +44,21 @@ const TrainingPage: React.FC = () => {
     const loadCardDetails = async () => {
         if (!user) return;
         const progress = await getUserProgress(user.uid);
-        const details: CardDetails[] = productData.map(product => ({
-            productId: product.name,
-            category: product.category as 'hot' | 'ice' | 'food',
-            isNew: progress.cards[product.name]?.isNew ?? true,
-            dueDate: convertToDate(progress.cards[product.name]?.dueDate ?? new Date()),
-            easeFactor: progress.cards[product.name]?.easeFactor ?? 2.5,
-            learningHistory: progress.cards[product.name]?.learningHistory?.map(item => ({
+        setUserProgress(progress);
+        const details: CardDetails[] = Object.entries(progress.cards).map(([productId, card]) => ({
+            productId,
+            category: productData.find(p => p.productID.toString() === productId)?.category as 'hot' | 'ice' | 'food',
+            isNew: card.isNew,
+            dueDate: convertToDate(card.dueDate),
+            easeFactor: card.easeFactor,
+            interval: card.interval,
+            correctCount: card.correctCount,
+            learningHistory: card.learningHistory.map(item => ({
                 date: item.date instanceof Timestamp ? item.date : Timestamp.fromDate(item.date),
                 score: item.score
-            })) ?? []
+            }))
         }));
-
         setCardDetails(details);
-
-        const queues: CategoryQueues = {
-            hot: { newCards: [], reviewCards: [] },
-            ice: { newCards: [], reviewCards: [] },
-            food: { newCards: [], reviewCards: [] }
-        };
-
-        for (const category of ['hot', 'ice', 'food'] as const) {
-            const { newCards, reviewCards } = getCategoryQueue(details, category, progress);
-            queues[category] = { newCards, reviewCards };
-        }
-
-        setCategoryQueues(queues);
-    };
-    const getCategoryQueue = (details: CardDetails[], category: 'hot' | 'ice' | 'food', progress: UserProgress): CategoryQueue => {
-        const filteredProducts = productData.filter(p => p.category === category);
-        const newCards: CardDetails[] = [];
-        const reviewCards: CardDetails[] = [];
-        const selectedProductIds = new Set<string>();
-
-        for (let i = 0; i < 6; i++) {
-            const { productId, updatedNewCardCount, updatedTotalCardCount } = getNextDueCard(progress, filteredProducts, category);
-            if (productId && !selectedProductIds.has(productId)) {
-                const card = details.find(d => d.productId === productId);
-                if (card) {
-                    if (card.isNew) {
-                        newCards.push(card);
-                    } else {
-                        reviewCards.push(card);
-                    }
-                    selectedProductIds.add(productId);
-
-                    // Update progress
-                    progress.newCardCount[category] = updatedNewCardCount;
-                    progress.totalCardCount[category] = updatedTotalCardCount;
-                    if (progress.cards[productId]) {
-                        progress.cards[productId].isNew = false;
-                    }
-                }
-            }
-        }
-
-        return { newCards, reviewCards };
     };
 
     const handleCategoryClick = (category: 'hot' | 'ice' | 'food') => {
@@ -128,6 +74,20 @@ const TrainingPage: React.FC = () => {
         const now = new Date();
         const diffTime = dueDate.getTime() - now.getTime();
         return Math.ceil(diffTime / (1000 * 3600 * 24));
+    };
+
+    const getCategoryQueue = (category: 'hot' | 'ice' | 'food') => {
+        if (!userProgress) return { newCards: [], reviewCards: [] };
+
+        const newCards = userProgress.newQueue
+            .map(id => cardDetails.find(card => card.productId === id && card.category === category))
+            .filter((card): card is CardDetails => card !== undefined);
+
+        const reviewCards = userProgress.reviewQueue
+            .map(id => cardDetails.find(card => card.productId === id && card.category === category))
+            .filter((card): card is CardDetails => card !== undefined);
+
+        return { newCards, reviewCards };
     };
 
     return (
@@ -170,8 +130,7 @@ const TrainingPage: React.FC = () => {
                     isOpen={showQueueDialog}
                     onClose={() => setShowQueueDialog(false)}
                     category={selectedCategory}
-                    newCards={categoryQueues[selectedCategory].newCards}
-                    reviewCards={categoryQueues[selectedCategory].reviewCards}
+                    queue={getCategoryQueue(selectedCategory)}
                 />
             </div>
         </Layout>

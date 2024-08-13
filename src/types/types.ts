@@ -156,6 +156,8 @@ export interface CardDetails {
     isNew: boolean;
     dueDate: Date;
     easeFactor: number;
+    interval: number;
+    correctCount: number;
     learningHistory: {
         date: Timestamp;
         score: number;
@@ -173,20 +175,13 @@ export interface CardData {
     interval: number;
     dueDate: Date | Timestamp;
     isNew: boolean;
+    correctCount: number;
     learningHistory: LearningHistoryItem[];
 }
 
 export interface UserProgress {
     cards: { [productId: string]: CardData };
     lastStudyDate: Date | Timestamp;
-    newCardCount: {
-        hot: number;
-        ice: number;
-        food: number;
-    };
-    totalCardCount: {
-        hot: number;
-        ice: number;
-        food: number;
-    };
+    newQueue: string[];
+    reviewQueue: string[];
 }

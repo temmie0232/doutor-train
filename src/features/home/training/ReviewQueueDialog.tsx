@@ -14,16 +14,17 @@ interface ReviewQueueDialogProps {
     isOpen: boolean;
     onClose: () => void;
     category: string;
-    newCards: CardDetails[];
-    reviewCards: CardDetails[];
+    queue: {
+        newCards: CardDetails[];
+        reviewCards: CardDetails[];
+    };
 }
 
 const ReviewQueueDialog: React.FC<ReviewQueueDialogProps> = ({
     isOpen,
     onClose,
     category,
-    newCards,
-    reviewCards
+    queue
 }) => {
     const getCategoryTitle = (cat: string) => {
         switch (cat) {
@@ -45,17 +46,27 @@ const ReviewQueueDialog: React.FC<ReviewQueueDialogProps> = ({
                     <DialogTitle>{getCategoryTitle(category)}の学習キュー</DialogTitle>
                 </DialogHeader>
                 <ScrollArea className="h-[60vh] mt-4 pr-4">
-                    <h3 className="font-semibold mb-2">新規カード ({newCards.length})</h3>
+                    <h3 className="font-semibold mb-2">新規カード ({queue.newCards.length})</h3>
                     <ul className="list-disc pl-5 mb-4">
-                        {newCards.map((card, index) => (
-                            <li key={`new-${card.productId}-${index}`}>{card.productId}</li>
+                        {queue.newCards.map((card, index) => (
+                            <li key={`new-${card.productId}-${index}`}>
+                                {card.productId}
+                                <span className="text-sm text-gray-500 ml-2">
+                                    (正解回数: {card.correctCount})
+                                </span>
+                            </li>
                         ))}
                     </ul>
                     <Separator className="my-4" />
-                    <h3 className="font-semibold mb-2">復習カード ({reviewCards.length})</h3>
+                    <h3 className="font-semibold mb-2">復習カード ({queue.reviewCards.length})</h3>
                     <ul className="list-disc pl-5">
-                        {reviewCards.map((card, index) => (
-                            <li key={`review-${card.productId}-${index}`}>{card.productId}</li>
+                        {queue.reviewCards.map((card, index) => (
+                            <li key={`review-${card.productId}-${index}`}>
+                                {card.productId}
+                                <span className="text-sm text-gray-500 ml-2">
+                                    (間隔: {card.interval}日, 難易度: {card.easeFactor.toFixed(2)})
+                                </span>
+                            </li>
                         ))}
                     </ul>
                 </ScrollArea>

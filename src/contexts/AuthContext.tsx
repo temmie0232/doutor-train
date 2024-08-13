@@ -1,11 +1,19 @@
-"use client";
-
+"use client"
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { User, UserCredential, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { saveUserName, getUserName } from '@/lib/firebase';
-import { AuthContextType } from '@/types/types';
 
+interface AuthContextType {
+    user: User | null;
+    loading: boolean;
+    signIn: (email: string, password: string) => Promise<UserCredential>;
+    signUp: (email: string, password: string) => Promise<UserCredential>;
+    logOut: () => Promise<void>;
+    signInWithGoogle: () => Promise<UserCredential>;
+    saveUserName: (name: string) => Promise<void>;
+    getUserName: () => Promise<string | null>;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -22,21 +30,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => unsubscribe();
     }, []);
 
-    const signIn = async (email: string, password: string) => {
-        await signInWithEmailAndPassword(auth, email, password);
+    const signIn = (email: string, password: string) => {
+        return signInWithEmailAndPassword(auth, email, password);
     };
 
-    const signUp = async (email: string, password: string) => {
-        await createUserWithEmailAndPassword(auth, email, password);
+    const signUp = (email: string, password: string) => {
+        return createUserWithEmailAndPassword(auth, email, password);
     };
 
-    const logOut = async () => {
-        await signOut(auth);
+    const logOut = () => {
+        return signOut(auth);
     };
 
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        return signInWithPopup(auth, provider);
     };
 
     const value = {

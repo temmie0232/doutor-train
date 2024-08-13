@@ -34,9 +34,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const [loading, setLoading] = useState(true);
     const [showInstructions, setShowInstructions] = useState(false);
     const [showInfoDialog, setShowInfoDialog] = useState(false);
-    const [currentCardData, setCurrentCardData] = useState<{ easeFactor: number, interval: number } | null>(null);
-    const [newCardCount, setNewCardCount] = useState(0);
-    const [totalCardCount, setTotalCardCount] = useState(0);
+    const [userProgress, setUserProgress] = useState<any>(null);
     const { user } = useAuth();
     const router = useRouter();
     const { toast } = useToast();
@@ -51,17 +49,17 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         if (!user) return;
         setLoading(true);
         const progress = await getUserProgress(user.uid);
-        const filteredProducts = productData.filter(p => p.category === category);
-        const { productId, updatedNewCardCount, updatedTotalCardCount } = getNextDueCard(progress, filteredProducts, category);
-        if (productId) {
-            const product = filteredProducts.find(p => p.name === productId);
-            setCurrentProduct(product || null);
-            setCurrentCardData(progress.cards[productId]);
-            setNewCardCount(updatedNewCardCount);
-            setTotalCardCount(updatedTotalCardCount);
+        setUserProgress(progress);
+        const nextProductId = getNextDueCard(progress);
+        if (nextProductId) {
+            const product = productData.find(p => p.productID.toString() === nextProductId);
+            if (product && product.category === category) {
+                setCurrentProduct(product);
+            } else {
+                setCurrentProduct(null);
+            }
         } else {
             setCurrentProduct(null);
-            setCurrentCardData(null);
         }
         setSubmitted(false);
         setScore(0);
@@ -76,43 +74,22 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
 
     const handleRating = async (rating: number) => {
         if (!user || !currentProduct) return;
-        await updateUserProgress(user.uid, currentProduct.name, rating, category);
-        if (totalCardCount >= 6) {
-            toast({
-                title: `${category}カテゴリーの本日の学習が完了しました`,
-                description: "明日また新しいカードが利用可能になります。",
-            });
-            router.push('/home/training');
-        } else {
-            loadNextCard();
-        }
+        await updateUserProgress(user.uid, currentProduct.productID.toString(), rating * 25); // Convert rating (1-4) to score (25-100)
+        loadNextCard();
     };
 
-    const getNextDueDays = (rating: number) => {
-        if (!currentCardData) return 0;
-        const { easeFactor } = currentCardData;
+    const getNextDueDays = (rating: number): number => {
+        if (!currentProduct || !userProgress) return 0;
+        const card = userProgress.cards[currentProduct.productID];
         let interval;
         switch (rating) {
-            case 1:
-                interval = 0;
-                break;
-            case 2:
-                interval = Math.max(1, Math.floor(currentCardData.interval * 0.5));
-                break;
-            case 3:
-                interval = currentCardData.interval === 0 ? 1 :
-                    currentCardData.interval === 1 ? 3 :
-                        Math.round(currentCardData.interval * easeFactor);
-                break;
-            case 4:
-                interval = currentCardData.interval === 0 ? 2 :
-                    currentCardData.interval === 1 ? 4 :
-                        Math.round(currentCardData.interval * easeFactor * 1.2);
-                break;
-            default:
-                interval = 0;
+            case 1: interval = 1; break;
+            case 2: interval = Math.max(1, Math.floor(card.interval * 0.5)); break;
+            case 3: interval = card.interval * card.easeFactor; break;
+            case 4: interval = card.interval * card.easeFactor * 1.3; break;
+            default: interval = 1;
         }
-        return interval;
+        return Math.round(interval);
     };
 
     const formatAnswer = (answer: QuizAnswerItem): string => {
@@ -148,16 +125,10 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
             <Layout>
                 <div className="text-center">
                     <h1 className="text-2xl font-bold mb-4">
-                        {loading ? "問題の読み込みに失敗しました" : "本日の学習は完了しました！"}
+                        本日の学習は完了しました！
                     </h1>
-                    <p>
-                        {loading
-                            ? "しばらくしてからもう一度お試しください。"
-                            : "明日また新しいカードが利用可能になります。"}
-                    </p>
-                    {loading && (
-                        <Button onClick={loadNextCard} className="mt-4">再読み込み</Button>
-                    )}
+                    <p>明日また新しいカードが利用可能になります。</p>
+                    <Button onClick={() => router.push('/home/training')} className="mt-4">トレーニングメニューに戻る</Button>
                 </div>
             </Layout>
         );
@@ -239,8 +210,8 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                     <DialogDescription>
                         <p className="mb-2">現在のカードの状態：</p>
                         <ul className="list-disc list-inside mb-4">
-                            <li>難易度係数: {currentCardData ? currentCardData.easeFactor.toFixed(2) : 'N/A'}</li>
-                            <li>前回の間隔: {currentCardData ? `${currentCardData.interval}日` : 'N/A'}</li>
+                            <li>難易度係数: {userProgress?.cards[currentProduct.productID]?.easeFactor.toFixed(2) || 'N/A'}</li>
+                            <li>前回の間隔: {userProgress?.cards[currentProduct.productID]?.interval || 'N/A'}日</li>
                         </ul>
                         <p className="mb-2">各評価に対する次回表示までの日数：</p>
                         <ul className="list-disc list-inside mb-4">
