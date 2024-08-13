@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -79,11 +78,11 @@ const TrainingPage: React.FC = () => {
     const getCategoryQueue = (category: 'hot' | 'ice' | 'food') => {
         if (!userProgress) return { newCards: [], reviewCards: [] };
 
-        const newCards = userProgress.newQueue
+        const newCards = (userProgress[`${category}NewQueue`] || [])
             .map(id => cardDetails.find(card => card.productId === id && card.category === category))
             .filter((card): card is CardDetails => card !== undefined);
 
-        const reviewCards = userProgress.reviewQueue
+        const reviewCards = (userProgress[`${category}ReviewQueue`] || [])
             .map(id => cardDetails.find(card => card.productId === id && card.category === category))
             .filter((card): card is CardDetails => card !== undefined);
 

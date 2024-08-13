@@ -1,8 +1,35 @@
 import { collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, Timestamp, runTransaction } from 'firebase/firestore';
 import { Product, productData } from '@/data/productData';
-import { CardData, UserProgress } from '@/types/types';
 
 const db = getFirestore();
+
+interface LearningHistoryItem {
+    date: Date | Timestamp;
+    score: number;
+}
+
+interface CardData {
+    productId: string;
+    easeFactor: number;
+    interval: number;
+    dueDate: Date | Timestamp;
+    isNew: boolean;
+    correctCount: number;
+    learningHistory: LearningHistoryItem[];
+}
+
+interface UserProgress {
+    cards: { [productId: string]: CardData };
+    lastStudyDate: Date | Timestamp;
+    hotNewQueue: string[];
+    hotReviewQueue: string[];
+    iceNewQueue: string[];
+    iceReviewQueue: string[];
+    foodNewQueue: string[];
+    foodReviewQueue: string[];
+}
+
+type Category = 'hot' | 'ice' | 'food';
 
 function initializeQueues(userProgress: UserProgress, allProducts: Product[]): UserProgress {
     console.log("Starting initializeQueues function");
@@ -14,80 +41,63 @@ function initializeQueues(userProgress: UserProgress, allProducts: Product[]): U
 
     let shouldInitialize = false;
 
-    if (!userProgress.lastQueueInitDate) {
-        console.log("No lastQueueInitDate found. Initializing queues.");
+    if (!userProgress.lastStudyDate) {
+        console.log("No lastStudyDate found. Setting to 2000-01-01 and initializing.");
+        userProgress.lastStudyDate = Timestamp.fromDate(new Date(2000, 0, 1));
         shouldInitialize = true;
     } else {
-        const lastInitDate = convertToDate(userProgress.lastQueueInitDate);
-        console.log("Last queue init date:", lastInitDate);
-        if (today > lastInitDate) {
-            console.log("Today is after last queue init date. Should initialize.");
+        const lastStudyDate = convertToDate(userProgress.lastStudyDate);
+        console.log("Last study date:", lastStudyDate);
+        if (today > lastStudyDate) {
+            console.log("Today is after last study date. Should initialize.");
             shouldInitialize = true;
         } else {
-            console.log("Queues already initialized today. Not reinitializing.");
+            console.log("Today is not after last study date. Should not initialize.");
         }
     }
 
     if (shouldInitialize) {
         console.log("Initializing queues");
 
-        // 新規キューの初期化（既存のキューを保持）
-        const existingNewCards = userProgress.newQueue.filter(id => userProgress.cards[id]?.isNew);
-        const newCards = allProducts.filter(p => !userProgress.cards[p.productID] || (userProgress.cards[p.productID].isNew && !existingNewCards.includes(p.productID.toString())));
-        const shuffledNewCards = shuffleArray(newCards.map(p => p.productID.toString()));
-        userProgress.newQueue = [...existingNewCards, ...shuffledNewCards].slice(0, 6);
+        const categories: Category[] = ['hot', 'ice', 'food'];
 
-        console.log("New cards in queue:", userProgress.newQueue);
+        categories.forEach(category => {
+            // Initialize new queue for each category
+            const newCards = allProducts
+                .filter(p => p.category === category && (!userProgress.cards[p.productID] || userProgress.cards[p.productID].isNew));
+            console.log(`Number of new ${category} cards:`, newCards.length);
+            const shuffledNewCards = shuffleArray(newCards.map(p => p.productID.toString()));
+            userProgress[`${category}NewQueue`] = shuffledNewCards.slice(0, 6);
 
-        // 復習キューの初期化（既存のキューを保持）
-        const existingReviewCards = userProgress.reviewQueue.filter(id => !userProgress.cards[id]?.isNew);
-        const dueReviewCards = Object.entries(userProgress.cards || {})
-            .filter(([id, card]) => !card.isNew && (!card.dueDate || convertToDate(card.dueDate) <= today) && !existingReviewCards.includes(id))
-            .map(([id, _]) => id);
-        const shuffledDueReviewCards = shuffleArray(dueReviewCards);
-        userProgress.reviewQueue = [...existingReviewCards, ...shuffledDueReviewCards].slice(0, 12);
+            console.log(`New ${category} cards added to new queue:`, userProgress[`${category}NewQueue`]);
 
-        console.log("Review cards in queue:", userProgress.reviewQueue);
+            // Initialize review queue for each category
+            const dueReviewCards = Object.entries(userProgress.cards || {})
+                .filter(([_, card]) => !card.isNew &&
+                    (!card.dueDate || convertToDate(card.dueDate) <= today) &&
+                    allProducts.find(p => p.productID.toString() === card.productId)?.category === category)
+                .map(([productId, _]) => productId);
+            console.log(`Number of due ${category} review cards:`, dueReviewCards.length);
+            const shuffledDueReviewCards = shuffleArray(dueReviewCards);
+            userProgress[`${category}ReviewQueue`] = shuffledDueReviewCards.slice(0, 12);
 
-        userProgress.lastQueueInitDate = Timestamp.fromDate(today);
+            console.log(`${category} review cards added to review queue:`, userProgress[`${category}ReviewQueue`]);
+        });
+
+        userProgress.lastStudyDate = Timestamp.fromDate(today);
+    } else {
+        console.log("Queues not initialized: Not a new day");
     }
 
-    if (!userProgress.newQueue) userProgress.newQueue = [];
-    if (!userProgress.reviewQueue) userProgress.reviewQueue = [];
+    // Ensure all queues exist
+    const categories: Category[] = ['hot', 'ice', 'food'];
+    categories.forEach(category => {
+        if (!userProgress[`${category}NewQueue`]) userProgress[`${category}NewQueue`] = [];
+        if (!userProgress[`${category}ReviewQueue`]) userProgress[`${category}ReviewQueue`] = [];
+    });
 
     console.log("Final userProgress:", JSON.stringify(userProgress, null, 2));
     return userProgress;
-}
-
-export async function initializeUserProgress(userId: string): Promise<void> {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday.setHours(0, 0, 0, 0);  // 前日の0:00に設定
-
-    const initialUserProgress: UserProgress = {
-        cards: {},
-        lastStudyDate: Timestamp.fromDate(yesterday),
-        lastQueueInitDate: Timestamp.fromDate(yesterday), // 新しく追加
-        newQueue: [],
-        reviewQueue: []
-    };
-
-    // すべての製品に対して初期カードデータを作成
-    productData.forEach(product => {
-        initialUserProgress.cards[product.productID] = {
-            productId: product.productID.toString(),
-            easeFactor: 2.5,
-            interval: 0,
-            dueDate: Timestamp.fromDate(new Date()),
-            isNew: true,
-            correctCount: 0,
-            learningHistory: []
-        };
-    });
-
-    // Firestoreにデータを保存
-    const userProgressRef = doc(db, 'userProgress', userId);
-    await setDoc(userProgressRef, initialUserProgress);
 }
 
 function convertFirestoreTimestampToDate(timestamp: Date | Timestamp): Date {
@@ -106,47 +116,54 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffled;
 }
 
-function getNextCard(userProgress: UserProgress): string | null {
-    if (userProgress.newQueue.length > 0) {
-        return userProgress.newQueue[0];
-    } else if (userProgress.reviewQueue.length > 0) {
-        return userProgress.reviewQueue[0];
+export function getNextDueCard(userProgress: UserProgress): string | null {
+    const categories = ['hot', 'ice', 'food'] as const;
+
+    for (const category of categories) {
+        if (userProgress[`${category}NewQueue`].length > 0) {
+            return userProgress[`${category}NewQueue`][0];
+        }
+        if (userProgress[`${category}ReviewQueue`].length > 0) {
+            return userProgress[`${category}ReviewQueue`][0];
+        }
     }
+
     return null;
 }
 
 function processCardAfterAnswer(userProgress: UserProgress, productId: string, score: number): UserProgress {
     const card = userProgress.cards[productId];
+    const category = getCardCategory(productId);
 
     if (card.isNew) {
         if (score === 100) {
             card.correctCount++;
             if (card.correctCount >= 2) {
                 card.isNew = false;
-                // 新規キューから削除
-                userProgress.newQueue = userProgress.newQueue.filter(id => id !== productId);
-                // 復習キューに追加（最大12個まで）
-                if (userProgress.reviewQueue.length < 12) {
-                    userProgress.reviewQueue.push(productId);
+                // Remove from new queue
+                userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter(id => id !== productId);
+                // Add to review queue (max 12)
+                if (userProgress[`${category}ReviewQueue`].length < 12) {
+                    userProgress[`${category}ReviewQueue`].push(productId);
                 }
             }
         }
-        // スコアに関わらず、新規キューの末尾に移動（ただし、復習カードに移行した場合を除く）
+        // Move to the end of new queue if still new
         if (card.isNew) {
-            userProgress.newQueue = userProgress.newQueue.filter(id => id !== productId);
-            if (userProgress.newQueue.length < 6) {
-                userProgress.newQueue.push(productId);
+            userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter(id => id !== productId);
+            if (userProgress[`${category}NewQueue`].length < 6) {
+                userProgress[`${category}NewQueue`].push(productId);
             }
         }
     } else {
-        // 復習カードの場合、復習キューの末尾に移動
-        userProgress.reviewQueue = userProgress.reviewQueue.filter(id => id !== productId);
-        if (userProgress.reviewQueue.length < 12) {
-            userProgress.reviewQueue.push(productId);
+        // Move review card to the end of review queue
+        userProgress[`${category}ReviewQueue`] = userProgress[`${category}ReviewQueue`].filter(id => id !== productId);
+        if (userProgress[`${category}ReviewQueue`].length < 12) {
+            userProgress[`${category}ReviewQueue`].push(productId);
         }
     }
 
-    // カードのプロパティを更新
+    // Update card properties
     const quality = Math.min(5, Math.max(0, Math.floor(score / 20)));
     card.easeFactor = Math.max(1.3, card.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
 
@@ -164,7 +181,7 @@ function processCardAfterAnswer(userProgress: UserProgress, productId: string, s
 
     card.dueDate = new Date(Date.now() + card.interval * 24 * 60 * 60 * 1000);
 
-    // 学習履歴を更新
+    // Update learning history
     card.learningHistory.push({
         date: new Date(),
         score: score
@@ -175,7 +192,8 @@ function processCardAfterAnswer(userProgress: UserProgress, productId: string, s
 
 function updateReviewCardDueDate(userProgress: UserProgress, productId: string, newDueDate: Date): UserProgress {
     userProgress.cards[productId].dueDate = newDueDate;
-    userProgress.reviewQueue = userProgress.reviewQueue.filter(id => id !== productId);
+    const category = getCardCategory(productId);
+    userProgress[`${category}ReviewQueue`] = userProgress[`${category}ReviewQueue`].filter(id => id !== productId);
     return userProgress;
 }
 
@@ -184,13 +202,16 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
     let data = userDoc.data() as UserProgress | undefined;
 
     if (!data || Object.keys(data.cards).length === 0) {
-        // 初期状態の設定
+        // Initialize the state
         data = {
             cards: {},
             lastStudyDate: new Date(),
-            lastQueueInitDate: new Date(0), // 1970年1月1日に設定
-            newQueue: [],
-            reviewQueue: []
+            hotNewQueue: [],
+            hotReviewQueue: [],
+            iceNewQueue: [],
+            iceReviewQueue: [],
+            foodNewQueue: [],
+            foodReviewQueue: []
         };
         productData.forEach(product => {
             data!.cards[product.productID] = {
@@ -205,14 +226,13 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
         });
     }
 
-    // キューの初期化（既存のキューを保持）
+    // Initialize queues
     data = initializeQueues(data, productData);
 
-    // FirestoreのタイムスタンプをDateオブジェクトに変換
+    // Convert Firestore timestamps to Date objects
     const convertedData: UserProgress = {
         ...data,
         lastStudyDate: convertFirestoreTimestampToDate(data.lastStudyDate),
-        lastQueueInitDate: convertFirestoreTimestampToDate(data.lastQueueInitDate),
         cards: Object.entries(data.cards).reduce((acc, [key, card]) => {
             acc[key] = {
                 ...card,
@@ -225,9 +245,6 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
             return acc;
         }, {} as { [productId: string]: CardData })
     };
-
-    // 変換後のデータをFirestoreに保存
-    await setDoc(doc(db, 'userProgress', userId), convertedData);
 
     return convertedData;
 }
@@ -247,31 +264,8 @@ export async function updateUserProgress(userId: string, productId: string, scor
             score: score
         });
 
-        // キューの状態を更新
-        if (card.isNew) {
-            if (score === 100 && card.correctCount >= 2) {
-                userProgress.newQueue = userProgress.newQueue.filter(id => id !== productId);
-                if (userProgress.reviewQueue.length < 12) {
-                    userProgress.reviewQueue.push(productId);
-                }
-            } else {
-                // 新規キューの末尾に移動
-                userProgress.newQueue = userProgress.newQueue.filter(id => id !== productId);
-                if (userProgress.newQueue.length < 6) {
-                    userProgress.newQueue.push(productId);
-                }
-            }
-        } else {
-            // 復習キューから削除
-            userProgress.reviewQueue = userProgress.reviewQueue.filter(id => id !== productId);
-        }
-
         transaction.set(userProgressRef, userProgress);
     });
-}
-
-export function getNextDueCard(userProgress: UserProgress): string | null {
-    return getNextCard(userProgress);
 }
 
 function updateCardDueDate(userProgress: UserProgress, productId: string, rating: number): UserProgress {
@@ -280,59 +274,99 @@ function updateCardDueDate(userProgress: UserProgress, productId: string, rating
 
     const oldDueDate = convertToDate(card.dueDate);
 
-    // SMモデルを使用して次の期日を計算
+    // Calculate next due date using SM-2 algorithm
     let interval: number;
     switch (rating) {
-        case 1: // 完全に忘れていた
+        case 1: // Completely forgot
             interval = 1;
             break;
-        case 2: // 思い出すのに苦労した
+        case 2: // Difficult to remember
             interval = Math.max(1, Math.floor(card.interval * 0.5));
             break;
-        case 3: // 少し努力して思い出した
+        case 3: // Remembered with some effort
             interval = card.interval * card.easeFactor;
             break;
-        case 4: // 完璧に覚えていた
+        case 4: // Perfectly remembered
             interval = card.interval * card.easeFactor * 1.3;
             break;
         default:
             interval = card.interval;
     }
 
-    // 新しい期日を設定
+    // Set new due date
     const newDueDate = new Date();
     newDueDate.setDate(newDueDate.getDate() + Math.round(interval));
     card.dueDate = Timestamp.fromDate(newDueDate);
     card.interval = interval;
 
-    // ease factorを更新
+    // Update ease factor
     if (rating > 1) {
         card.easeFactor += 0.1 - (4 - rating) * (0.08 + (4 - rating) * 0.02);
     }
     card.easeFactor = Math.max(1.3, card.easeFactor);
 
-    // 復習キューから削除
-    userProgress.reviewQueue = userProgress.reviewQueue.filter(id => id !== productId);
+    // Remove from review queue
+    const category = getCardCategory(productId);
+    userProgress[`${category}ReviewQueue`] = userProgress[`${category}ReviewQueue`].filter(id => id !== productId);
 
-    // 新しい期日が今日より後の場合、復習キューから完全に削除
+    // If new due date is after today, remove from review queue completely
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (newDueDate > today) {
-        userProgress.reviewQueue = userProgress.reviewQueue.filter(id => id !== productId);
+        userProgress[`${category}ReviewQueue`] = userProgress[`${category}ReviewQueue`].filter(id => id !== productId);
     } else {
-        // 今日の日付以前の場合は、復習キューの末尾に追加（最大12個まで）
-        if (userProgress.reviewQueue.length < 12) {
-            userProgress.reviewQueue.push(productId);
+        // If due date is today or earlier, add to the end of review queue (max 12)
+        if (userProgress[`${category}ReviewQueue`].length < 12) {
+            userProgress[`${category}ReviewQueue`].push(productId);
         }
     }
 
     return userProgress;
 }
 
-// 日付変換のためのヘルパー関数
+// Helper function for date conversion
 function convertToDate(dateOrTimestamp: Date | Timestamp): Date {
     if (dateOrTimestamp instanceof Timestamp) {
         return dateOrTimestamp.toDate();
     }
     return dateOrTimestamp;
+}
+
+function getCardCategory(productId: string): Category {
+    const product = productData.find(p => p.productID.toString() === productId);
+    return product?.category || 'hot'; // Default to 'hot' if not found
+}
+
+export async function initializeUserProgress(userId: string): Promise<void> {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);  // Set to 00:00 of the previous day
+
+    const initialUserProgress: UserProgress = {
+        cards: {},
+        lastStudyDate: Timestamp.fromDate(yesterday),
+        hotNewQueue: [],
+        hotReviewQueue: [],
+        iceNewQueue: [],
+        iceReviewQueue: [],
+        foodNewQueue: [],
+        foodReviewQueue: []
+    };
+
+    // Initialize card data for all products
+    productData.forEach(product => {
+        initialUserProgress.cards[product.productID] = {
+            productId: product.productID.toString(),
+            easeFactor: 2.5,
+            interval: 0,
+            dueDate: Timestamp.fromDate(new Date()),
+            isNew: true,
+            correctCount: 0,
+            learningHistory: []
+        };
+    });
+
+    // Save data to Firestore
+    const userProgressRef = doc(db, 'userProgress', userId);
+    await setDoc(userProgressRef, initialUserProgress);
 }

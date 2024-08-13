@@ -182,7 +182,10 @@ export interface CardData {
 export interface UserProgress {
     cards: { [productId: string]: CardData };
     lastStudyDate: Date | Timestamp;
-    lastQueueInitDate: Date | Timestamp;
-    newQueue: string[];
-    reviewQueue: string[];
+    hotNewQueue: string[];
+    hotReviewQueue: string[];
+    iceNewQueue: string[];
+    iceReviewQueue: string[];
+    foodNewQueue: string[];
+    foodReviewQueue: string[];
 }
