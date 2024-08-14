@@ -12,6 +12,17 @@ import ReviewInfoDialog from './ReviewInfoDialog';
 import ReviewQueueDialog from './ReviewQueueDialog';
 import { CardDetails, UserProgress } from '@/types/types';
 import { useToast } from "@/components/ui/use-toast";
+import { Progress } from "@/components/ui/progress";
+
+interface QueueProgress {
+    current: number;
+    total: number;
+}
+
+interface CategoryProgress {
+    newQueue: QueueProgress;
+    reviewQueue: QueueProgress;
+}
 
 const TrainingPage: React.FC = () => {
     const router = useRouter();
@@ -23,6 +34,15 @@ const TrainingPage: React.FC = () => {
     const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [categoryProgress, setCategoryProgress] = useState<{
+        hot: CategoryProgress;
+        ice: CategoryProgress;
+        food: CategoryProgress;
+    }>({
+        hot: { newQueue: { current: 0, total: 0 }, reviewQueue: { current: 0, total: 0 } },
+        ice: { newQueue: { current: 0, total: 0 }, reviewQueue: { current: 0, total: 0 } },
+        food: { newQueue: { current: 0, total: 0 }, reviewQueue: { current: 0, total: 0 } },
+    });
 
     const categories = [
         { title: "ホットドリンク編", description: "ホットドリンクの作り方を中心に復習します。", category: "hot" as const },
@@ -37,9 +57,10 @@ const TrainingPage: React.FC = () => {
                 try {
                     await ensureUserProgressInitialized(user.uid);
                     const progress = await getUserProgress(user.uid);
-                    await saveUserProgress(user.uid, progress); // この行を追加
+                    await saveUserProgress(user.uid, progress);
                     setUserProgress(progress);
                     await loadCardDetails(progress);
+                    updateCategoryProgress(progress);
                     await logUserProgress(user.uid);  // デバッグ用
                     console.log("User progress initialized and loaded successfully");
                 } catch (error) {
@@ -57,6 +78,33 @@ const TrainingPage: React.FC = () => {
 
         initializeUserData();
     }, [user]);
+
+    const updateCategoryProgress = (progress: UserProgress) => {
+        const newProgress = {
+            hot: {
+                newQueue: { current: 0, total: progress.hotNewQueue.length },
+                reviewQueue: { current: 0, total: progress.hotReviewQueue.length },
+            },
+            ice: {
+                newQueue: { current: 0, total: progress.iceNewQueue.length },
+                reviewQueue: { current: 0, total: progress.iceReviewQueue.length },
+            },
+            food: {
+                newQueue: { current: 0, total: progress.foodNewQueue.length },
+                reviewQueue: { current: 0, total: progress.foodReviewQueue.length },
+            },
+        };
+
+        // Calculate current progress based on the difference between initial queue length and current queue length
+        newProgress.hot.newQueue.current = Math.max(0, newProgress.hot.newQueue.total - progress.hotNewQueue.length);
+        newProgress.hot.reviewQueue.current = Math.max(0, newProgress.hot.reviewQueue.total - progress.hotReviewQueue.length);
+        newProgress.ice.newQueue.current = Math.max(0, newProgress.ice.newQueue.total - progress.iceNewQueue.length);
+        newProgress.ice.reviewQueue.current = Math.max(0, newProgress.ice.reviewQueue.total - progress.iceReviewQueue.length);
+        newProgress.food.newQueue.current = Math.max(0, newProgress.food.newQueue.total - progress.foodNewQueue.length);
+        newProgress.food.reviewQueue.current = Math.max(0, newProgress.food.reviewQueue.total - progress.foodReviewQueue.length);
+
+        setCategoryProgress(newProgress);
+    };
 
     const convertToDate = (dateOrTimestamp: Date | Timestamp): Date => {
         if (dateOrTimestamp instanceof Timestamp) {
@@ -97,16 +145,27 @@ const TrainingPage: React.FC = () => {
         return Math.ceil(diffTime / (1000 * 3600 * 24));
     };
 
+    const getProductName = (productId: string): string => {
+        const product = productData.find(p => p.productID.toString() === productId);
+        return product ? product.name : productId;
+    };
+
     const getCategoryQueue = (category: 'hot' | 'ice' | 'food') => {
         if (!userProgress) return { newCards: [], reviewCards: [] };
 
         const newCards = (userProgress[`${category}NewQueue`] || [])
-            .map(id => cardDetails.find(card => card.productId === id && card.category === category))
-            .filter((card): card is CardDetails => card !== undefined);
+            .map(id => {
+                const card = cardDetails.find(card => card.productId === id && card.category === category);
+                return card ? { ...card, productName: getProductName(id) } : undefined;
+            })
+            .filter((card): card is CardDetails & { productName: string } => card !== undefined);
 
         const reviewCards = (userProgress[`${category}ReviewQueue`] || [])
-            .map(id => cardDetails.find(card => card.productId === id && card.category === category))
-            .filter((card): card is CardDetails => card !== undefined);
+            .map(id => {
+                const card = cardDetails.find(card => card.productId === id && card.category === category);
+                return card ? { ...card, productName: getProductName(id) } : undefined;
+            })
+            .filter((card): card is CardDetails & { productName: string } => card !== undefined);
 
         return { newCards, reviewCards };
     };
@@ -131,6 +190,30 @@ const TrainingPage: React.FC = () => {
                         </CardHeader>
                         <CardContent>
                             <p className="mb-4">{category.description}</p>
+                            <div className="mb-4">
+                                <p className="text-sm font-medium mb-1">新規カード</p>
+                                <div className="flex items-center">
+                                    <Progress
+                                        value={(categoryProgress[category.category].newQueue.current / categoryProgress[category.category].newQueue.total) * 100}
+                                        className="flex-grow mr-2"
+                                    />
+                                    <span className="text-sm">
+                                        {categoryProgress[category.category].newQueue.current}/{categoryProgress[category.category].newQueue.total}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <p className="text-sm font-medium mb-1">復習カード</p>
+                                <div className="flex items-center">
+                                    <Progress
+                                        value={(categoryProgress[category.category].reviewQueue.current / categoryProgress[category.category].reviewQueue.total) * 100}
+                                        className="flex-grow mr-2"
+                                    />
+                                    <span className="text-sm">
+                                        {categoryProgress[category.category].reviewQueue.current}/{categoryProgress[category.category].reviewQueue.total}
+                                    </span>
+                                </div>
+                            </div>
                             <Button
                                 onClick={() => handleCategoryClick(category.category)}
                                 className="w-full bg-black text-white hover:bg-gray-800"
@@ -156,6 +239,7 @@ const TrainingPage: React.FC = () => {
                     onClose={() => setShowDetailsDialog(false)}
                     cardDetails={cardDetails}
                     getNextDueDays={getNextDueDays}
+                    getProductName={getProductName}
                 />
                 <ReviewQueueDialog
                     isOpen={showQueueDialog}

@@ -9,13 +9,16 @@ interface CardDetailDrawerProps {
     onClose: () => void;
     card: CardDetails | null;
     getNextDueDays: (dueDate: Date) => number;
+    getProductName: (productId: string) => string;
 }
+
 
 const CardDetailDrawer: React.FC<CardDetailDrawerProps> = ({
     isOpen,
     onClose,
     card,
-    getNextDueDays
+    getNextDueDays,
+    getProductName
 }) => {
     if (!card) return null;
 
@@ -26,7 +29,7 @@ const CardDetailDrawer: React.FC<CardDetailDrawerProps> = ({
         <Drawer open={isOpen} onOpenChange={onClose}>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle className='my-3'>{card.productId}</DrawerTitle>
+                    <DrawerTitle className='my-3'>{getProductName(card.productId)}</DrawerTitle>
                     <DrawerDescription>
                         <p>状態: {card.isNew ? '新規' : '復習'}</p>
                         <p>次回の出題日: {getNextDueDays(card.dueDate)}日後 ({nextDueDate.toLocaleDateString()})</p>

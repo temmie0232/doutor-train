@@ -50,7 +50,7 @@ const ReviewQueueDialog: React.FC<ReviewQueueDialogProps> = ({
                     <ul className="list-disc pl-5 mb-4">
                         {queue.newCards.map((card, index) => (
                             <li key={`new-${card.productId}-${index}`}>
-                                {card.productId}
+                                {card.productName}
                                 <span className="text-sm text-gray-500 ml-2">
                                     (正解回数: {card.correctCount})
                                 </span>
@@ -62,7 +62,7 @@ const ReviewQueueDialog: React.FC<ReviewQueueDialogProps> = ({
                     <ul className="list-disc pl-5">
                         {queue.reviewCards.map((card, index) => (
                             <li key={`review-${card.productId}-${index}`}>
-                                {card.productId}
+                                {card.productName}
                                 <span className="text-sm text-gray-500 ml-2">
                                     (間隔: {card.interval}日, 難易度: {card.easeFactor.toFixed(2)})
                                 </span>

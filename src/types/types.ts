@@ -152,6 +152,7 @@ export interface EspressoOptionProps {
 
 export interface CardDetails {
     productId: string;
+    productName?: string; // オプショナルプロパティとして追加
     category: 'hot' | 'ice' | 'food';
     isNew: boolean;
     dueDate: Date;
@@ -188,4 +189,12 @@ export interface UserProgress {
     iceReviewQueue: string[];
     foodNewQueue: string[];
     foodReviewQueue: string[];
+}
+
+export interface ReviewInfoDialogProps {
+    isOpen: boolean;
+    onClose: () => void;
+    cardDetails: CardDetails[];
+    getNextDueDays: (dueDate: Date) => number;
+    getProductName: (productId: string) => string;
 }
