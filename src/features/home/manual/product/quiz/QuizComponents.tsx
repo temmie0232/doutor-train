@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Product } from '@/data/productData';
+import { Product, QuizAnswerItem } from '@/data/productData';
 import { QuizState, SelectedItem } from '@/types/types';
 
 export interface QuizActions {
@@ -104,20 +104,22 @@ interface HotCupSelectorProps {
     product: Product;
     hotCupTypes: { [size: string]: string };
     handleHotCupTypeSelection: (size: string, type: string) => void;
+    correctAnswer: QuizAnswerItem | undefined;
 }
 
 export const HotCupSelector: React.FC<HotCupSelectorProps> = ({
     product,
     hotCupTypes,
-    handleHotCupTypeSelection
+    handleHotCupTypeSelection,
+    correctAnswer
 }) => {
-    const cupTypes = ['デミタスカップ', 'アメリカンカップ', 'Mホットカップ', 'Lホットカップ'];
+    const cupTypes = ['デミタスカップ', 'アメリカンカップ', 'Mホットカップ', 'Lホットカップ', 'サイズなし'];
 
     return (
         <div className="mt-4 mb-6">
             <h4 className="font-bold mb-3">カップ</h4>
             <div className="flex flex-wrap -mx-2">
-                {product.sizes.map(size => (
+                {['R', 'L'].map(size => (
                     <div key={size} className="w-full sm:w-1/2 px-2 mb-4">
                         <h5 className="font-semibold mb-2">{size}サイズのカップの種類</h5>
                         <RadioGroup
@@ -137,7 +139,6 @@ export const HotCupSelector: React.FC<HotCupSelectorProps> = ({
         </div>
     );
 };
-
 export const JetSteamerOption: React.FC = () => {
     const { jetSteamerFoam, setJetSteamerFoam, submitted } = useQuiz();
 

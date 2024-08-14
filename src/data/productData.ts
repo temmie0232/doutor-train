@@ -61,7 +61,7 @@ export const productData: Product[] = [
                 attributes: { type: "hot" },
                 sizeDependent: {
                     R: "Mホットカップ",
-                    L: null
+                    L: "サイズなし"
                 }
             },
             { item: "ブレンドコーヒー" },
@@ -86,6 +86,7 @@ export const productData: Product[] = [
                 attributes: { type: "hot" },
                 sizeDependent: {
                     R: "デミタスカップ",
+                    L: "サイズなし",
                 }
             },
             {
@@ -114,6 +115,7 @@ export const productData: Product[] = [
                 attributes: { type: "hot" },
                 sizeDependent: {
                     R: "アメリカンカップ",
+                    L: "サイズなし",
                 }
             },
             { item: "本日のコーヒー" }
@@ -131,14 +133,7 @@ export const productData: Product[] = [
             ["カフェラテのボタンを押す", "M : M", "L : L"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "カフェラテ" }
         ]
     },
@@ -157,14 +152,6 @@ export const productData: Product[] = [
             ["エスプレッソを入れる"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
             { item: "豆乳" },
             {
                 item: "エスプレッソ",
@@ -197,7 +184,7 @@ export const productData: Product[] = [
                 attributes: { type: "hot" },
                 sizeDependent: {
                     R: "Mホットカップ",
-                    L: null
+                    L: "サイズなし",
                 }
             },
             { item: "ホットティー用ティーバッグ" },
@@ -308,14 +295,6 @@ export const productData: Product[] = [
             ["エスプレッソを入れる"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
             { item: "ハニーベース" },
             {
                 item: "エスプレッソ",
@@ -341,14 +320,7 @@ export const productData: Product[] = [
             ["ホイップを上にのせる。", "R : 1回", "L : 2回"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "ココアベース" },
             {
                 item: "ホイップクリーム",
@@ -380,14 +352,7 @@ export const productData: Product[] = [
             ["カプチーノパウダーをかける", "0.1g"],
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "ココアベース" },
             {
                 item: "エスプレッソ",
@@ -425,14 +390,7 @@ export const productData: Product[] = [
             ["黒糖ソースを格子状にかける", "※Mを描くように二回"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "黒糖ベース" },
             {
                 item: "ホイップクリーム",
@@ -464,14 +422,7 @@ export const productData: Product[] = [
             ["抹茶パウダーをかける", "0.1g"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "抹茶ベース" },
             { item: "牛乳" },
             { item: "抹茶パウダー" },
@@ -496,14 +447,7 @@ export const productData: Product[] = [
             ["抹茶パウダーをかける", "0.1g"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "抹茶ベース" },
             { item: "豆乳" },
             { item: "抹茶パウダー" },
@@ -526,14 +470,7 @@ export const productData: Product[] = [
             ["ジェットスチーマーで温める"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "牛乳" },
             {
                 item: "ジェットスチーマー",
@@ -554,14 +491,7 @@ export const productData: Product[] = [
             ["ジェットスチーマーで温める"]
         ],
         quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
+
             { item: "豆乳" },
             {
                 item: "ジェットスチーマー",

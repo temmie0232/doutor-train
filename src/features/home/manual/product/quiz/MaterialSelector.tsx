@@ -33,7 +33,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     });
 
     useEffect(() => {
-        // Reset state when product changes
         setState({
             selectedItems: [],
             jetSteamerFoam: false,
@@ -122,8 +121,10 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         if (item === 'カップ') {
             if (correctItem.sizeDependent) {
                 return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
-                    if (value === null) return true;
                     const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
+                    if (value === "サイズなし") {
+                        return selectedCupForSize?.attributes?.subType === "サイズなし";
+                    }
                     return selectedCupForSize?.attributes?.subType === value;
                 });
             }
@@ -184,17 +185,21 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         handleHotCupTypeSelection,
     };
 
+
     const categories = product.category === 'hot' ? hotCategories :
         product.category === 'ice' ? iceCategories :
             foodCategories;
 
+    const hasCupInCorrectAnswer = correctAnswer.some(answer => answer.item === 'カップ');
+
     return (
         <QuizContext.Provider value={quizContextValue}>
-            {product.category === 'hot' && (
+            {product.category === 'hot' && hasCupInCorrectAnswer && (
                 <HotCupSelector
                     product={product}
                     hotCupTypes={state.hotCupTypes}
                     handleHotCupTypeSelection={handleHotCupTypeSelection}
+                    correctAnswer={correctAnswer.find(answer => answer.item === 'カップ')}
                 />
             )}
             {Object.entries(categories).map(([category, items]) => (
