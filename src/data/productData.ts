@@ -70,6 +70,117 @@ export const productData: Product[] = [
     },
     {
         productID: 3,
+        name: 'エスプレッソコーヒー',
+        image: '/images/16.jpg',
+        category: 'hot',
+        sizes: ['R'],
+        isOnSale: true,
+        description: 'コーヒーの旨みを凝縮し、豊潤な香りとすっきりとした苦味が感じられます。',
+        instructions: [
+            ["アウトレット部をクリーニング"],
+            ["エスプレッソを抽出", "エスプレッソL"]
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "デミタスカップ",
+                }
+            },
+            {
+                item: "エスプレッソ",
+                sizeDependent: {
+                    R: "L",
+                }
+            }
+        ]
+    },
+    {
+        productID: 4,
+        name: '本日のコーヒー',
+        image: '/images/18.jpg',
+        category: 'hot',
+        sizes: ['R'],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["アウトレット部をクリーニング"],
+            ["本日のコーヒーのボタンを押す", "※アメリカンカップを使用"]
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "アメリカンカップ",
+                }
+            },
+            { item: "本日のコーヒー" }
+        ]
+    },
+    {
+        productID: 5,
+        name: 'カフェ・ラテ',
+        image: '/images/17.jpg',
+        category: 'hot',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'しっかりしたコーヒー感が自慢のまろやかな味です。',
+        instructions: [
+            ["カフェラテのボタンを押す", "M : M", "L : L"]
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "Mホットカップ",
+                    L: "Lホットカップ"
+                }
+            },
+            { item: "カフェラテ" }
+        ]
+    },
+    {
+        productID: 6,
+        name: '豆乳ラテ',
+        image: '/images/14.jpg',
+        category: 'hot',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '豆乳でつくったカフェラテです。',
+        instructions: [
+            ["エスプレッソを抽出", "R : エスプレッソM", "L : エスプレッソL"],
+            ["下ラインまで豆乳を入れる"],
+            ["\"泡立て\" でジェットスチーマーで温める"],
+            ["エスプレッソを入れる"],
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "Mホットカップ",
+                    L: "Lホットカップ"
+                }
+            },
+            { item: "豆乳" },
+            {
+                item: "エスプレッソ",
+                sizeDependent: {
+                    R: "M",
+                    L: "L"
+                }
+            },
+            {
+                item: "ジェットスチーマー",
+                attributes: { "泡立て": "あり" }
+            }
+        ]
+    },
+    {
+        productID: 7,
         name: 'ティー',
         image: '/images/3.jpg',
         category: 'hot',
@@ -94,7 +205,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 4,
+        productID: 8,
         name: 'ルイボスティー',
         image: '/images/4.jpg',
         category: 'hot',
@@ -119,7 +230,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 5,
+        productID: 9,
         name: 'ロイヤルミルクティー',
         image: '/images/5.jpg',
         category: 'hot',
@@ -129,7 +240,7 @@ export const productData: Product[] = [
         instructions: [
             ["ティーバッグをカップに入れる"],
             ["お湯を一タップ分入れ、ティーバッグを10回チャプチャプする"],
-            ["牛乳を一番上の線まで入れる"],
+            ["ミルクを一番上の線まで入れる"],
             ["ジェットスチーマーで温める"]
         ],
         quizAnswers: [
@@ -151,7 +262,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 6,
+        productID: 10,
         name: '豆乳ティー',
         image: '/images/6.jpg',
         category: 'hot',
@@ -176,136 +287,6 @@ export const productData: Product[] = [
             { item: "ミルクティー用ティーバッグ" },
             { item: "熱湯" },
             { item: "豆乳" },
-            {
-                item: "ジェットスチーマー",
-                attributes: { "泡立て": "なし" }
-            }
-        ]
-    },
-    {
-        productID: 7,
-        name: 'ホットミルク',
-        image: '/images/7.jpg',
-        category: 'hot',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'データがありません。',
-        instructions: [
-            ["牛乳を一番上の線まで入れる"],
-            ["ジェットスチーマーで温める"]
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
-            { item: "牛乳" },
-            {
-                item: "ジェットスチーマー",
-                attributes: { "泡立て": "なし" }
-            }
-        ]
-    },
-    {
-        productID: 8,
-        name: 'ホット豆乳',
-        image: '/images/8.jpg',
-        category: 'hot',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'データがありません。',
-        instructions: [
-            ["豆乳を一番上の線まで入れる"],
-            ["ジェットスチーマーで温める"]
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
-            { item: "豆乳" },
-            {
-                item: "ジェットスチーマー",
-                attributes: { "泡立て": "なし" }
-            }
-        ]
-    },
-    {
-        productID: 9,
-        name: 'ココア',
-        image: '/images/9.jpg',
-        category: 'hot',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '口当たりまろやかなココアです。',
-        instructions: [
-            ["ココアを真ん中の線まで入れる"],
-            ["ジェットスチーマーで温める"],
-            ["ホイップを上にのせる。", "R : 1回", "L : 2回"]
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
-            { item: "ココアベース" },
-            {
-                item: "ホイップクリーム",
-                quantity: {
-                    R: 1,
-                    L: 2
-                }
-            },
-            {
-                item: "ジェットスチーマー",
-                attributes: { "泡立て": "なし" }
-            }
-        ]
-    },
-    {
-        productID: 10,
-        name: '沖縄黒糖ラテ',
-        image: '/images/10.jpg',
-        category: 'hot',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '黒糖の深い味わいとまろやかさが広がる、風味豊かなラテです。',
-        instructions: [
-            ["黒糖ベースを真ん中の線まで入れる"],
-            ["ジェットスチーマーで温める"],
-            ["ホイップを上にのせる。", "R : 1回", "L : 2回"],
-            ["黒糖ソースを格子状にかける", "※Mを描くように二回"]
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
-            { item: "黒糖ベース" },
-            {
-                item: "ホイップクリーム",
-                quantity: {
-                    R: 1,
-                    L: 2
-                }
-            },
-            { item: "黒糖ソース" },
             {
                 item: "ジェットスチーマー",
                 attributes: { "泡立て": "なし" }
@@ -348,17 +329,16 @@ export const productData: Product[] = [
     },
     {
         productID: 12,
-        name: '宇治抹茶ラテ',
-        image: '/images/12.jpg',
+        name: 'ココア',
+        image: '/images/9.jpg',
         category: 'hot',
         sizes: ['R', 'L'],
         isOnSale: true,
-        description: '宇治抹茶とミルクがマッチした絶妙な味わいです。',
+        description: '口当たりまろやかなココアです。',
         instructions: [
-            ["抹茶ベースを入れる", "R : 60cc", "L : 73cc"],
-            ["ミルクを中ラインまで入れる"],
-            ["\"泡だて\" てジェットスチーマーで温める"],
-            ["抹茶パウダーをかける", "0.1g"]
+            ["ココアを真ん中の線まで入れる"],
+            ["ジェットスチーマーで温める"],
+            ["ホイップを上にのせる。", "R : 1回", "L : 2回"]
         ],
         quizAnswers: [
             {
@@ -369,86 +349,22 @@ export const productData: Product[] = [
                     L: "Lホットカップ"
                 }
             },
-            { item: "抹茶ベース" },
-            { item: "牛乳" },
-            { item: "抹茶パウダー" },
+            { item: "ココアベース" },
+            {
+                item: "ホイップクリーム",
+                quantity: {
+                    R: 1,
+                    L: 2
+                }
+            },
             {
                 item: "ジェットスチーマー",
-                attributes: { "泡立て": "あり" }
+                attributes: { "泡立て": "なし" }
             }
         ]
     },
     {
         productID: 13,
-        name: '宇治抹茶豆乳ラテ',
-        image: '/images/13.jpg',
-        category: 'hot',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '定番人気の宇治抹茶ラテを豆乳で仕立てました。',
-        instructions: [
-            ["抹茶ベースを入れる", "R : 60cc", "L : 73cc"],
-            ["豆乳を中ラインまで入れる"],
-            ["\"泡だて\" でジェットスチーマーで温める"],
-            ["抹茶パウダーをかける", "0.1g"]
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
-            { item: "抹茶ベース" },
-            { item: "豆乳" },
-            { item: "抹茶パウダー" },
-            {
-                item: "ジェットスチーマー",
-                attributes: { "泡立て": "あり" }
-            }
-        ]
-    },
-    {
-        productID: 14,
-        name: '豆乳ラテ',
-        image: '/images/14.jpg',
-        category: 'hot',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '豆乳でつくったカフェラテです。',
-        instructions: [
-            ["エスプレッソを抽出", "R : エスプレッソM", "L : エスプレッソL"],
-            ["下ラインまで豆乳を入れる"],
-            ["\"泡立て\" でジェットスチーマーで温める"],
-            ["エスプレッソを入れる"],
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "Mホットカップ",
-                    L: "Lホットカップ"
-                }
-            },
-            { item: "豆乳" },
-            {
-                item: "エスプレッソ",
-                sizeDependent: {
-                    R: "M",
-                    L: "L"
-                }
-            },
-            {
-                item: "ジェットスチーマー",
-                attributes: { "泡立て": "あり" }
-            }
-        ]
-    },
-    {
-        productID: 15,
         name: 'カフェモカ',
         image: '/images/15.jpg',
         category: 'hot',
@@ -495,43 +411,18 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 16,
-        name: 'エスプレッソコーヒー',
-        image: '/images/16.jpg',
-        category: 'hot',
-        sizes: ['R'],
-        isOnSale: true,
-        description: 'コーヒーの旨みを凝縮し、豊潤な香りとすっきりとした苦味が感じられます。',
-        instructions: [
-            ["アウトレット部をクリーニング"],
-            ["エスプレッソを抽出", "エスプレッソL"]
-        ],
-        quizAnswers: [
-            {
-                item: "カップ",
-                attributes: { type: "hot" },
-                sizeDependent: {
-                    R: "デミタスカップ",
-                }
-            },
-            {
-                item: "エスプレッソ",
-                sizeDependent: {
-                    R: "L",
-                }
-            }
-        ]
-    },
-    {
-        productID: 17,
-        name: 'カフェ・ラテ',
-        image: '/images/17.jpg',
+        productID: 14,
+        name: '沖縄黒糖ラテ',
+        image: '/images/10.jpg',
         category: 'hot',
         sizes: ['R', 'L'],
         isOnSale: true,
-        description: 'しっかりしたコーヒー感が自慢のまろやかな味です。',
+        description: '黒糖の深い味わいとまろやかさが広がる、風味豊かなラテです。',
         instructions: [
-            ["カフェラテのボタンを押す", "M : M", "L : L"]
+            ["黒糖ベースを真ん中の線まで入れる"],
+            ["ジェットスチーマーで温める"],
+            ["ホイップを上にのせる。", "R : 1回", "L : 2回"],
+            ["黒糖ソースを格子状にかける", "※Mを描くように二回"]
         ],
         quizAnswers: [
             {
@@ -542,30 +433,140 @@ export const productData: Product[] = [
                     L: "Lホットカップ"
                 }
             },
-            { item: "カフェラテ" }
+            { item: "黒糖ベース" },
+            {
+                item: "ホイップクリーム",
+                quantity: {
+                    R: 1,
+                    L: 2
+                }
+            },
+            { item: "黒糖ソース" },
+            {
+                item: "ジェットスチーマー",
+                attributes: { "泡立て": "なし" }
+            }
         ]
     },
+
     {
-        productID: 18,
-        name: '本日のコーヒー',
-        image: '/images/18.jpg',
+        productID: 15,
+        name: '宇治抹茶ラテ',
+        image: '/images/12.jpg',
         category: 'hot',
-        sizes: ['R'],
+        sizes: ['R', 'L'],
         isOnSale: true,
-        description: 'データがありません。',
+        description: '宇治抹茶とミルクがマッチした絶妙な味わいです。',
         instructions: [
-            ["アウトレット部をクリーニング"],
-            ["本日のコーヒーのボタンを押す", "※アメリカンカップを使用"]
+            ["抹茶ベースを入れる", "R : 60cc", "L : 73cc"],
+            ["ミルクを中ラインまで入れる"],
+            ["\"泡だて\" てジェットスチーマーで温める"],
+            ["抹茶パウダーをかける", "0.1g"]
         ],
         quizAnswers: [
             {
                 item: "カップ",
                 attributes: { type: "hot" },
                 sizeDependent: {
-                    R: "アメリカンカップ",
+                    R: "Mホットカップ",
+                    L: "Lホットカップ"
                 }
             },
-            { item: "本日のコーヒー" }
+            { item: "抹茶ベース" },
+            { item: "牛乳" },
+            { item: "抹茶パウダー" },
+            {
+                item: "ジェットスチーマー",
+                attributes: { "泡立て": "あり" }
+            }
+        ]
+    },
+    {
+        productID: 16,
+        name: '宇治抹茶豆乳ラテ',
+        image: '/images/13.jpg',
+        category: 'hot',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '定番人気の宇治抹茶ラテを豆乳で仕立てました。',
+        instructions: [
+            ["抹茶ベースを入れる", "R : 60cc", "L : 73cc"],
+            ["豆乳を中ラインまで入れる"],
+            ["\"泡だて\" でジェットスチーマーで温める"],
+            ["抹茶パウダーをかける", "0.1g"]
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "Mホットカップ",
+                    L: "Lホットカップ"
+                }
+            },
+            { item: "抹茶ベース" },
+            { item: "豆乳" },
+            { item: "抹茶パウダー" },
+            {
+                item: "ジェットスチーマー",
+                attributes: { "泡立て": "あり" }
+            }
+        ]
+    },
+    {
+        productID: 17,
+        name: 'ホットミルク',
+        image: '/images/7.jpg',
+        category: 'hot',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["ミルクを一番上の線まで入れる"],
+            ["ジェットスチーマーで温める"]
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "Mホットカップ",
+                    L: "Lホットカップ"
+                }
+            },
+            { item: "牛乳" },
+            {
+                item: "ジェットスチーマー",
+                attributes: { "泡立て": "なし" }
+            }
+        ]
+    },
+    {
+        productID: 18,
+        name: 'ホット豆乳',
+        image: '/images/8.jpg',
+        category: 'hot',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["豆乳を一番上の線まで入れる"],
+            ["ジェットスチーマーで温める"]
+        ],
+        quizAnswers: [
+            {
+                item: "カップ",
+                attributes: { type: "hot" },
+                sizeDependent: {
+                    R: "Mホットカップ",
+                    L: "Lホットカップ"
+                }
+            },
+            { item: "豆乳" },
+            {
+                item: "ジェットスチーマー",
+                attributes: { "泡立て": "なし" }
+            }
         ]
     },
     {
@@ -587,228 +588,6 @@ export const productData: Product[] = [
     },
     {
         productID: 20,
-        name: 'アイスティー',
-        image: '/images/20.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'フルーティーな香りとコクのある味わいが特長のアイスティーです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "ロゴ上までアイスティーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "アイスティー" }
-        ]
-    },
-    {
-        productID: 21,
-        name: 'アイスルイボスティー',
-        image: '/images/21.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'ルイボスティーは南アフリカ原産のハーブを使用したお茶で、「奇跡のお茶」「不老長寿のお茶」として現地で飲まれています。鮮やかな赤色と自然な甘み、すっきりした味わいでカフェインが気になる方におすすめのドリンクです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "ロゴ上までアイスルイボスティーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "アイスルイボスティー" }
-        ]
-    },
-    {
-        productID: 22,
-        name: 'みかんジュース',
-        image: '/images/22.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '国産（和歌山県産、静岡県産）の手摘みされた温州みかんを皮ごと丸絞りしたみかんジュースです。さっぱりとした甘みが特長です。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "ロゴ上までみかんジュースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "みかんジュース" }
-        ]
-    },
-    {
-        productID: 23,
-        name: 'リンゴジュース',
-        image: '/images/23.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'りんご果汁本来のまろやかな甘味とスッキリとしたのどごし、爽やかな酸味が特長です。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "ロゴ上までリンゴジュースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "リンゴジュース" }
-        ]
-    },
-    {
-        productID: 24,
-        name: 'アイスミルク',
-        image: '/images/24.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'データがありません。',
-        instructions: [],
-        quizAnswers: []
-    },
-    {
-        productID: 25,
-        name: 'アイス豆乳',
-        image: '/images/25.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: 'データがありません。',
-        instructions: [],
-        quizAnswers: []
-    },
-    {
-        productID: 26,
-        name: 'アイスココア',
-        image: '/images/26.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '口当たりまろやかなココアです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "ロゴ上までココアを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-            ["ホイップを上にのせる", "M : 1回", "L : 2回"]
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "ココアベース" },
-            {
-                item: "ホイップクリーム",
-                quantity: {
-                    R: 1,
-                    L: 2
-                }
-            }
-        ]
-    },
-    {
-        productID: 27,
-        name: 'アイス沖縄黒糖ラテ',
-        image: '/images/27.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '黒糖の深い味わいとまろやかさが広がる、風味豊かなラテです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "ロゴ上まで黒糖ベースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-            ["ホイップを上にのせる", "M : 1回", "L : 2回"],
-            ["黒糖ソースを格子状にかける", "※Mを描くように二回"]
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "黒糖ベース" },
-            {
-                item: "ホイップクリーム",
-                quantity: {
-                    R: 1,
-                    L: 2
-                }
-            },
-            { item: "黒糖ソース" }
-        ]
-    },
-    {
-        productID: 28,
-        name: 'アイス豆乳ラテ',
-        image: '/images/28.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '豆乳でつくったアイスカフェラテです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "グラスの継ぎ目まで豆乳を入れる", "---------", "テイクアウト : ", "黄色い点線"],
-            ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "豆乳" },
-            { item: "アイスコーヒー" }
-        ]
-    },
-    {
-        productID: 29,
-        name: 'アイスハニーカフェ・オレ',
-        image: '/images/29.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '最後までハチミツの風味が広がります。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "グラスの継ぎ目までハニーベースを入れる", "---------", "テイクアウト : ", "黄色い点線"],
-            ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "ハニーベース" },
-            { item: "アイスコーヒー" }
-        ]
-    },
-    {
-        productID: 30,
-        name: 'アイス宇治抹茶ラテ',
-        image: '/images/30.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '宇治抹茶とミルクがマッチした絶妙な味わいです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "グラスの継ぎ目までミルクを入れる", "---------", "テイクアウト : ", "黄色い点線"],
-            ["店内 : ", "ロゴ上まで抹茶ベースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-            ["抹茶パウダーをかける", "0.1g"]
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "牛乳" },
-            { item: "抹茶ベース" },
-            { item: "抹茶パウダー" }
-        ]
-    },
-    {
-        productID: 31,
-        name: 'アイス宇治抹茶豆乳ラテ',
-        image: '/images/31.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isOnSale: true,
-        description: '定番人気の宇治抹茶ラテを豆乳で仕立てました。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
-            ["店内 : ", "グラスの継ぎ目まで豆乳を入れる", "---------", "テイクアウト : ", "黄色い点線"],
-            ["店内 : ", "ロゴ上まで抹茶ベースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
-            ["抹茶パウダーをかける", "0.1g"]
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "豆乳" },
-            { item: "抹茶ベース" },
-            { item: "抹茶パウダー" }
-        ]
-    },
-    {
-        productID: 32,
         name: 'アイスカフェ・ラテ',
         image: '/images/32.jpg',
         category: 'ice',
@@ -834,7 +613,26 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 33,
+        productID: 21,
+        name: 'アイス豆乳ラテ',
+        image: '/images/28.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '豆乳でつくったアイスカフェラテです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "グラスの継ぎ目まで豆乳を入れる", "---------", "テイクアウト : ", "黄色い点線"],
+            ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "豆乳" },
+            { item: "アイスコーヒー" }
+        ]
+    },
+    {
+        productID: 22,
         name: 'プレミアムアイスカフェ・ラテ',
         image: '/images/33.jpg',
         category: 'ice',
@@ -851,7 +649,41 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 34,
+        productID: 23,
+        name: 'アイスティー',
+        image: '/images/20.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'フルーティーな香りとコクのある味わいが特長のアイスティーです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上までアイスティーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "アイスティー" }
+        ]
+    },
+    {
+        productID: 24,
+        name: 'アイスルイボスティー',
+        image: '/images/21.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'ルイボスティーは南アフリカ原産のハーブを使用したお茶で、「奇跡のお茶」「不老長寿のお茶」として現地で飲まれています。鮮やかな赤色と自然な甘み、すっきりした味わいでカフェインが気になる方におすすめのドリンクです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上までアイスルイボスティーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "アイスルイボスティー" }
+        ]
+    },
+    {
+        productID: 25,
         name: 'アイスロイヤルミルクティー',
         image: '/images/34.jpg',
         category: 'ice',
@@ -870,7 +702,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 35,
+        productID: 26,
         name: 'アイス豆乳ティー',
         image: '/images/35.jpg',
         category: 'ice',
@@ -889,7 +721,51 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 36,
+        productID: 27,
+        name: 'アイスハニーカフェ・オレ',
+        image: '/images/29.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '最後までハチミツの風味が広がります。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "グラスの継ぎ目までハニーベースを入れる", "---------", "テイクアウト : ", "黄色い点線"],
+            ["店内 : ", "ロゴ上までアイスコーヒーを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "ハニーベース" },
+            { item: "アイスコーヒー" }
+        ]
+    },
+    {
+        productID: 28,
+        name: 'アイスココア',
+        image: '/images/26.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '口当たりまろやかなココアです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上までココアを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+            ["ホイップを上にのせる", "M : 1回", "L : 2回"]
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "ココアベース" },
+            {
+                item: "ホイップクリーム",
+                quantity: {
+                    R: 1,
+                    L: 2
+                }
+            }
+        ]
+    },
+    {
+        productID: 29,
         name: 'アイスカフェ・モカ',
         image: '/images/36.jpg',
         category: 'ice',
@@ -921,6 +797,143 @@ export const productData: Product[] = [
                 }
             },
             { item: "カプチーノパウダー" }
+        ]
+    },
+    {
+        productID: 30,
+        name: 'アイス沖縄黒糖ラテ',
+        image: '/images/27.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '黒糖の深い味わいとまろやかさが広がる、風味豊かなラテです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上まで黒糖ベースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+            ["ホイップを上にのせる", "M : 1回", "L : 2回"],
+            ["黒糖ソースを格子状にかける", "※Mを描くように二回"]
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "黒糖ベース" },
+            {
+                item: "ホイップクリーム",
+                quantity: {
+                    R: 1,
+                    L: 2
+                }
+            },
+            { item: "黒糖ソース" }
+        ]
+    },
+    {
+        productID: 31,
+        name: 'アイス宇治抹茶ラテ',
+        image: '/images/30.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '宇治抹茶とミルクがマッチした絶妙な味わいです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "グラスの継ぎ目までミルクを入れる", "---------", "テイクアウト : ", "黄色い点線"],
+            ["店内 : ", "ロゴ上まで抹茶ベースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+            ["抹茶パウダーをかける", "0.1g"]
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "牛乳" },
+            { item: "抹茶ベース" },
+            { item: "抹茶パウダー" }
+        ]
+    },
+    {
+        productID: 32,
+        name: 'アイス宇治抹茶豆乳ラテ',
+        image: '/images/31.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '定番人気の宇治抹茶ラテを豆乳で仕立てました。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "グラスの継ぎ目まで豆乳を入れる", "---------", "テイクアウト : ", "黄色い点線"],
+            ["店内 : ", "ロゴ上まで抹茶ベースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+            ["抹茶パウダーをかける", "0.1g"]
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "豆乳" },
+            { item: "抹茶ベース" },
+            { item: "抹茶パウダー" }
+        ]
+    },
+    {
+        productID: 33,
+        name: 'みかんジュース',
+        image: '/images/22.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: '国産（和歌山県産、静岡県産）の手摘みされた温州みかんを皮ごと丸絞りしたみかんジュースです。さっぱりとした甘みが特長です。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上までみかんジュースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "みかんジュース" }
+        ]
+    },
+    {
+        productID: 34,
+        name: 'リンゴジュース',
+        image: '/images/23.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'りんご果汁本来のまろやかな甘味とスッキリとしたのどごし、爽やかな酸味が特長です。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上までリンゴジュースを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "リンゴジュース" }
+        ]
+    },
+    {
+        productID: 35,
+        name: 'アイスミルク',
+        image: '/images/24.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上までミルクを注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "牛乳" }
+        ]
+    },
+    {
+        productID: 36,
+        name: 'アイス豆乳',
+        image: '/images/25.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "M : 一番下のでっぱり", "L : 黄色い点線"],
+            ["店内 : ", "ロゴ上まで豆乳を注ぐ", "---------", "テイクアウト : ", "M : 下から二番目のでっぱり", "L : 一番下のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "豆乳" }
         ]
     },
     {
@@ -969,92 +982,6 @@ export const productData: Product[] = [
     },
     {
         productID: 39,
-        name: 'レモンスカッシュ',
-        image: '/images/39.jpg',
-        category: 'ice',
-        sizes: ['R'],
-        isLimited: true,
-        isOnSale: true,
-        description: 'ジンジャエールに、レモンスライスとはちみつ入りのレモンソースを合わせました。ジンジャエールの辛口で爽やかな刺激に、レモンソースのやさしい酸味とほんのりとしたはちみつの風味が合わさった、夏の暑さを吹き飛ばすのにぴったりのドリンクです。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "一番下のでっぱり"],
-            ["袋に入ったレモンをカップに入れる"],
-            ["ジンジャーエール(缶)を１本分カップに入れる"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "レモン（袋入り）" },
-            { item: "ジンジャーエール" }
-        ]
-    },
-    {
-        productID: 40,
-        name: 'グリーンレモティーハニー',
-        image: '/images/40.jpg',
-        category: 'ice',
-        sizes: ['R'],
-        isLimited: true,
-        isOnSale: true,
-        description: '緑茶に、レモンスライスとはちみつ入りのレモンソースを合わせました。緑茶のすっきりとした味わいに、レモンソースのやさしい酸味とほんのりとしたはちみつの風味が広がります。',
-        instructions: [
-            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "一番下のでっぱり"],
-            ["袋に入ったレモンをカップに入れる"],
-            ["店内 : ", "ロゴ上まで緑茶ベースを注ぐ", "---------", "テイクアウト : ", " 下から二番目のでっぱり"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "レモン（袋入り）" },
-            { item: "緑茶ベース" }
-        ]
-    },
-    {
-        productID: 41,
-        name: 'レモンヨーグルン',
-        image: '/images/41.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isLimited: true,
-        isOnSale: true,
-        description: 'ヨーグルト風味のフローズンに、瀬戸内産のレモン果汁とピールが入ったレモンソースを合わせました。食感も楽しめる爽やかな味わいのドリンクです。',
-        instructions: [
-            ["ブレンダーのカップに氷を入れる", "R : 190g", "L : 220g"],
-            ["ブレンダーのカップにフローズンベースを入れる", "R : 190g", "L:220g"],
-            ["ブレンダーに容器をセットしてを回す", "R : Rボタン", "L : Lボタン"],
-            ["カップを回しながら容器のフチにレモンソースを3周(たぶん)かける"],
-            ["ブレンダー内のヨーグルンをカップに移す"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "フローズンベース" },
-            { item: "レモンソース" },
-            { item: "ブレンダー" },
-        ]
-    },
-    {
-        productID: 42,
-        name: 'マスカットヨーグルン',
-        image: '/images/42.jpg',
-        category: 'ice',
-        sizes: ['R', 'L'],
-        isLimited: true,
-        isOnSale: true,
-        description: 'ヨーグルト風味のフローズンに、長野県産シャインマスカットとアロエの葉肉を使用したソースを合わせた、今年で4年目となるマスカットの爽やかな香りが楽しめるフローズンドリンクです。',
-        instructions: [
-            ["ブレンダーのカップに氷を入れる", "R : 190g", "L : 220g"],
-            ["ブレンダーのカップにフローズンベースを入れる", "R : 190g", "L:220g"],
-            ["ブレンダーに容器をセットしてを回す", "R : Rボタン", "L : Lボタン"],
-            ["カップを回しながら容器のフチにマスカットソースを3周(たぶん)かける"],
-            ["ブレンダー内のヨーグルンをカップに移す"],
-        ],
-        quizAnswers: [
-            { item: "氷" },
-            { item: "フローズンベース" },
-            { item: "マスカットソース" },
-            { item: "ブレンダー" },
-        ]
-    },
-    {
-        productID: 43,
         name: 'ミラノサンドA',
         image: '/images/43.jpg',
         category: 'food',
@@ -1077,7 +1004,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 44,
+        productID: 40,
         name: 'チーズ in ミラノサンドA',
         image: '/images/44.jpg',
         category: 'food',
@@ -1102,7 +1029,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 45,
+        productID: 41,
         name: 'ミラノサンドB',
         image: '/images/45.jpg',
         category: 'food',
@@ -1137,7 +1064,294 @@ export const productData: Product[] = [
         ]
     },
     {
+        productID: 42,
+        name: 'ツナチェダーチーズ',
+        image: '/images/52.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: 'ツナサラダに、とろ～り熱々のチェダーチーズが絶妙にマッチした、寒い季節にぴったりのホットサンドです',
+        instructions: [
+            ["ミラノパンのヒールにツナフィリングをのせる", "レモン型18番ディッシャー小山盛り1杯(50g)", "ヒール : パンの下側"],
+            ["ツナフィリングの上にブラックペッパーをかける", "0.1g"],
+            ["チェダーチーズを真ん中を重ねるようにして上にのせる"],
+            ["クラウンを被せる"],
+            ["半分にカットする"],
+            ["ウェーブスターで焼く"],
+        ],
+        quizAnswers: [
+            { item: "ミラノパン" },
+            { item: "ウェーブスター" },
+            { item: "ツナフィリング" },
+            { item: "ブラックペッパー" },
+            { item: "チェダーチーズ" },
+        ]
+    },
+    {
+        productID: 43,
+        name: 'ジャーマンドック',
+        image: '/images/54.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: 'ドトールコーヒーショップのベストセラー商品。どこを切ってもオリジナル。パン・ソーセージ・マスタードの素材にとことんこだわった、自信作です。',
+        instructions: [
+            ["ドックパンをトースターで焼く"],
+            ["ソーセージをはさむ、マスタードをかける", "3g"],
+        ],
+        quizAnswers: [
+            { item: "ドッグパン" },
+            { item: "ソーセージ" },
+            { item: "マスタード" },
+        ]
+    },
+    {
+        productID: 44,
+        name: 'レタスドッグ',
+        image: '/images/55.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: 'シャキシャキレタスのサラダなドック。オリジナルソースが◎',
+        instructions: [
+            ["ドックパンをトースターで焼く"],
+            ["レタスを二枚重ねる", "16×8cm (25g)"],
+            ["レタスをドッグパンにはさみ、ムータルドをかける", "8g"],
+            ["ソーセージをはさむ"],
+        ],
+        quizAnswers: [
+            { item: "ドッグパン" },
+            { item: "ソーセージ" },
+            { item: "レタス" },
+            { item: "ムータルド" },
+        ]
+    },
+    {
+        productID: 45,
+        name: 'トースト',
+        image: '/images/50.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: '外はさっくり、中はふんわり食感の厚切りトーストです。コーヒーと相性がよく、朝食メニューにぴったりです',
+        instructions: [
+            ["トースターを山側を奥にして、一番手前のヒーターにトーストの中心が来るように置き、焼く"],
+            ["出てきた状態でパンの面をひっくり返さないようにして、そのままもう一度同じように焼く"],
+            ["半分にカットし、皿にのせる"],
+        ],
+        quizAnswers: [
+            { item: "トースト" },
+            { item: "トースター" },
+        ]
+    },
+    {
         productID: 46,
+        name: 'チーズトースト',
+        image: '/images/51.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: '外はさっくり、中はふんわり食感の厚切りトーストにチーズをのせました。',
+        instructions: [
+            ["トーストの上にゴーダチーズを二枚のせる", "チーズ間を5mm開ける"],
+            ["ウェーブスターで焼く"],
+            ["半分にカットし、皿にのせる"],
+        ],
+        quizAnswers: [
+            { item: "トースト" },
+            { item: "ウェーブスター" },
+            { item: "ゴーダチーズ" },
+        ]
+    },
+
+    {
+        productID: 47,
+        name: '全粒粉サンド',
+        image: '/images/56.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: '肉の食感に近づけるよう改良した「大豆のミート」にスライストマト、豆と野菜をトマトで煮込んだ具材感あるソースをトッピング。ピリ辛豆乳ソースでピリッと且つマイルドに仕上げています。',
+        instructions: [
+            ["全粒粉入りパンをトースターで焼く"],
+            ["大豆ミートをウェーブスターで焼く"],
+            ["レタスを二枚重ねる", "8×8cm (13g)"],
+            ["焼いた大豆ミートをレタスにのせる"],
+            ["トマト1枚を大豆ミートにのせる"],
+            ["トマト煮を18gトマトの上にのせる。", "丸型26番ディッシャーすりきり1杯"],
+            ["ピリ辛ごま豆乳ソースをクラウンにかける", "円を描くように8g", "クラウン : 上側のパン"],
+            ["クラウンを具材にのせ、それをヒールにのせる"]
+        ],
+        quizAnswers: [
+            { item: "全粒粉入りパン" },
+            { item: "トースター" },
+            { item: "ウェーブスター" },
+            { item: "レタス" },
+            { item: "大豆ミート" },
+            { item: "トマト" },
+            { item: "トマト煮" },
+            { item: "ピリ辛ソース" },
+        ]
+    },
+    {
+        productID: 48,
+        name: 'フレンチトースト ハニーメープル',
+        image: '/images/57.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["フレンチトーストをウェーブスターで焼く", "山側を手前に向ける"],
+            ["焼いたフレンチトーストを６等分にカットする"],
+            ["丸皿の左にカットしたフレンチトーストを4切れのせ、その上に2切れのせる"],
+            ["ソフトクリームを丸皿の右側にのせる", "2周半"],
+            ["ケーキシロップを全体にかける", "6山 (12g)"],
+            ["粉糖を全体にかける", "0.1g"],
+        ],
+        quizAnswers: [
+            { item: "フレンチトースト" },
+            { item: "ウェーブスター" },
+            { item: "ソフトクリーム" },
+            { item: "ケーキシロップ" },
+            { item: "粉糖" },
+        ]
+    },
+    {
+        productID: 49,
+        name: 'フレンチトースト チョコバナナ',
+        image: '/images/58.jpg',
+        category: 'food',
+        sizes: [],
+        isOnSale: true,
+        description: 'データがありません。',
+        instructions: [
+            ["フレンチトーストをウェーブスターで焼く", "山側を手前に向ける"],
+            ["焼いたフレンチトーストを６等分にカットする"],
+            ["丸皿の左にカットしたフレンチトーストを4切れのせ、その上に2切れのせる"],
+            ["バナナ(1/4)の皮を取り、それを４等分にカットする"],
+            ["カットしたバナナ4切れを丸皿の手前にずらしてのせる"],
+            ["ソフトクリームを丸皿の右側にのせる", "2周半"],
+            ["チョコソースをソフトクリームとバナナの上にかける", "3山 (5g)"],
+            ["粉糖を全体にかける", "0.1g"],
+        ],
+        quizAnswers: [
+            { item: "フレンチトースト" },
+            { item: "ウェーブスター" },
+            { item: "ソフトクリーム" },
+            { item: "バナナ" },
+            { item: "チョコソース" },
+            { item: "粉糖" },
+        ]
+    },
+
+
+    {
+        productID: 50,
+        name: 'マスカットヨーグルン',
+        image: '/images/42.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isLimited: true,
+        isOnSale: true,
+        description: 'ヨーグルト風味のフローズンに、長野県産シャインマスカットとアロエの葉肉を使用したソースを合わせた、今年で4年目となるマスカットの爽やかな香りが楽しめるフローズンドリンクです。',
+        instructions: [
+            ["ブレンダーのカップに氷を入れる", "R : 190g", "L : 220g"],
+            ["ブレンダーのカップにフローズンベースを入れる", "R : 190g", "L:220g"],
+            ["ブレンダーに容器をセットしてを回す", "R : Rボタン", "L : Lボタン"],
+            ["カップを回しながら容器のフチにマスカットソースを3周(たぶん)かける"],
+            ["ブレンダー内のヨーグルンをカップに移す"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "フローズンベース" },
+            { item: "マスカットソース" },
+            { item: "ブレンダー" },
+        ]
+    },
+    {
+        productID: 51,
+        name: 'レモンヨーグルン',
+        image: '/images/41.jpg',
+        category: 'ice',
+        sizes: ['R', 'L'],
+        isLimited: true,
+        isOnSale: true,
+        description: 'ヨーグルト風味のフローズンに、瀬戸内産のレモン果汁とピールが入ったレモンソースを合わせました。食感も楽しめる爽やかな味わいのドリンクです。',
+        instructions: [
+            ["ブレンダーのカップに氷を入れる", "R : 190g", "L : 220g"],
+            ["ブレンダーのカップにフローズンベースを入れる", "R : 190g", "L:220g"],
+            ["ブレンダーに容器をセットしてを回す", "R : Rボタン", "L : Lボタン"],
+            ["カップを回しながら容器のフチにレモンソースを3周(たぶん)かける"],
+            ["ブレンダー内のヨーグルンをカップに移す"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "フローズンベース" },
+            { item: "レモンソース" },
+            { item: "ブレンダー" },
+        ]
+    },
+    {
+        productID: 52,
+        name: 'レモンスカッシュ',
+        image: '/images/39.jpg',
+        category: 'ice',
+        sizes: ['R'],
+        isLimited: true,
+        isOnSale: true,
+        description: 'ジンジャエールに、レモンスライスとはちみつ入りのレモンソースを合わせました。ジンジャエールの辛口で爽やかな刺激に、レモンソースのやさしい酸味とほんのりとしたはちみつの風味が合わさった、夏の暑さを吹き飛ばすのにぴったりのドリンクです。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "一番下のでっぱり"],
+            ["袋に入ったレモンをカップに入れる"],
+            ["ジンジャーエール(缶)を１本分カップに入れる"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "レモン（袋入り）" },
+            { item: "ジンジャーエール" }
+        ]
+    },
+    {
+        productID: 53,
+        name: 'グリーンレモティーハニー',
+        image: '/images/40.jpg',
+        category: 'ice',
+        sizes: ['R'],
+        isLimited: true,
+        isOnSale: true,
+        description: '緑茶に、レモンスライスとはちみつ入りのレモンソースを合わせました。緑茶のすっきりとした味わいに、レモンソースのやさしい酸味とほんのりとしたはちみつの風味が広がります。',
+        instructions: [
+            ["店内 : ", "グラスの継ぎ目まで氷を入れる", "---------", "テイクアウト : ", "一番下のでっぱり"],
+            ["袋に入ったレモンをカップに入れる"],
+            ["店内 : ", "ロゴ上まで緑茶ベースを注ぐ", "---------", "テイクアウト : ", " 下から二番目のでっぱり"],
+        ],
+        quizAnswers: [
+            { item: "氷" },
+            { item: "レモン（袋入り）" },
+            { item: "緑茶ベース" }
+        ]
+    },
+    {
+        productID: 54,
+        name: 'カルツォーネ',
+        image: '/images/53.jpg',
+        category: 'food',
+        sizes: [],
+        isLimited: true,
+        isOnSale: true,
+        description: 'アサリ、イカ、イタヤ貝の具材と、トマトペースト、チーズをもちもち生地で包みました。魚介の旨みが詰まった、トマト仕立てのカルツォーネです。',
+        instructions: [
+            ["カルツォーネの包材を剥がす"],
+            ["折り返し部分を奥にして、ウェーブスターで焼く"],
+        ],
+        quizAnswers: [
+            { item: "ウェーブスター" },
+            { item: "カルツォーネ" }
+        ]
+    },
+    {
+        productID: 55,
         name: '牛カルビ',
         image: '/images/46.jpg',
         category: 'food',
@@ -1165,7 +1379,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 47,
+        productID: 56,
         name: '牛カルビ 濃厚チーズソース',
         image: '/images/47.jpg',
         category: 'food',
@@ -1195,7 +1409,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 48,
+        productID: 57,
         name: '牛カルビ ねぎ塩レモン',
         image: '/images/48.jpg',
         category: 'food',
@@ -1227,7 +1441,7 @@ export const productData: Product[] = [
         ]
     },
     {
-        productID: 49,
+        productID: 58,
         name: '牛カルビ ハラペーニョ',
         image: '/images/49.jpg',
         category: 'food',
@@ -1256,204 +1470,7 @@ export const productData: Product[] = [
             { item: "マヨネーズ" },
         ]
     },
-    {
-        productID: 50,
-        name: 'トースト',
-        image: '/images/50.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: '外はさっくり、中はふんわり食感の厚切りトーストです。コーヒーと相性がよく、朝食メニューにぴったりです',
-        instructions: [
-            ["トースターを山側を奥にして、一番手前のヒーターにトーストの中心が来るように置き、焼く"],
-            ["出てきた状態でパンの面をひっくり返さないようにして、そのままもう一度同じように焼く"],
-            ["半分にカットし、皿にのせる"],
-        ],
-        quizAnswers: [
-            { item: "トースト" },
-            { item: "トースター" },
-        ]
-    },
-    {
-        productID: 51,
-        name: 'チーズトースト',
-        image: '/images/51.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: '外はさっくり、中はふんわり食感の厚切りトーストにチーズをのせました。',
-        instructions: [
-            ["トーストの上にゴーダチーズを二枚のせる", "チーズ間を5mm開ける"],
-            ["ウェーブスターで焼く"],
-            ["半分にカットし、皿にのせる"],
-        ],
-        quizAnswers: [
-            { item: "トースト" },
-            { item: "ウェーブスター" },
-            { item: "ゴーダチーズ" },
-        ]
-    },
-    {
-        productID: 52,
-        name: 'ツナチェダーチーズ',
-        image: '/images/52.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: 'ツナサラダに、とろ～り熱々のチェダーチーズが絶妙にマッチした、寒い季節にぴったりのホットサンドです',
-        instructions: [
-            ["ミラノパンのヒールにツナフィリングをのせる", "レモン型18番ディッシャー小山盛り1杯(50g)", "ヒール : パンの下側"],
-            ["ツナフィリングの上にブラックペッパーをかける", "0.1g"],
-            ["チェダーチーズを真ん中を重ねるようにして上にのせる"],
-            ["クラウンを被せる"],
-            ["半分にカットする"],
-            ["ウェーブスターで焼く"],
-        ],
-        quizAnswers: [
-            { item: "ミラノパン" },
-            { item: "ウェーブスター" },
-            { item: "ツナフィリング" },
-            { item: "ブラックペッパー" },
-            { item: "チェダーチーズ" },
-        ]
-    },
-    {
-        productID: 53,
-        name: 'カルツォーネ',
-        image: '/images/53.jpg',
-        category: 'food',
-        sizes: [],
-        isLimited: true,
-        isOnSale: true,
-        description: 'アサリ、イカ、イタヤ貝の具材と、トマトペースト、チーズをもちもち生地で包みました。魚介の旨みが詰まった、トマト仕立てのカルツォーネです。',
-        instructions: [
-            ["カルツォーネの包材を剥がす"],
-            ["折り返し部分を奥にして、ウェーブスターで焼く"],
-        ],
-        quizAnswers: [
-            { item: "ウェーブスター" },
-            { item: "カルツォーネ" }
-        ]
-    },
-    {
-        productID: 54,
-        name: 'ジャーマンドック',
-        image: '/images/54.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: 'ドトールコーヒーショップのベストセラー商品。どこを切ってもオリジナル。パン・ソーセージ・マスタードの素材にとことんこだわった、自信作です。',
-        instructions: [
-            ["ドックパンをトースターで焼く"],
-            ["ソーセージをはさむ、マスタードをかける", "3g"],
-        ],
-        quizAnswers: [
-            { item: "ドッグパン" },
-            { item: "ソーセージ" },
-            { item: "マスタード" },
-        ]
-    },
-    {
-        productID: 55,
-        name: 'レタスドッグ',
-        image: '/images/55.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: 'シャキシャキレタスのサラダなドック。オリジナルソースが◎',
-        instructions: [
-            ["ドックパンをトースターで焼く"],
-            ["レタスを二枚重ねる", "16×8cm (25g)"],
-            ["レタスをドッグパンにはさみ、ムータルドをかける", "8g"],
-            ["ソーセージをはさむ"],
-        ],
-        quizAnswers: [
-            { item: "ドッグパン" },
-            { item: "ソーセージ" },
-            { item: "レタス" },
-            { item: "ムータルド" },
-        ]
-    },
-    {
-        productID: 56,
-        name: '全粒粉サンド',
-        image: '/images/56.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: '肉の食感に近づけるよう改良した「大豆のミート」にスライストマト、豆と野菜をトマトで煮込んだ具材感あるソースをトッピング。ピリ辛豆乳ソースでピリッと且つマイルドに仕上げています。',
-        instructions: [
-            ["全粒粉入りパンをトースターで焼く"],
-            ["大豆ミートをウェーブスターで焼く"],
-            ["レタスを二枚重ねる", "8×8cm (13g)"],
-            ["焼いた大豆ミートをレタスにのせる"],
-            ["トマト1枚を大豆ミートにのせる"],
-            ["トマト煮を18gトマトの上にのせる。", "丸型26番ディッシャーすりきり1杯"],
-            ["ピリ辛ごま豆乳ソースをクラウンにかける", "円を描くように8g", "クラウン : 上側のパン"],
-            ["クラウンを具材にのせ、それをヒールにのせる"]
-        ],
-        quizAnswers: [
-            { item: "全粒粉入りパン" },
-            { item: "トースター" },
-            { item: "ウェーブスター" },
-            { item: "レタス" },
-            { item: "大豆ミート" },
-            { item: "トマト" },
-            { item: "トマト煮" },
-            { item: "ピリ辛ソース" },
-        ]
-    },
-    {
-        productID: 57,
-        name: 'フレンチトースト ハニーメープル',
-        image: '/images/57.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: 'データがありません。',
-        instructions: [
-            ["フレンチトーストをウェーブスターで焼く", "山側を手前に向ける"],
-            ["焼いたフレンチトーストを６等分にカットする"],
-            ["丸皿の左にカットしたフレンチトーストを4切れのせ、その上に2切れのせる"],
-            ["ソフトクリームを丸皿の右側にのせる", "2周半"],
-            ["ケーキシロップを全体にかける", "6山 (12g)"],
-            ["粉糖を全体にかける", "0.1g"],
-        ],
-        quizAnswers: [
-            { item: "フレンチトースト" },
-            { item: "ウェーブスター" },
-            { item: "ソフトクリーム" },
-            { item: "ケーキシロップ" },
-            { item: "粉糖" },
-        ]
-    },
-    {
-        productID: 58,
-        name: 'フレンチトースト チョコバナナ',
-        image: '/images/58.jpg',
-        category: 'food',
-        sizes: [],
-        isOnSale: true,
-        description: 'データがありません。',
-        instructions: [
-            ["フレンチトーストをウェーブスターで焼く", "山側を手前に向ける"],
-            ["焼いたフレンチトーストを６等分にカットする"],
-            ["丸皿の左にカットしたフレンチトーストを4切れのせ、その上に2切れのせる"],
-            ["バナナ(1/4)の皮を取り、それを４等分にカットする"],
-            ["カットしたバナナ4切れを丸皿の手前にずらしてのせる"],
-            ["ソフトクリームを丸皿の右側にのせる", "2周半"],
-            ["チョコソースをソフトクリームとバナナの上にかける", "3山 (5g)"],
-            ["粉糖を全体にかける", "0.1g"],
-        ],
-        quizAnswers: [
-            { item: "フレンチトースト" },
-            { item: "ウェーブスター" },
-            { item: "ソフトクリーム" },
-            { item: "バナナ" },
-            { item: "チョコソース" },
-            { item: "粉糖" },
-        ]
-    }
+
 ];
 
 export function getProductByName(name: string): Product | undefined {
