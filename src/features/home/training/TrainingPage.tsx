@@ -6,20 +6,23 @@ import Layout from '@/components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { productData, Product } from '@/data/productData';
-import { getUserProgress, getNextDueCard } from '@/lib/spaced-repetition';
+import { getUserProgress, ensureUserProgressInitialized, logUserProgress, saveUserProgress } from '@/lib/spaced-repetition';
 import { Timestamp } from 'firebase/firestore';
 import ReviewInfoDialog from './ReviewInfoDialog';
 import ReviewQueueDialog from './ReviewQueueDialog';
 import { CardDetails, UserProgress } from '@/types/types';
+import { useToast } from "@/components/ui/use-toast";
 
 const TrainingPage: React.FC = () => {
     const router = useRouter();
     const { user } = useAuth();
+    const { toast } = useToast();
     const [showDetailsDialog, setShowDetailsDialog] = useState(false);
     const [showQueueDialog, setShowQueueDialog] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<'hot' | 'ice' | 'food'>('hot');
     const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const categories = [
         { title: "ホットドリンク編", description: "ホットドリンクの作り方を中心に復習します。", category: "hot" as const },
@@ -28,9 +31,31 @@ const TrainingPage: React.FC = () => {
     ];
 
     useEffect(() => {
-        if (user) {
-            loadCardDetails();
-        }
+        const initializeUserData = async () => {
+            if (user) {
+                setIsLoading(true);
+                try {
+                    await ensureUserProgressInitialized(user.uid);
+                    const progress = await getUserProgress(user.uid);
+                    await saveUserProgress(user.uid, progress); // この行を追加
+                    setUserProgress(progress);
+                    await loadCardDetails(progress);
+                    await logUserProgress(user.uid);  // デバッグ用
+                    console.log("User progress initialized and loaded successfully");
+                } catch (error) {
+                    console.error("Error initializing user data:", error);
+                    toast({
+                        title: "エラー",
+                        description: "ユーザーデータの初期化中にエラーが発生しました。",
+                        variant: "destructive",
+                    });
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        initializeUserData();
     }, [user]);
 
     const convertToDate = (dateOrTimestamp: Date | Timestamp): Date => {
@@ -40,10 +65,7 @@ const TrainingPage: React.FC = () => {
         return dateOrTimestamp;
     };
 
-    const loadCardDetails = async () => {
-        if (!user) return;
-        const progress = await getUserProgress(user.uid);
-        setUserProgress(progress);
+    const loadCardDetails = async (progress: UserProgress) => {
         const details: CardDetails[] = Object.entries(progress.cards).map(([productId, card]) => ({
             productId,
             category: productData.find(p => p.productID.toString() === productId)?.category as 'hot' | 'ice' | 'food',
@@ -88,6 +110,16 @@ const TrainingPage: React.FC = () => {
 
         return { newCards, reviewCards };
     };
+
+    if (isLoading) {
+        return (
+            <Layout>
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold mb-4">読み込み中...</h1>
+                </div>
+            </Layout>
+        );
+    }
 
     return (
         <Layout>

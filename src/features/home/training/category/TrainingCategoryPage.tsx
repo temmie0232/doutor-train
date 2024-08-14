@@ -6,22 +6,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/components/ui/dialog";
 import { productData, Product, QuizAnswerItem } from '@/data/productData';
-import ProductImage from '@/features/home/manual/product/quiz/ProductImage';
-import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelector';
 import { InstructionDialog } from '@/features/home/manual/product/quiz/InstructionCarousel';
-import { getUserProgress, updateUserProgress, getNextDueCard } from '@/lib/spaced-repetition';
+import { getUserProgress, updateUserProgress, saveUserQueues } from '@/lib/spaced-repetition';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { useToast } from "@/components/ui/use-toast";
+import ProductImage from '@/features/home/manual/product/quiz/ProductImage';
+import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelector';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface TrainingCategoryPageProps {
     category: 'hot' | 'ice' | 'food';
@@ -41,30 +33,54 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
 
     useEffect(() => {
         if (user) {
-            loadNextCard();
+            loadNextCard().catch(error => {
+                console.error("Error loading next card:", error);
+                toast({
+                    title: "エラー",
+                    description: "カードの読み込み中にエラーが発生しました。",
+                    variant: "destructive",
+                });
+            });
         }
     }, [user, category]);
 
     const loadNextCard = async () => {
         if (!user) return;
         setLoading(true);
-        const progress = await getUserProgress(user.uid);
-        setUserProgress(progress);
-        const nextProductId = getNextDueCard(progress);
-        if (nextProductId) {
-            const product = productData.find(p => p.productID.toString() === nextProductId);
-            if (product && product.category === category) {
-                setCurrentProduct(product);
+        try {
+            const progress = await getUserProgress(user.uid);
+            setUserProgress(progress);
+
+            let nextProductId: string | undefined;
+            if (progress[`${category}NewQueue`].length > 0) {
+                nextProductId = progress[`${category}NewQueue`][0];
+            } else if (progress[`${category}ReviewQueue`].length > 0) {
+                nextProductId = progress[`${category}ReviewQueue`][0];
+            }
+
+            if (nextProductId) {
+                const product = productData.find(p => p.productID.toString() === nextProductId);
+                if (product && product.category === category) {
+                    setCurrentProduct(product);
+                } else {
+                    setCurrentProduct(null);
+                }
             } else {
                 setCurrentProduct(null);
             }
-        } else {
-            setCurrentProduct(null);
+            setSubmitted(false);
+            setScore(0);
+            setShowInstructions(false);
+        } catch (error) {
+            console.error("Error in loadNextCard:", error);
+            toast({
+                title: "エラー",
+                description: "データの読み込み中にエラーが発生しました。",
+                variant: "destructive",
+            });
+        } finally {
+            setLoading(false);
         }
-        setSubmitted(false);
-        setScore(0);
-        setShowInstructions(false);
-        setLoading(false);
     };
 
     const handleSubmit = async (quizScore: number) => {
@@ -73,9 +89,28 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     };
 
     const handleRating = async (rating: number) => {
-        if (!user || !currentProduct) return;
-        await updateUserProgress(user.uid, currentProduct.productID.toString(), rating * 25); // Convert rating (1-4) to score (25-100)
-        loadNextCard();
+        if (!user || !currentProduct || !userProgress) return;
+        try {
+            await updateUserProgress(user.uid, currentProduct.productID.toString(), rating * 25);
+
+            const updatedProgress = { ...userProgress };
+            if (updatedProgress.cards[currentProduct.productID].isNew) {
+                updatedProgress[`${category}NewQueue`] = updatedProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+            } else {
+                updatedProgress[`${category}ReviewQueue`] = updatedProgress[`${category}ReviewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+            }
+
+            await saveUserQueues(user.uid, updatedProgress);
+
+            loadNextCard();
+        } catch (error) {
+            console.error("Error in handleRating:", error);
+            toast({
+                title: "エラー",
+                description: "評価の保存中にエラーが発生しました。",
+                variant: "destructive",
+            });
+        }
     };
 
     const getNextDueDays = (rating: number): number => {
@@ -170,7 +205,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                     <Button onClick={() => setShowInstructions(true)}>
                                         作り方を確認する
                                     </Button>
-                                    <Separator className="my-4" />
+                                    <div className="w-full h-px bg-gray-300 my-4"></div>
                                     <div className="flex items-center justify-between w-full">
                                         <h4 className="text-lg font-semibold">あなたの理解度は？</h4>
                                         <Button

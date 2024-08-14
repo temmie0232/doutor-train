@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, Timestamp, runTransaction } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc, Timestamp, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { Product, productData } from '@/data/productData';
 
 const db = getFirestore();
@@ -18,7 +18,7 @@ interface CardData {
     learningHistory: LearningHistoryItem[];
 }
 
-interface UserProgress {
+export interface UserProgress {
     cards: { [productId: string]: CardData };
     lastStudyDate: Date | Timestamp;
     hotNewQueue: string[];
@@ -31,7 +31,7 @@ interface UserProgress {
 
 type Category = 'hot' | 'ice' | 'food';
 
-function initializeQueues(userProgress: UserProgress, allProducts: Product[]): UserProgress {
+export function initializeQueues(userProgress: UserProgress, allProducts: Product[]): UserProgress {
     console.log("Starting initializeQueues function");
     console.log("Current userProgress:", JSON.stringify(userProgress, null, 2));
 
@@ -369,4 +369,56 @@ export async function initializeUserProgress(userId: string): Promise<void> {
     // Save data to Firestore
     const userProgressRef = doc(db, 'userProgress', userId);
     await setDoc(userProgressRef, initialUserProgress);
+}
+
+export async function saveUserQueues(userId: string, userProgress: UserProgress): Promise<void> {
+    const userProgressRef = doc(db, 'userProgress', userId);
+    await updateDoc(userProgressRef, {
+        hotNewQueue: userProgress.hotNewQueue,
+        hotReviewQueue: userProgress.hotReviewQueue,
+        iceNewQueue: userProgress.iceNewQueue,
+        iceReviewQueue: userProgress.iceReviewQueue,
+        foodNewQueue: userProgress.foodNewQueue,
+        foodReviewQueue: userProgress.foodReviewQueue,
+        lastStudyDate: userProgress.lastStudyDate
+    });
+}
+
+export async function ensureUserProgressInitialized(userId: string): Promise<void> {
+    const userProgressRef = doc(db, 'userProgress', userId);
+    const userProgressDoc = await getDoc(userProgressRef);
+
+    if (!userProgressDoc.exists()) {
+        console.log("Initializing user progress for new user:", userId);
+        await initializeUserProgress(userId);
+    } else {
+        console.log("User progress already exists for:", userId);
+    }
+}
+
+export async function resetUserProgress(userId: string): Promise<void> {
+    console.log("Resetting user progress for:", userId);
+    await initializeUserProgress(userId);
+}
+
+export async function logUserProgress(userId: string): Promise<void> {
+    const userProgressRef = doc(db, 'userProgress', userId);
+    const userProgressDoc = await getDoc(userProgressRef);
+
+    if (userProgressDoc.exists()) {
+        console.log("User Progress for", userId, ":", userProgressDoc.data());
+    } else {
+        console.log("No user progress found for:", userId);
+    }
+}
+
+export async function saveUserProgress(userId: string, progress: UserProgress): Promise<void> {
+    console.log("Saving user progress...");
+    const userProgressRef = doc(db, 'userProgress', userId);
+    try {
+        await setDoc(userProgressRef, progress, { merge: true });
+        console.log("User progress saved successfully for:", userId);
+    } catch (error) {
+        console.error("Error saving user progress:", error);
+    }
 }
