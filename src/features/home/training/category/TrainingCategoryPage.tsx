@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -86,6 +84,55 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const handleSubmit = async (quizScore: number) => {
         setSubmitted(true);
         setScore(quizScore);
+
+        if (!user || !currentProduct || !userProgress) return;
+
+        const cardData = userProgress.cards[currentProduct.productID];
+        const isNewCard = cardData.isNew;
+        const totalQuestions = currentProduct.quizAnswers.length;
+        const scorePercentage = (quizScore / totalQuestions) * 100;
+
+        try {
+            if (isNewCard) {
+                // 新規カードの場合
+                if (scorePercentage === 100) {
+                    cardData.correctCount += 1;
+                    if (cardData.correctCount >= 2) {
+                        // 新規カードから復習カードへの移行
+                        cardData.isNew = false;
+                        cardData.dueDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1日後
+                        cardData.interval = 1; // 初期間隔を1日に設定
+                        userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+                        // 注意: この復習カードは今日の復習キューには追加しない
+                    } else {
+                        // 新規キューの最後に移動
+                        userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+                        if (userProgress[`${category}NewQueue`].length < 6) {
+                            userProgress[`${category}NewQueue`].push(currentProduct.productID.toString());
+                        }
+                    }
+                } else {
+                    // スコアが100%未満の場合、新規キューの最後に移動
+                    userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+                    if (userProgress[`${category}NewQueue`].length < 6) {
+                        userProgress[`${category}NewQueue`].push(currentProduct.productID.toString());
+                    }
+                }
+
+                await updateUserProgress(user.uid, currentProduct.productID.toString(), scorePercentage);
+                await saveUserQueues(user.uid, userProgress);
+            } else {
+                // 復習カードの場合は、ユーザーの自己評価を待つ
+                // handleRating 関数で処理されるため、ここでは何もしない
+            }
+        } catch (error) {
+            console.error("Error updating user progress:", error);
+            toast({
+                title: "エラー",
+                description: "進捗の更新中にエラーが発生しました。",
+                variant: "destructive",
+            });
+        }
     };
 
     const handleRating = async (rating: number) => {
@@ -94,11 +141,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
             await updateUserProgress(user.uid, currentProduct.productID.toString(), rating * 25);
 
             const updatedProgress = { ...userProgress };
-            if (updatedProgress.cards[currentProduct.productID].isNew) {
-                updatedProgress[`${category}NewQueue`] = updatedProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
-            } else {
-                updatedProgress[`${category}ReviewQueue`] = updatedProgress[`${category}ReviewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
-            }
+            updatedProgress[`${category}ReviewQueue`] = updatedProgress[`${category}ReviewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
 
             await saveUserQueues(user.uid, updatedProgress);
 
@@ -111,6 +154,10 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                 variant: "destructive",
             });
         }
+    };
+
+    const handleNextQuestion = () => {
+        loadNextCard();
     };
 
     const getNextDueDays = (rating: number): number => {
@@ -169,6 +216,8 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         );
     }
 
+    const isNewCard = userProgress?.cards[currentProduct.productID]?.isNew;
+
     return (
         <Layout>
             <div className="w-full max-w-4xl mx-auto">
@@ -205,26 +254,34 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                     <Button onClick={() => setShowInstructions(true)}>
                                         作り方を確認する
                                     </Button>
-                                    <div className="w-full h-px bg-gray-300 my-4"></div>
-                                    <div className="flex items-center justify-between w-full">
-                                        <h4 className="text-lg font-semibold">あなたの理解度は？</h4>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => setShowInfoDialog(true)}
-                                        >
-                                            <IoIosInformationCircleOutline size={24} />
+                                    {isNewCard ? (
+                                        <Button onClick={handleNextQuestion} className="w-full max-w-xs">
+                                            次の問題へ
                                         </Button>
-                                    </div>
-                                    {['完全に忘れていた', '思い出すのに苦労した', '少し努力して思い出した', '完璧に覚えていた'].map((label, index) => (
-                                        <Button
-                                            key={index}
-                                            onClick={() => handleRating(index + 1)}
-                                            className="w-full max-w-xs"
-                                        >
-                                            {label}
-                                        </Button>
-                                    ))}
+                                    ) : (
+                                        <>
+                                            <div className="w-full h-px bg-gray-300 my-4"></div>
+                                            <div className="flex items-center justify-between w-full">
+                                                <h4 className="text-lg font-semibold">あなたの理解度は？</h4>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setShowInfoDialog(true)}
+                                                >
+                                                    <IoIosInformationCircleOutline size={24} />
+                                                </Button>
+                                            </div>
+                                            {['完全に忘れていた', '思い出すのに苦労した', '少し努力して思い出した', '完璧に覚えていた'].map((label, index) => (
+                                                <Button
+                                                    key={index}
+                                                    onClick={() => handleRating(index + 1)}
+                                                    className="w-full max-w-xs"
+                                                >
+                                                    {label}
+                                                </Button>
+                                            ))}
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         )}
