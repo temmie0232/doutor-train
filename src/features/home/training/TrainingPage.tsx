@@ -13,6 +13,8 @@ import ReviewQueueDialog from './ReviewQueueDialog';
 import { CardDetails, UserProgress } from '@/types/types';
 import { useToast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from '@/components/ui/separator';
+import { SelectSeparator } from '@/components/ui/select';
 
 interface QueueProgress {
     current: number;
@@ -190,7 +192,8 @@ const TrainingPage: React.FC = () => {
                         </CardHeader>
                         <CardContent>
                             <p className="mb-4">{category.description}</p>
-                            <div className="mb-4">
+                            <Separator className='mt-5 mb-2' />
+                            <div className="mb-2">
                                 <p className="text-sm font-medium mb-1">新規カード</p>
                                 <div className="flex items-center">
                                     <Progress
@@ -202,7 +205,7 @@ const TrainingPage: React.FC = () => {
                                     </span>
                                 </div>
                             </div>
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <p className="text-sm font-medium mb-1">復習カード</p>
                                 <div className="flex items-center">
                                     <Progress
@@ -214,24 +217,28 @@ const TrainingPage: React.FC = () => {
                                     </span>
                                 </div>
                             </div>
-                            <Button
-                                onClick={() => handleCategoryClick(category.category)}
-                                className="w-full bg-black text-white hover:bg-gray-800"
-                            >
-                                開始する
-                            </Button>
-                            <Button
-                                onClick={() => handleQueueCheck(category.category)}
-                                className="w-full mt-2 bg-gray-200 text-black hover:bg-gray-300"
-                            >
-                                キューの確認
-                            </Button>
+                            <Separator className='mt-2 mb-5' />
+                            <div className='flex justify-between '>
+                                <Button
+                                    onClick={() => handleCategoryClick(category.category)}
+                                    className="flex-1 mr-2 bg-black text-white hover:bg-gray-800"
+                                >
+                                    開始する
+                                </Button>
+                                <Button
+                                    onClick={() => handleQueueCheck(category.category)}
+                                    className="flex-1 ml-2 bg-gray-200 text-black hover:bg-gray-300"
+                                >
+                                    キューの確認
+                                </Button>
+                            </div>
                         </CardContent>
                     </Card>
                 ))}
-                <div className="mt-8 text-center">
-                    <Button onClick={() => setShowDetailsDialog(true)}>
-                        詳細を確認
+                <Separator className='my-4' />
+                <div className="mt-8  text-center">
+                    <Button className="w-full" onClick={() => setShowDetailsDialog(true)}>
+                        商品別に詳細を確認
                     </Button>
                 </div>
                 <ReviewInfoDialog

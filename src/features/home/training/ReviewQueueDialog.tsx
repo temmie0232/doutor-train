@@ -43,7 +43,7 @@ const ReviewQueueDialog: React.FC<ReviewQueueDialogProps> = ({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{getCategoryTitle(category)}の学習キュー</DialogTitle>
+                    <DialogTitle>今日の{getCategoryTitle(category)}の学習タスク</DialogTitle>
                 </DialogHeader>
                 <ScrollArea className="h-[60vh] mt-4 pr-4">
                     <h3 className="font-semibold mb-2">新規カード ({queue.newCards.length})</h3>
