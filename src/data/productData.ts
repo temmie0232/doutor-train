@@ -298,7 +298,10 @@ export const productData: Product[] = [
             { item: "ハニーベース" },
             {
                 item: "エスプレッソ",
-                attributes: { "サイズ": "S" }
+                sizeDependent: {
+                    R: "S",
+                    L: "S"
+                }
             },
             {
                 item: "ジェットスチーマー",
