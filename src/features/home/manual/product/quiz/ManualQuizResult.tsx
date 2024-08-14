@@ -79,7 +79,7 @@ const ManualQuizResult: React.FC<ManualQuizResultProps> = ({
             >
                 作り方を確認する
             </Button>
-            <Separator className="my-7" />
+            <Separator className="my-5" />
             <div className="flex justify-between">
                 <Button
                     onClick={onBackToInstructions}

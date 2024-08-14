@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 import ProductImage from '@/features/home/manual/product/quiz/ProductImage';
 import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelector';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Separator } from '@/components/ui/separator';
 
 interface TrainingCategoryPageProps {
     category: 'hot' | 'ice' | 'food';
@@ -237,9 +238,9 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                             submitted={submitted}
                         />
                         {submitted && (
-                            <div className="mt-8">
-                                <h3 className="text-xl font-bold mb-4 text-center">結果</h3>
-                                <p className="text-center mb-4">
+                            <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                                <h3 className="text-xl font-bold mb-4">結果</h3>
+                                <p className="text-lg mb-4">
                                     スコア: {score} / {currentProduct.quizAnswers.length} ({Math.round(score / currentProduct.quizAnswers.length * 100)}%)
                                 </p>
                                 <div className="mb-4">
@@ -250,10 +251,11 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="flex flex-col items-center space-y-4">
-                                    <Button onClick={() => setShowInstructions(true)}>
+                                <div className="flex flex-col items-center">
+                                    <Button className="mt-2" onClick={() => setShowInstructions(true)}>
                                         作り方を確認する
                                     </Button>
+                                    <Separator className="my-5" />
                                     {isNewCard ? (
                                         <Button onClick={handleNextQuestion} className="w-full max-w-xs">
                                             次の問題へ

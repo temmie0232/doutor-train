@@ -48,6 +48,10 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
         router.push(`/home/manual/${productID}/quiz`);
     };
 
+    const handleBackClick = () => {
+        router.push('/home/manual');  // この行を変更
+    };
+
     if (loading) {
         return (
             <Layout>
@@ -94,7 +98,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
                 </div>
 
                 <InstructionSteps product={product} instructions={product.instructions} />
-                <ProductActions onQuizClick={handleQuizClick} onBackClick={() => router.back()} />
+                <ProductActions onQuizClick={handleQuizClick} onBackClick={handleBackClick} />
             </div>
         </Layout>
     );
