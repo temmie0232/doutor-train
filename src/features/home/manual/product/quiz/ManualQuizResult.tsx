@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { productData, QuizAnswerItem } from '@/data/productData';
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import InstructionCarousel from './InstructionCarousel';
-import { Separator } from '@/components/ui/separator';
+import { Separator } from "@/components/ui/separator";
+import { InstructionDialog } from './InstructionCarousel';
 import { QuizResultProps } from '@/types/types';
+import { productData, QuizAnswerItem } from '@/data/productData';
 
+interface ManualQuizResultProps extends Omit<QuizResultProps, 'answerChecked' | 'onNextQuestion'> {
+    onBackToInstructions: () => void;
+    onBackToProductList: () => void;
+}
 
-
-
-const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productName, answerChecked, onNextQuestion }) => {
+const ManualQuizResult: React.FC<ManualQuizResultProps> = ({
+    score,
+    correctAnswer,
+    productName,
+    onBackToInstructions,
+    onBackToProductList
+}) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const product = productData.find(p => p.name === productName);
 
     const formatAnswer = (answer: QuizAnswerItem): JSX.Element => {
         let details: string[] = [];
@@ -71,15 +73,38 @@ const QuizResult: React.FC<QuizResultProps> = ({ score, correctAnswer, productNa
                     {correctAnswer.map(formatAnswer)}
                 </ul>
             </div>
-            <Separator className="my-4" />
             <Button
-                onClick={onNextQuestion}
-                className="w-full mt-4 bg-black text-white hover:bg-gray-800"
+                onClick={() => setIsDialogOpen(true)}
+                className="w-full mt-4 bg-black text-white"
             >
-                次の問題
+                作り方を確認する
             </Button>
+            <Separator className="my-7" />
+            <div className="flex justify-between">
+                <Button
+                    onClick={onBackToInstructions}
+                    className="flex-1 mr-2 bg-black text-white"
+                >
+                    作り方に戻る
+                </Button>
+                <Button
+                    onClick={onBackToProductList}
+                    className="flex-1 ml-2  bg-gray-200 text-black"
+                >
+                    商品リストに戻る
+                </Button>
+            </div>
+
+            {product && (
+                <InstructionDialog
+                    productName={productName}
+                    instructions={product.instructions}
+                    isOpen={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                />
+            )}
         </div>
     );
 };
 
-export default QuizResult;
+export default ManualQuizResult;

@@ -7,18 +7,7 @@ import { Product, QuizAnswerItem, getQuizAnswerByProduct, productData } from '@/
 import { saveQuizResult } from '@/lib/firebase';
 import ProductImage from './ProductImage';
 import MaterialSelector from './MaterialSelector';
-import QuizResult from './QuizResult';
-import NavigationButtons from './NavigationButtons';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import ManualQuizResult from './ManualQuizResult';
 import { InstructionDialog } from './InstructionCarousel';
 import { ProductQuizProps } from '@/types/types';
 import { useToast } from "@/components/ui/use-toast";
@@ -27,9 +16,7 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [correctAnswer, setCorrectAnswer] = useState<QuizAnswerItem[]>([]);
     const [score, setScore] = useState<number>(0);
-    const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
     const [showInstructionCarousel, setShowInstructionCarousel] = useState<boolean>(false);
-    const [answerChecked, setAnswerChecked] = useState<boolean>(false);
     const [product, setProduct] = useState<Product | undefined>(undefined);
     const router = useRouter();
     const { user } = useAuth();
@@ -48,7 +35,7 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
         setSubmitted(true);
         setScore(quizScore);
 
-        if (user && product && !answerChecked) {
+        if (user && product) {
             try {
                 await saveQuizResult(user.uid, product.name, quizScore, correctAnswer.length);
                 toast({
@@ -66,25 +53,12 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
         }
     };
 
-    const handleCheckAnswer = () => {
-        setShowConfirmDialog(true);
+    const handleBackToInstructions = () => {
+        router.push(`/home/manual/${encodeURIComponent(productName)}`);
     };
 
-    const handleConfirmCheckAnswer = () => {
-        setAnswerChecked(true);
-        setShowConfirmDialog(false);
-        setShowInstructionCarousel(true);
-    };
-
-    const handleNextQuestion = () => {
-        // Find the index of the current product
-        const currentIndex = productData.findIndex(p => p.name === productName);
-
-        // Get the next product (or loop back to the first if we're at the end)
-        const nextProduct = productData[(currentIndex + 1) % productData.length];
-
-        // Navigate to the next product's quiz page
-        router.push(`/home/manual/${encodeURIComponent(nextProduct.name)}/quiz`);
+    const handleBackToProductList = () => {
+        router.push('/home/manual');
     };
 
     if (!product) {
@@ -104,15 +78,9 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                     <CardTitle className="text-2xl text-center">
                         {productName} を作るためには？
                     </CardTitle>
-                    <p className="text-sm text-gray-500 text-center mt-2">
-                        コツ : 作る工程を頭で想像しながら順番に選択しよう
-                    </p>
                 </CardHeader>
                 <CardContent>
                     <ProductImage product={product} />
-                    <Button onClick={handleCheckAnswer} className="mt-4 mb-4 w-full">
-                        答えを確認する
-                    </Button>
                     <MaterialSelector
                         correctAnswer={correctAnswer}
                         product={product}
@@ -120,33 +88,16 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                         submitted={submitted}
                     />
                     {submitted && (
-                        <QuizResult
+                        <ManualQuizResult
                             score={score}
                             correctAnswer={correctAnswer}
                             productName={productName}
-                            answerChecked={answerChecked}
-                            onNextQuestion={handleNextQuestion}
+                            onBackToInstructions={handleBackToInstructions}
+                            onBackToProductList={handleBackToProductList}
                         />
                     )}
                 </CardContent>
             </Card>
-            <NavigationButtons productName={productName} />
-
-            <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>答えを確認しますか？</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            答えを確認すると、実績に反映されなくなります。
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>いいえ</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleConfirmCheckAnswer}>はい</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-
             <InstructionDialog
                 productName={productName}
                 instructions={product.instructions}
