@@ -39,7 +39,7 @@ const Header: React.FC = () => {
             case pathname === '/home':
                 return 'ホーム';
             case pathname.includes('/basics'):
-                return '基礎編';
+                return '基本 (Tips)';
             case pathname.includes('/manual'):
                 return 'マニュアル';
             case pathname.includes('/training'):
