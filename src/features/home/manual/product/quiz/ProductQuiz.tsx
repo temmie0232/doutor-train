@@ -19,9 +19,9 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import InstructionCarousel from './InstructionCarousel';
+import { InstructionDialog } from './InstructionCarousel';
 import { ProductQuizProps } from '@/types/types';
-
+import { useToast } from "@/components/ui/use-toast";
 
 const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [submitted, setSubmitted] = useState<boolean>(false);
@@ -30,23 +30,39 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
     const [showInstructionCarousel, setShowInstructionCarousel] = useState<boolean>(false);
     const [answerChecked, setAnswerChecked] = useState<boolean>(false);
-    const product: Product | undefined = productData.find(p => p.name === productName);
+    const [product, setProduct] = useState<Product | undefined>(undefined);
     const router = useRouter();
     const { user } = useAuth();
+    const { toast } = useToast();
 
     useEffect(() => {
-        if (product) {
-            const answer = getQuizAnswerByProduct(product);
+        const foundProduct = productData.find(p => p.name === productName);
+        if (foundProduct) {
+            setProduct(foundProduct);
+            const answer = getQuizAnswerByProduct(foundProduct);
             setCorrectAnswer(answer);
         }
-    }, [productName, product]);
+    }, [productName]);
 
     const handleSubmit = async (quizScore: number) => {
         setSubmitted(true);
         setScore(quizScore);
 
         if (user && product && !answerChecked) {
-            await saveQuizResult(user.uid, product.name, quizScore, correctAnswer.length);
+            try {
+                await saveQuizResult(user.uid, product.name, quizScore, correctAnswer.length);
+                toast({
+                    title: "クイズ結果を保存しました",
+                    description: "あなたの進捗が更新されました。",
+                });
+            } catch (error) {
+                console.error("Error saving quiz result:", error);
+                toast({
+                    title: "エラー",
+                    description: "クイズ結果の保存中にエラーが発生しました。",
+                    variant: "destructive",
+                });
+            }
         }
     };
 
@@ -59,6 +75,27 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
         setShowConfirmDialog(false);
         setShowInstructionCarousel(true);
     };
+
+    const handleNextQuestion = () => {
+        // Find the index of the current product
+        const currentIndex = productData.findIndex(p => p.name === productName);
+
+        // Get the next product (or loop back to the first if we're at the end)
+        const nextProduct = productData[(currentIndex + 1) % productData.length];
+
+        // Navigate to the next product's quiz page
+        router.push(`/home/manual/${encodeURIComponent(nextProduct.name)}/quiz`);
+    };
+
+    if (!product) {
+        return (
+            <div className="text-center">
+                <h1 className="text-2xl font-bold mb-4">商品が見つかりません</h1>
+                <p className="mb-4">検索した商品名: {productName}</p>
+                <Button onClick={() => router.back()}>戻る</Button>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full max-w-4xl mx-auto">
@@ -76,19 +113,19 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                     <Button onClick={handleCheckAnswer} className="mt-4 mb-4 w-full">
                         答えを確認する
                     </Button>
-                    {product && (
-                        <MaterialSelector
-                            correctAnswer={correctAnswer}
-                            product={product}
-                            onSubmit={handleSubmit}
-                        />
-                    )}
+                    <MaterialSelector
+                        correctAnswer={correctAnswer}
+                        product={product}
+                        onSubmit={handleSubmit}
+                        submitted={submitted}
+                    />
                     {submitted && (
                         <QuizResult
                             score={score}
                             correctAnswer={correctAnswer}
                             productName={productName}
                             answerChecked={answerChecked}
+                            onNextQuestion={handleNextQuestion}
                         />
                     )}
                 </CardContent>
@@ -110,22 +147,12 @@ const ProductQuiz: React.FC<ProductQuizProps> = ({ productName }) => {
                 </AlertDialogContent>
             </AlertDialog>
 
-            <AlertDialog open={showInstructionCarousel} onOpenChange={setShowInstructionCarousel}>
-                <AlertDialogContent className="max-w-4xl">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{productName}の作り方</AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <InstructionCarousel
-                        productName={productName}
-                        instructions={product?.instructions || []}
-                    />
-                    <AlertDialogFooter>
-                        <AlertDialogAction onClick={() => setShowInstructionCarousel(false)}>
-                            閉じる
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <InstructionDialog
+                productName={productName}
+                instructions={product.instructions}
+                isOpen={showInstructionCarousel}
+                onClose={() => setShowInstructionCarousel(false)}
+            />
         </div>
     );
 };
