@@ -109,7 +109,6 @@ export async function updateUserProgress(userId: string, productId: string, scor
         const initialNewQueue = [...userProgress[`${category}NewQueue`]];
         const initialReviewQueue = [...userProgress[`${category}ReviewQueue`]];
 
-
         if (card.isNew) {
             if (score === 100) {
                 card.correctCount++;
@@ -117,10 +116,10 @@ export async function updateUserProgress(userId: string, productId: string, scor
                     card.isNew = false;
                     // Remove from new queue
                     userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter(id => id !== productId);
-                    // Add to review queue (max 12)
-                    if (userProgress[`${category}ReviewQueue`].length < 12) {
-                        userProgress[`${category}ReviewQueue`].push(productId);
-                    }
+                    // Set due date for tomorrow
+                    card.dueDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+                    card.interval = 1;
+                    // Do not add to today's review queue
                 } else {
                     // Move to the end of new queue
                     userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter(id => id !== productId);
@@ -155,7 +154,7 @@ export async function updateUserProgress(userId: string, productId: string, scor
             card.dueDate = new Date(Date.now() + card.interval * 24 * 60 * 60 * 1000);
 
             // Remove from review queue if due date is in the future
-            if (convertToDate(card.dueDate) > new Date()) {
+            if (card.dueDate > new Date()) {
                 userProgress[`${category}ReviewQueue`] = userProgress[`${category}ReviewQueue`].filter(id => id !== productId);
             } else {
                 // Move to the end of review queue
@@ -189,6 +188,7 @@ export async function updateUserProgress(userId: string, productId: string, scor
     // トランザクション完了後、明示的にキューの状態を保存
     await saveUserQueues(userId);
 }
+
 export function getCardCategory(productId: string): Category {
     const product = productData.find(p => p.productID.toString() === productId);
     return product?.category || 'hot'; // Default to 'hot' if not found

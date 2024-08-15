@@ -195,6 +195,11 @@ const TrainingPage: React.FC = () => {
     return (
         <Layout>
             <div className="space-y-6">
+                <div className="mt-1  text-center">
+                    <Button className="w-full bg-white text-black font-semibold text-basic underline" variant="outline" onClick={() => setShowDetailsDialog(true)}>
+                        学習の流れ
+                    </Button>
+                </div>
                 {categories.map((category, index) => (
                     <Card key={index} className="hover:shadow-lg transition-shadow">
                         <CardHeader>
