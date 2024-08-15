@@ -181,6 +181,7 @@ export interface CardData {
 }
 
 export interface UserProgress {
+    hotReviewCardsRemovedQueueToday: any;
     cards: { [productId: string]: CardData };
     lastStudyDate: Date | Timestamp;
     hotNewQueue: string[];

@@ -6,15 +6,15 @@ import Layout from '@/components/layout/Layout';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { productData, Product } from '@/data/productData';
-import { getUserProgress, ensureUserProgressInitialized, logUserProgress, saveUserProgress } from '@/lib/spaced-repetition';
+import { getUserProgress, ensureUserProgressInitialized, logUserProgress, saveUserProgress, UserProgress } from '@/lib/spaced-repetition';
 import { Timestamp } from 'firebase/firestore';
 import ReviewInfoDialog from './ReviewInfoDialog';
 import ReviewQueueDialog from './ReviewQueueDialog';
-import { CardDetails, UserProgress } from '@/types/types';
 import { useToast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from '@/components/ui/separator';
 import { SelectSeparator } from '@/components/ui/select';
+import { CardDetails } from '@/types/types';
 
 interface QueueProgress {
     removed: number;
