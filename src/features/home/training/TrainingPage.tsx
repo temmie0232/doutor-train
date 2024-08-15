@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from '@/components/ui/separator';
 import { SelectSeparator } from '@/components/ui/select';
 import { CardDetails } from '@/types/types';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface QueueProgress {
     removed: number;
@@ -32,6 +33,7 @@ const TrainingPage: React.FC = () => {
     const { toast } = useToast();
     const [showDetailsDialog, setShowDetailsDialog] = useState(false);
     const [showQueueDialog, setShowQueueDialog] = useState(false);
+    const [showInstructionsDialog, setShowInstructionsDialog] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<'hot' | 'ice' | 'food'>('hot');
     const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
@@ -192,11 +194,34 @@ const TrainingPage: React.FC = () => {
         );
     }
 
+    const instructionsContent = {
+        basic: [
+            "このセッションを始める前に、マニュアルで一通り作り方の確認をすることをおすすめします。",
+            "新規カードと復習カードの2種類があり、毎日新規カードは6枚、復習カードは12枚追加されます。",
+            "新規カードは2回正解（スコア100%）すると復習カードに変更され、その日の出題からは外れます。",
+            "進捗バーでタスクの完了状況が視覚的に確認できます。",
+            "ホットドリンク、アイスドリンク、フードの3種類のクイズがあります。",
+            "最初はアイスドリンクに集中し、慣れてきたら他のカテゴリーも学習することをおすすめします。",
+            "深く考えすぎず、毎日進捗バーを100%にすることを目指しましょう。",
+            "頭の中で商品を作りながら選択肢を選ぶと、学習効果が高まります。"
+        ],
+        detailed: [
+            "新規カードは、スコアが100%か否かでのみ判定され、ユーザーの自己評価は求められません。",
+            "復習カードでは、回答後に4段階のユーザー評価を求められます。適切な選択により、次回の最適な学習日が計算されます。",
+            "復習カードの間隔反復アルゴリズムにはスコアの値は影響しません。スコアはユーザーが適切な評価を選択するためのものです。",
+            "理解度が低い商品は頻繁に出題され、理解度が高い商品の出題頻度は下がります。これにより、苦手な商品に効率的にアプローチできます。"
+        ]
+    };
+
     return (
         <Layout>
             <div className="space-y-6">
-                <div className="mt-1  text-center">
-                    <Button className="w-full bg-white text-black font-semibold text-basic underline" variant="outline" onClick={() => setShowDetailsDialog(true)}>
+                <div className="mt-1 text-center">
+                    <Button
+                        className="w-full bg-white text-black font-semibold text-basic underline"
+                        variant="outline"
+                        onClick={() => setShowInstructionsDialog(true)}
+                    >
                         学習の流れ
                     </Button>
                 </div>
@@ -269,6 +294,30 @@ const TrainingPage: React.FC = () => {
                     category={selectedCategory}
                     queue={getCategoryQueue(selectedCategory)}
                 />
+                <Dialog open={showInstructionsDialog} onOpenChange={setShowInstructionsDialog}>
+                    <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle>トレーニングの使い方</DialogTitle>
+                        </DialogHeader>
+                        <DialogDescription>
+                            <h3 className="text-lg font-semibold mt-4 mb-2">基本的な使い方</h3>
+                            <ul className="list-disc pl-5 space-y-2">
+                                {instructionsContent.basic.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                            <h3 className="text-lg font-semibold mt-6 mb-2">詳細</h3>
+                            <ul className="list-disc pl-5 space-y-2">
+                                {instructionsContent.detailed.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                        </DialogDescription>
+                        <DialogFooter>
+                            <Button onClick={() => setShowInstructionsDialog(false)}>閉じる</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </Layout>
     );

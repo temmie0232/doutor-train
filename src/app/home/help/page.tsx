@@ -47,8 +47,7 @@ const HelpPage: React.FC = () => {
                         手打ちの部分もあるので、誤りもあると思います。見つけた場合は<br />
                         メールかLINEで 誤:〇〇 正:〇〇 のように送ってください。<br />
                         mail : temmie0232@gmail.com<br />
-                        LINE : やぎ<br /><br />
-                        または <a href="https://github.com/temmie0232/doutor-train" className='underline text-blue-600'>ここ</a> をクリックすると、匿名でメッセージを送れます。
+                        LINE : やぎ
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-6">
