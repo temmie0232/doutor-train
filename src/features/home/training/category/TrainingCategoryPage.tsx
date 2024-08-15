@@ -254,10 +254,9 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                     </ul>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <Button className="mt-2" onClick={() => setShowInstructions(true)}>
+                                    <Button className="my-4" onClick={() => setShowInstructions(true)}>
                                         作り方を確認する
                                     </Button>
-                                    <Separator className="my-5" />
                                     {isNewCard ? (
                                         <Button onClick={handleNextQuestion} className="w-full max-w-xs">
                                             次の問題へ
@@ -265,7 +264,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                     ) : (
                                         <>
                                             <div className="w-full h-px bg-gray-300 my-4"></div>
-                                            <div className="flex items-center justify-between w-full">
+                                            <div className="flex items-center justify-between w-full mb-3">
                                                 <h4 className="text-lg font-semibold">あなたの理解度は？</h4>
                                                 <Button
                                                     variant="ghost"
@@ -279,7 +278,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                                                 <Button
                                                     key={index}
                                                     onClick={() => handleRating(index + 1)}
-                                                    className="w-full max-w-xs"
+                                                    className="w-full max-w-xs my-2"
                                                 >
                                                     {label}
                                                 </Button>
