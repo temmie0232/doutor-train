@@ -8,11 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { NameInputModalProps } from '@/types/types';
 
-interface NameInputModalProps {
-    isOpen: boolean;
-    onClose: (name: string) => void;
-}
 
 const NameInputModal: React.FC<NameInputModalProps> = ({ isOpen, onClose }) => {
     const [name, setName] = useState('');

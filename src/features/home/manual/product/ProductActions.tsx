@@ -14,7 +14,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ onQuizClick, onBackClic
             <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                     onClick={onQuizClick}
-                    className="flex-1 bg-zinc-800 text-white"
+                    className="flex-1 bg-black text-whitebg-zinc-800 text-white"
                 >
                     クイズに挑戦
                 </Button>

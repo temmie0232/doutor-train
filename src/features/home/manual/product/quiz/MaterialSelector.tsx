@@ -1,44 +1,46 @@
-// src/features/home/manual/product/quiz/MaterialSelector.tsx
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { categories } from '@/data/materials';
-import { Product } from '@/data/products';
-import { QuizAnswerItem } from '@/data/quizAnswers';
+import { hotCategories } from '@/data/materials_hot';
+import { iceCategories } from '@/data/materials_ice';
+import { foodCategories } from '@/data/materials_food';
+import {
+    MaterialSelectorProps,
+    QuizState,
+    SelectedItem,
+    QuizContextType
+} from '@/types/types';
 import {
     Category,
-    CupSelector,
-    HotCupTypeSelector,
+    HotCupSelector,
     JetSteamerOption,
     WhippedCreamOption,
     EspressoOption,
-    QuizContext,
-    SelectedItem,
-    QuizState,
-    QuizContextType
+    QuizContext
 } from './QuizComponents';
-
-interface MaterialSelectorProps {
-    correctAnswer: QuizAnswerItem[];
-    product: Product;
-    onSubmit: (score: number) => void;
-}
 
 const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     correctAnswer,
     product,
-    onSubmit
+    onSubmit,
+    submitted
 }) => {
     const [state, setState] = useState<QuizState>({
         selectedItems: [],
         jetSteamerFoam: false,
         whippedCreamCount: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 0 }), {}),
         espressoSize: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 'S' }), {}),
-        selectedCup: null,
         hotCupTypes: product.sizes.reduce((acc, size) => ({ ...acc, [size]: '' }), {})
     });
 
-    const [submitted, setSubmitted] = useState<boolean>(false);
+    useEffect(() => {
+        setState({
+            selectedItems: [],
+            jetSteamerFoam: false,
+            whippedCreamCount: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 0 }), {}),
+            espressoSize: product.sizes.reduce((acc, size) => ({ ...acc, [size]: 'S' }), {}),
+            hotCupTypes: product.sizes.reduce((acc, size) => ({ ...acc, [size]: '' }), {})
+        });
+    }, [product]);
 
     const toggleItem = useCallback((item: string, size?: string) => {
         setState(prev => {
@@ -98,17 +100,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         }));
     }, []);
 
-    const handleCupSelection = useCallback((cupType: 'hot' | 'ice') => {
-        setState(prev => ({
-            ...prev,
-            selectedCup: cupType,
-            selectedItems: prev.selectedItems.filter(item => item.item !== 'カップ').concat({
-                item: 'カップ',
-                attributes: { type: cupType }
-            })
-        }));
-    }, []);
-
     const handleHotCupTypeSelection = useCallback((size: string, type: string) => {
         setState(prev => ({
             ...prev,
@@ -128,25 +119,23 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
         if (!selectedItem || !correctItem) return false;
 
         if (item === 'カップ') {
-            const selectedType = selectedItem.attributes?.type;
-            const correctType = correctItem.attributes?.type;
-
-            if (selectedType === correctType) {
-                if (correctType === 'hot' && correctItem.sizeDependent) {
-                    return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
-                        const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
-                        return selectedCupForSize?.attributes?.subType === value;
-                    });
-                }
-                return true;
+            if (correctItem.sizeDependent) {
+                return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
+                    const selectedCupForSize = state.selectedItems.find(i => i.item === 'カップ' && i.size === size);
+                    if (value === "サイズなし") {
+                        return selectedCupForSize?.attributes?.subType === "サイズなし";
+                    }
+                    return selectedCupForSize?.attributes?.subType === value;
+                });
             }
-            return false;
+            return true;
         }
 
         if (item === "エスプレッソ" && correctItem.sizeDependent) {
-            return Object.entries(correctItem.sizeDependent).every(([size, value]) =>
-                selectedItem.attributes && selectedItem.attributes[size] === value
-            );
+            return Object.entries(correctItem.sizeDependent).every(([size, value]) => {
+                if (value === null) return true;
+                return selectedItem.attributes && selectedItem.attributes[size] === value;
+            });
         }
 
         if (correctItem.attributes) {
@@ -177,45 +166,45 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
     }, [state.selectedItems, correctAnswer]);
 
     const handleSubmit = useCallback(() => {
-        setSubmitted(true);
         const score = correctAnswer.filter(answer => isCorrect(answer.item)).length;
         onSubmit(score);
     }, [correctAnswer, isCorrect, onSubmit]);
 
     const quizContextValue: QuizContextType = {
-        ...state,
+        selectedItems: state.selectedItems,
+        jetSteamerFoam: state.jetSteamerFoam,
+        whippedCreamCount: state.whippedCreamCount,
+        espressoSize: state.espressoSize,
+        hotCupTypes: state.hotCupTypes,
         submitted,
         isCorrect,
         toggleItem,
         setJetSteamerFoam,
         setWhippedCreamCount,
         setEspressoSize,
-        handleCupSelection,
         handleHotCupTypeSelection,
     };
 
+
+    const categories = product.category === 'hot' ? hotCategories :
+        product.category === 'ice' ? iceCategories :
+            foodCategories;
+
+    const hasCupInCorrectAnswer = correctAnswer.some(answer => answer.item === 'カップ');
+
     return (
         <QuizContext.Provider value={quizContextValue}>
+            {product.category === 'hot' && hasCupInCorrectAnswer && (
+                <HotCupSelector
+                    product={product}
+                    hotCupTypes={state.hotCupTypes}
+                    handleHotCupTypeSelection={handleHotCupTypeSelection}
+                    correctAnswer={correctAnswer.find(answer => answer.item === 'カップ')}
+                />
+            )}
             {Object.entries(categories).map(([category, items]) => (
                 <React.Fragment key={category}>
-                    {category === "カップ/容器" ? (
-                        <>
-                            <h3 className="font-bold mb-2">{category}</h3>
-                            <CupSelector
-                                selectedCup={state.selectedCup}
-                                handleCupSelection={handleCupSelection}
-                                submitted={submitted}
-                                isCorrect={isCorrect}
-                            />
-                            {state.selectedCup === 'hot' && (
-                                <HotCupTypeSelector
-                                    product={product}
-                                    hotCupTypes={state.hotCupTypes}
-                                    handleHotCupTypeSelection={handleHotCupTypeSelection}
-                                />
-                            )}
-                        </>
-                    ) : (
+                    {category !== "カップ" && (
                         <Category
                             category={category}
                             items={items}
@@ -226,7 +215,7 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
                             product={product}
                         />
                     )}
-                    {category === "機械/設備" && state.selectedItems.some(i => i.item === "ジェットスチーマー") && (
+                    {category === "機械" && state.selectedItems.some(i => i.item === "ジェットスチーマー") && (
                         <JetSteamerOption />
                     )}
                     {category === "トッピング/ソース" && state.selectedItems.some(i => i.item === "ホイップクリーム") && (
@@ -246,7 +235,6 @@ const MaterialSelector: React.FC<MaterialSelectorProps> = ({
             </Button>
         </QuizContext.Provider>
     );
-
 };
 
 export default MaterialSelector;

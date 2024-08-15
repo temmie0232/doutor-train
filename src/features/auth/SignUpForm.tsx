@@ -1,9 +1,10 @@
 "use client"
-
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useForm } from 'react-hook-form'
+import { initializeUserProgress } from '@/lib/spaced-repetition'
+import { UserCredential } from 'firebase/auth'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,7 +16,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Separator } from '@/components/ui/separator'
 
 interface FormData {
     email: string;
@@ -31,27 +31,29 @@ const SignUpForm: React.FC = () => {
 
     const onSubmit = async (data: FormData) => {
         try {
-            await signUp(data.email, data.password);
+            const userCredential = await signUp(data.email, data.password);
+            const userId = userCredential.user.uid;
+
+            // ユーザーの進捗データを初期化
+            await initializeUserProgress(userId);
+
             router.push('/home');
         } catch (err) {
             setError("登録に失敗しました。");
+            console.error(err);
         }
     };
 
     return (
         <div>
-            {/*カード全体*/}
             <Card className="w-full">
-                {/*タイトル*/}
                 <CardHeader className='text-center'>
                     <CardTitle>新規登録</CardTitle>
-                    {/*アンダーライン*/}
                     <div className="flex justify-center mt-2">
                         <div className="w-12 h-1 bg-black rounded-lg"></div>
                     </div>
                 </CardHeader>
 
-                {/*内容*/}
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid w-full items-center gap-4">
@@ -104,7 +106,6 @@ const SignUpForm: React.FC = () => {
                     </form>
                 </CardContent>
 
-                {/*フッター*/}
                 <CardFooter className="flex justify-center flex-col">
                     <Button type="submit" size="sm" className="w-4/5 text-sm" onClick={handleSubmit(onSubmit)}>登録する</Button>
                 </CardFooter>

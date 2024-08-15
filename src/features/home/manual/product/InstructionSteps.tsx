@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Product } from '@/data/products';
+import { Product } from '@/data/productData';
 import { CiImageOff } from 'react-icons/ci';
 
 interface InstructionStepsProps {

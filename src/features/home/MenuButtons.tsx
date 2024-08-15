@@ -11,7 +11,7 @@ const MenuButtons: React.FC = () => {
     const router = useRouter();
 
     const buttons = [
-        { label: '基礎編', icon: FaGraduationCap, onClick: () => router.push('/home/basics') },
+        { label: '基本 (Tips)', icon: FaGraduationCap, onClick: () => router.push('/home/basics') },
         { label: '商品マニュアル', icon: MdMenuBook, onClick: () => router.push('/home/manual') },
         { label: 'トレーニング', icon: MdOutlineCoffeeMaker, onClick: () => router.push('/home/training') },
         { label: 'ヘルプ', icon: BiHelpCircle, onClick: () => router.push('/home/help') },

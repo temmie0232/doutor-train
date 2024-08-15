@@ -1,16 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { CiImageOff } from 'react-icons/ci';
-import { Product } from '@/data/products';
-
-interface ProductImageProps {
-    product: Product | undefined;
-}
+import { ProductImageProps } from '@/types/types';
 
 const ProductImage: React.FC<ProductImageProps> = ({ product }) => {
     return (
-        <div className="w-full mb-16" style={{ maxWidth: '350px', margin: '0 auto' }}>
-            <div style={{ position: 'relative', width: '100%', paddingBottom: '100%' }}>
+        <div className="w-full max-w-[350px] mx-auto mb-8">
+            <div className="relative aspect-square">
                 {product?.image ? (
                     <Image
                         src={product.image}
@@ -18,11 +14,10 @@ const ProductImage: React.FC<ProductImageProps> = ({ product }) => {
                         layout="fill"
                         objectFit="contain"
                         className="rounded-lg shadow-lg"
-                        style={{ borderRadius: '0.5rem' }}
                     />
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg shadow-lg">
-                        <CiImageOff size={48} className="text-gray-400" />
+                        <CiImageOff className="text-gray-400 w-1/3 h-1/3" />
                     </div>
                 )}
             </div>

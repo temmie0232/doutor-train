@@ -1,11 +1,7 @@
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
+import { UnderstandingBadgeProps } from '@/types/types';
 
-interface UnderstandingBadgeProps {
-    score: number | null;
-    totalQuestions: number;
-    showPercentage?: boolean;
-}
 
 const UnderstandingBadge: React.FC<UnderstandingBadgeProps> = ({ score, totalQuestions, showPercentage = false }) => {
     if (score === null) {

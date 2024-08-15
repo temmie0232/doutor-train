@@ -1,10 +1,7 @@
 import React from 'react';
 import { User } from 'firebase/auth';
+import { WelcomeMessageProps } from '@/types/types';
 
-interface WelcomeMessageProps {
-    user: User | null;
-    userName: string | null;
-}
 
 const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ user, userName }) => {
     if (!user) {

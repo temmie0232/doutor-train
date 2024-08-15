@@ -5,14 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ChevronDown } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { SortDropdownProps } from '@/types/types';
 
-interface SortDropdownProps {
-    title: string;
-    options: string[];
-    selectedOptions: string[];
-    onOptionToggle: (option: string) => void;
-    allOption: string;
-}
 
 const SortDropdown: React.FC<SortDropdownProps> = ({
     title,
