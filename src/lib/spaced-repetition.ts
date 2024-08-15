@@ -77,9 +77,6 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
             userProgress[`${category}NewQueue`] = newQueueToAdd;
             userProgress[`${category}NewCardsAddedToday`] = newQueueToAdd.length;
 
-            // Reset removed cards count here
-            userProgress[`${category}NewCardsRemovedQueueToday`] = 0;
-
             // Initialize review queue for each category
             const dueReviewCards = Object.entries(userProgress.cards || {})
                 .filter(([_, card]) => !card.isNew &&
@@ -90,18 +87,9 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
             const reviewQueueToAdd = shuffledDueReviewCards.slice(0, 12);
             userProgress[`${category}ReviewQueue`] = reviewQueueToAdd;
             userProgress[`${category}ReviewCardsAddedToday`] = reviewQueueToAdd.length;
-
-            // Reset removed cards count here
-            userProgress[`${category}ReviewCardsRemovedQueueToday`] = 0;
         });
 
         userProgress.lastInitializationDate = Timestamp.fromDate(today);
-    } else {
-        // If queues were already initialized today, don't reset the removed cards count
-        categories.forEach(category => {
-            userProgress[`${category}NewCardsAddedToday`] = 0;
-            userProgress[`${category}ReviewCardsAddedToday`] = 0;
-        });
     }
 
     return userProgress;
@@ -233,7 +221,7 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
             iceNewCardsRemovedQueueToday: 0,
             iceReviewCardsRemovedQueueToday: 0,
             foodNewCardsRemovedQueueToday: 0,
-            foodReviewCardsRemovedQueueToday: 0
+            foodReviewCardsRemovedQueueToday: 0,
         };
         productData.forEach(product => {
             data!.cards[product.productID] = {
@@ -250,6 +238,9 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
 
     // Initialize queues
     data = initializeQueues(data, productData);
+
+    // Save the updated progress
+    await setDoc(doc(db, 'userProgress', userId), data);
 
     return data;
 }
