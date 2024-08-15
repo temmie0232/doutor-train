@@ -85,13 +85,13 @@ const ManualQuizResult: React.FC<ManualQuizResultProps> = ({
                     onClick={onBackToInstructions}
                     className="flex-1 mr-2 bg-black text-white"
                 >
-                    作り方に戻る
+                    作り方へ
                 </Button>
                 <Button
                     onClick={onBackToProductList}
                     className="flex-1 ml-2  bg-gray-200 text-black"
                 >
-                    商品リストに戻る
+                    商品リストへ
                 </Button>
             </div>
 

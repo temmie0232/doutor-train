@@ -209,7 +209,7 @@ export const productData: Product[] = [
                 attributes: { type: "hot" },
                 sizeDependent: {
                     R: "Mホットカップ",
-                    L: "Lホットカップ"
+                    L: "サイズなし"
                 }
             },
             { item: "ルイボスティー用ティーバッグ" },

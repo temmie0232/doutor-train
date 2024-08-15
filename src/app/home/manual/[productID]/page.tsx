@@ -49,7 +49,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
     };
 
     const handleBackClick = () => {
-        router.push('/home/manual');  // この行を変更
+        router.push('/home/manual');
     };
 
     if (loading) {
@@ -76,7 +76,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ params }) => {
 
     return (
         <Layout>
-            <div className="max-w-2xl mx-auto px-8 sm:px-8 lg:px-10">
+            <div className="max-w-2xl mx-auto px-5 sm:px-5 lg:px-7">
                 <div className="flex justify-center items-center mb-4">
                     <h1 className="text-3xl font-bold">{product.name}</h1>
                 </div>
