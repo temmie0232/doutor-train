@@ -23,20 +23,22 @@ const ProgressToast: React.FC<ProgressToastProps> = ({ category, type, before, a
     const getProgressPercentage = (value: number) => ((total - value) / total) * 100;
 
     return (
-        <div className="w-400px">
-            <p className="text-sm font-medium">
-                {type === 'new' ? '新規カード' : '復習カード'} ({category})
-            </p>
-            <div className="flex items-center w-full">
-                <div className="flex-grow mr-2">
-                    <Progress
-                        value={getProgressPercentage(progress)}
-                        className="w-full transition-all duration-500 ease-in-out"
-                    />
-                </div>
-                <p className="text-sm whitespace-nowrap min-w-[60px] text-right">
-                    {total - progress} / {total}
+        <div className="flex justify-center w-full">
+            <div className="w-60 ">
+                <p className="text-sm font-medium mb-2 text-center truncate">
+                    {type === 'new' ? '新規カード' : '復習カード'} ({category})
                 </p>
+                <div className="flex items-center w-full">
+                    <div className="flex-grow mr-2">
+                        <Progress
+                            value={getProgressPercentage(progress)}
+                            className="w-full transition-all duration-500 ease-in-out"
+                        />
+                    </div>
+                    <p className="text-sm whitespace-nowrap min-w-[60px] text-right">
+                        {total - progress} / {total}
+                    </p>
+                </div>
             </div>
         </div>
     );

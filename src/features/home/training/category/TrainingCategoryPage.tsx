@@ -245,7 +245,6 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
 
     const showProgressToast = (type: 'new' | 'review', before: number, after: number, total: number) => {
         toast({
-            title: "進捗更新",
             description: (
                 <ProgressToast
                     category={category}
@@ -255,7 +254,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                     total={total}
                 />
             ),
-            duration: Infinity,
+            duration: 3000,
         });
     };
 
