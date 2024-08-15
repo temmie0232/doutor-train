@@ -9,10 +9,12 @@ import { InstructionDialog } from '@/features/home/manual/product/quiz/Instructi
 import { getUserProgress, updateUserProgress, saveUserQueues } from '@/lib/spaced-repetition';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { useToast } from "@/components/ui/use-toast";
+import { Toast } from "@/components/ui/toast";
 import ProductImage from '@/features/home/manual/product/quiz/ProductImage';
 import MaterialSelector from '@/features/home/manual/product/quiz/MaterialSelector';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from '@/components/ui/separator';
+import ProgressToast from './progressToast';
 
 interface TrainingCategoryPageProps {
     category: 'hot' | 'ice' | 'food';
@@ -26,6 +28,8 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const [showInstructions, setShowInstructions] = useState(false);
     const [showInfoDialog, setShowInfoDialog] = useState(false);
     const [userProgress, setUserProgress] = useState<any>(null);
+    const [progressBefore, setProgressBefore] = useState({ new: 0, review: 0 });
+    const [progressAfter, setProgressAfter] = useState({ new: 0, review: 0 });
     const { user } = useAuth();
     const router = useRouter();
     const { toast } = useToast();
@@ -93,6 +97,12 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         const totalQuestions = currentProduct.quizAnswers.length;
         const scorePercentage = (quizScore / totalQuestions) * 100;
 
+        // 進捗更新前の状態を保存
+        const progressBefore = {
+            new: userProgress[`${category}NewQueue`].length,
+            review: userProgress[`${category}ReviewQueue`].length
+        };
+
         try {
             if (isNewCard) {
                 // 新規カードの場合
@@ -121,12 +131,28 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                     }
                 }
 
-                await updateUserProgress(user.uid, currentProduct.productID.toString(), scorePercentage);
-                await saveUserQueues(user.uid);
+                // 進捗更新後の状態を取得
+                const progressAfter = {
+                    new: userProgress[`${category}NewQueue`].length,
+                    review: userProgress[`${category}ReviewQueue`].length
+                };
+
+                // 進捗が変化した場合、トーストを表示
+                if (progressBefore.new !== progressAfter.new || progressBefore.review !== progressAfter.review) {
+                    showProgressToast(
+                        'new',
+                        progressBefore.new,
+                        progressAfter.new,
+                        userProgress[`${category}NewCardsAddedToday`]
+                    );
+                }
             } else {
                 // 復習カードの場合は、ユーザーの自己評価を待つ
                 // handleRating 関数で処理されるため、ここでは何もしない
             }
+
+            await updateUserProgress(user.uid, currentProduct.productID.toString(), scorePercentage);
+            await saveUserQueues(user.uid);
         } catch (error) {
             console.error("Error updating user progress:", error);
             toast({
@@ -140,11 +166,33 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const handleRating = async (rating: number) => {
         if (!user || !currentProduct || !userProgress) return;
         try {
+            // 進捗更新前の状態を保存
+            setProgressBefore({
+                new: userProgress[`${category}NewQueue`].length,
+                review: userProgress[`${category}ReviewQueue`].length
+            });
+
             await updateUserProgress(user.uid, currentProduct.productID.toString(), rating * 25);
 
             const updatedProgress = { ...userProgress };
             updatedProgress[`${category}ReviewQueue`] = updatedProgress[`${category}ReviewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
             updatedProgress[`${category}ReviewCardsRemovedQueueToday`]++;
+
+            // 進捗更新後の状態を保存
+            setProgressAfter({
+                new: updatedProgress[`${category}NewQueue`].length,
+                review: updatedProgress[`${category}ReviewQueue`].length
+            });
+
+            // 進捗が変化した場合、トーストを表示
+            if (progressBefore.review !== progressAfter.review) {
+                showProgressToast(
+                    'review',
+                    progressBefore.review,
+                    progressAfter.review,
+                    userProgress[`${category}ReviewCardsAddedToday`]
+                );
+            }
 
             await saveUserQueues(user.uid);
 
@@ -193,6 +241,22 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
             }
         }
         return result;
+    };
+
+    const showProgressToast = (type: 'new' | 'review', before: number, after: number, total: number) => {
+        toast({
+            title: "進捗更新",
+            description: (
+                <ProgressToast
+                    category={category}
+                    type={type}
+                    before={before}
+                    after={after}
+                    total={total}
+                />
+            ),
+            duration: Infinity,
+        });
     };
 
     if (loading) {
