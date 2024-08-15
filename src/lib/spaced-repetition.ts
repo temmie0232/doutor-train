@@ -37,6 +37,12 @@ export interface UserProgress {
     iceReviewCardsAddedToday: number;
     foodNewCardsAddedToday: number;
     foodReviewCardsAddedToday: number;
+    hotNewCardsRemovedQueueToday: number;
+    hotReviewCardsRemovedQueueToday: number;
+    iceNewCardsRemovedQueueToday: number;
+    iceReviewCardsRemovedQueueToday: number;
+    foodNewCardsRemovedQueueToday: number;
+    foodReviewCardsRemovedQueueToday: number;
     [key: string]: any; // Add index signature
 }
 
@@ -70,6 +76,7 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
             const newQueueToAdd = shuffledNewCards.slice(0, 6);
             userProgress[`${category}NewQueue`] = newQueueToAdd;
             userProgress[`${category}NewCardsAddedToday`] = newQueueToAdd.length;
+            userProgress[`${category}NewCardsRemovedQueueToday`] = 0;
 
             // Initialize review queue for each category
             const dueReviewCards = Object.entries(userProgress.cards || {})
@@ -81,6 +88,7 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
             const reviewQueueToAdd = shuffledDueReviewCards.slice(0, 12);
             userProgress[`${category}ReviewQueue`] = reviewQueueToAdd;
             userProgress[`${category}ReviewCardsAddedToday`] = reviewQueueToAdd.length;
+            userProgress[`${category}ReviewCardsRemovedQueueToday`] = 0;
         });
 
         userProgress.lastInitializationDate = Timestamp.fromDate(today);
@@ -89,6 +97,8 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
         categories.forEach(category => {
             userProgress[`${category}NewCardsAddedToday`] = 0;
             userProgress[`${category}ReviewCardsAddedToday`] = 0;
+            userProgress[`${category}NewCardsRemovedQueueToday`] = 0;
+            userProgress[`${category}ReviewCardsRemovedQueueToday`] = 0;
         });
     }
 
@@ -104,6 +114,11 @@ export async function updateUserProgress(userId: string, productId: string, scor
 
         const card = userProgress.cards[productId];
         const category = getCardCategory(productId);
+
+        // キューの状態を保存
+        const initialNewQueue = [...userProgress[`${category}NewQueue`]];
+        const initialReviewQueue = [...userProgress[`${category}ReviewQueue`]];
+
 
         if (card.isNew) {
             if (score === 100) {
@@ -168,10 +183,22 @@ export async function updateUserProgress(userId: string, productId: string, scor
         });
 
         userProgress.cards[productId] = card;
+
+        // キューの状態を比較し、削除されたカードをカウント
+        if (initialNewQueue.includes(productId) && !userProgress[`${category}NewQueue`].includes(productId)) {
+            userProgress[`${category}NewCardsRemovedQueueToday`]++;
+        }
+        if (initialReviewQueue.includes(productId) && !userProgress[`${category}ReviewQueue`].includes(productId)) {
+            userProgress[`${category}ReviewCardsRemovedQueueToday`]++;
+        }
+
+        // トランザクションでuserProgressを更新
         transaction.set(userProgressRef, userProgress);
     });
-}
 
+    // トランザクション完了後、明示的にキューの状態を保存
+    await saveUserQueues(userId);
+}
 export function getCardCategory(productId: string): Category {
     const product = productData.find(p => p.productID.toString() === productId);
     return product?.category || 'hot'; // Default to 'hot' if not found
@@ -198,7 +225,13 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
             iceNewCardsAddedToday: 0,
             iceReviewCardsAddedToday: 0,
             foodNewCardsAddedToday: 0,
-            foodReviewCardsAddedToday: 0
+            foodReviewCardsAddedToday: 0,
+            hotNewCardsRemovedQueueToday: 0,
+            hotReviewCardsRemovedQueueToday: 0,
+            iceNewCardsRemovedQueueToday: 0,
+            iceReviewCardsRemovedQueueToday: 0,
+            foodNewCardsRemovedQueueToday: 0,
+            foodReviewCardsRemovedQueueToday: 0
         };
         productData.forEach(product => {
             data!.cards[product.productID] = {
@@ -219,8 +252,11 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
     return data;
 }
 
-export async function saveUserQueues(userId: string, userProgress: UserProgress): Promise<void> {
+export async function saveUserQueues(userId: string): Promise<void> {
     const userProgressRef = doc(db, 'userProgress', userId);
+    const userProgressDoc = await getDoc(userProgressRef);
+    const userProgress = userProgressDoc.data() as UserProgress;
+
     await updateDoc(userProgressRef, {
         hotNewQueue: userProgress.hotNewQueue,
         hotReviewQueue: userProgress.hotReviewQueue,
@@ -234,7 +270,13 @@ export async function saveUserQueues(userId: string, userProgress: UserProgress)
         iceNewCardsAddedToday: userProgress.iceNewCardsAddedToday,
         iceReviewCardsAddedToday: userProgress.iceReviewCardsAddedToday,
         foodNewCardsAddedToday: userProgress.foodNewCardsAddedToday,
-        foodReviewCardsAddedToday: userProgress.foodReviewCardsAddedToday
+        foodReviewCardsAddedToday: userProgress.foodReviewCardsAddedToday,
+        hotNewCardsRemovedQueueToday: userProgress.hotNewCardsRemovedQueueToday,
+        hotReviewCardsRemovedQueueToday: userProgress.hotReviewCardsRemovedQueueToday,
+        iceNewCardsRemovedQueueToday: userProgress.iceNewCardsRemovedQueueToday,
+        iceReviewCardsRemovedQueueToday: userProgress.iceReviewCardsRemovedQueueToday,
+        foodNewCardsRemovedQueueToday: userProgress.foodNewCardsRemovedQueueToday,
+        foodReviewCardsRemovedQueueToday: userProgress.foodReviewCardsRemovedQueueToday,
     });
 }
 
@@ -278,7 +320,14 @@ export async function saveUserProgress(userId: string, progress: UserProgress): 
             iceReviewCardsAddedToday: progress.iceReviewCardsAddedToday,
             foodNewCardsAddedToday: progress.foodNewCardsAddedToday,
             foodReviewCardsAddedToday: progress.foodReviewCardsAddedToday,
+            hotNewCardsRemovedQueueToday: progress.hotNewCardsRemovedQueueToday,
+            hotReviewCardsRemovedQueueToday: progress.hotReviewCardsRemovedQueueToday,
+            iceNewCardsRemovedQueueToday: progress.iceNewCardsRemovedQueueToday,
+            iceReviewCardsRemovedQueueToday: progress.iceReviewCardsRemovedQueueToday,
+            foodNewCardsRemovedQueueToday: progress.foodNewCardsRemovedQueueToday,
+            foodReviewCardsRemovedQueueToday: progress.foodReviewCardsRemovedQueueToday,
         }, { merge: true });
+
         console.log("User progress saved successfully for:", userId);
     } catch (error) {
         console.error("Error saving user progress:", error);
@@ -305,7 +354,13 @@ export async function initializeUserProgress(userId: string): Promise<void> {
         iceNewCardsAddedToday: 0,
         iceReviewCardsAddedToday: 0,
         foodNewCardsAddedToday: 0,
-        foodReviewCardsAddedToday: 0
+        foodReviewCardsAddedToday: 0,
+        hotNewCardsRemovedQueueToday: 0,
+        hotReviewCardsRemovedQueueToday: 0,
+        iceNewCardsRemovedQueueToday: 0,
+        iceReviewCardsRemovedQueueToday: 0,
+        foodNewCardsRemovedQueueToday: 0,
+        foodReviewCardsRemovedQueueToday: 0
     };
 
     // Initialize card data for all products
