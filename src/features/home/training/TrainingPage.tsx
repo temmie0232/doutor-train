@@ -17,8 +17,8 @@ import { Separator } from '@/components/ui/separator';
 import { SelectSeparator } from '@/components/ui/select';
 
 interface QueueProgress {
-    current: number;
-    total: number;
+    removed: number;
+    added: number;
 }
 
 interface CategoryProgress {
@@ -41,9 +41,9 @@ const TrainingPage: React.FC = () => {
         ice: CategoryProgress;
         food: CategoryProgress;
     }>({
-        hot: { newQueue: { current: 0, total: 0 }, reviewQueue: { current: 0, total: 0 } },
-        ice: { newQueue: { current: 0, total: 0 }, reviewQueue: { current: 0, total: 0 } },
-        food: { newQueue: { current: 0, total: 0 }, reviewQueue: { current: 0, total: 0 } },
+        hot: { newQueue: { removed: 0, added: 0 }, reviewQueue: { removed: 0, added: 0 } },
+        ice: { newQueue: { removed: 0, added: 0 }, reviewQueue: { removed: 0, added: 0 } },
+        food: { newQueue: { removed: 0, added: 0 }, reviewQueue: { removed: 0, added: 0 } },
     });
 
     const categories = [
@@ -84,26 +84,36 @@ const TrainingPage: React.FC = () => {
     const updateCategoryProgress = (progress: UserProgress) => {
         const newProgress = {
             hot: {
-                newQueue: { current: 0, total: progress.hotNewQueue.length },
-                reviewQueue: { current: 0, total: progress.hotReviewQueue.length },
+                newQueue: {
+                    removed: progress.hotNewCardsRemovedQueueToday,
+                    added: progress.hotNewCardsAddedToday
+                },
+                reviewQueue: {
+                    removed: progress.hotReviewCardsRemovedQueueToday,
+                    added: progress.hotReviewCardsAddedToday
+                },
             },
             ice: {
-                newQueue: { current: 0, total: progress.iceNewQueue.length },
-                reviewQueue: { current: 0, total: progress.iceReviewQueue.length },
+                newQueue: {
+                    removed: progress.iceNewCardsRemovedQueueToday,
+                    added: progress.iceNewCardsAddedToday
+                },
+                reviewQueue: {
+                    removed: progress.iceReviewCardsRemovedQueueToday,
+                    added: progress.iceReviewCardsAddedToday
+                },
             },
             food: {
-                newQueue: { current: 0, total: progress.foodNewQueue.length },
-                reviewQueue: { current: 0, total: progress.foodReviewQueue.length },
+                newQueue: {
+                    removed: progress.foodNewCardsRemovedQueueToday,
+                    added: progress.foodNewCardsAddedToday
+                },
+                reviewQueue: {
+                    removed: progress.foodReviewCardsRemovedQueueToday,
+                    added: progress.foodReviewCardsAddedToday
+                },
             },
         };
-
-        // Calculate current progress based on the difference between initial queue length and current queue length
-        newProgress.hot.newQueue.current = Math.max(0, newProgress.hot.newQueue.total - progress.hotNewQueue.length);
-        newProgress.hot.reviewQueue.current = Math.max(0, newProgress.hot.reviewQueue.total - progress.hotReviewQueue.length);
-        newProgress.ice.newQueue.current = Math.max(0, newProgress.ice.newQueue.total - progress.iceNewQueue.length);
-        newProgress.ice.reviewQueue.current = Math.max(0, newProgress.ice.reviewQueue.total - progress.iceReviewQueue.length);
-        newProgress.food.newQueue.current = Math.max(0, newProgress.food.newQueue.total - progress.foodNewQueue.length);
-        newProgress.food.reviewQueue.current = Math.max(0, newProgress.food.reviewQueue.total - progress.foodReviewQueue.length);
 
         setCategoryProgress(newProgress);
     };
@@ -197,11 +207,11 @@ const TrainingPage: React.FC = () => {
                                 <p className="text-sm font-medium mb-1">新規カード</p>
                                 <div className="flex items-center">
                                     <Progress
-                                        value={(categoryProgress[category.category].newQueue.current / categoryProgress[category.category].newQueue.total) * 100}
+                                        value={(categoryProgress[category.category].newQueue.removed / categoryProgress[category.category].newQueue.added) * 100}
                                         className="flex-grow mr-2"
                                     />
                                     <span className="text-sm">
-                                        {categoryProgress[category.category].newQueue.current}/{categoryProgress[category.category].newQueue.total}
+                                        {categoryProgress[category.category].newQueue.removed}/{categoryProgress[category.category].newQueue.added}
                                     </span>
                                 </div>
                             </div>
@@ -209,11 +219,11 @@ const TrainingPage: React.FC = () => {
                                 <p className="text-sm font-medium mb-1">復習カード</p>
                                 <div className="flex items-center">
                                     <Progress
-                                        value={(categoryProgress[category.category].reviewQueue.current / categoryProgress[category.category].reviewQueue.total) * 100}
+                                        value={(categoryProgress[category.category].reviewQueue.removed / categoryProgress[category.category].reviewQueue.added) * 100}
                                         className="flex-grow mr-2"
                                     />
                                     <span className="text-sm">
-                                        {categoryProgress[category.category].reviewQueue.current}/{categoryProgress[category.category].reviewQueue.total}
+                                        {categoryProgress[category.category].reviewQueue.removed}/{categoryProgress[category.category].reviewQueue.added}
                                     </span>
                                 </div>
                             </div>
