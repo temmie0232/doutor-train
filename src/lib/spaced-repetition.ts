@@ -76,6 +76,8 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
             const newQueueToAdd = shuffledNewCards.slice(0, 6);
             userProgress[`${category}NewQueue`] = newQueueToAdd;
             userProgress[`${category}NewCardsAddedToday`] = newQueueToAdd.length;
+
+            // Reset removed cards count here
             userProgress[`${category}NewCardsRemovedQueueToday`] = 0;
 
             // Initialize review queue for each category
@@ -88,17 +90,17 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
             const reviewQueueToAdd = shuffledDueReviewCards.slice(0, 12);
             userProgress[`${category}ReviewQueue`] = reviewQueueToAdd;
             userProgress[`${category}ReviewCardsAddedToday`] = reviewQueueToAdd.length;
+
+            // Reset removed cards count here
             userProgress[`${category}ReviewCardsRemovedQueueToday`] = 0;
         });
 
         userProgress.lastInitializationDate = Timestamp.fromDate(today);
     } else {
-        // If queues were already initialized today, set added cards to 0
+        // If queues were already initialized today, don't reset the removed cards count
         categories.forEach(category => {
             userProgress[`${category}NewCardsAddedToday`] = 0;
             userProgress[`${category}ReviewCardsAddedToday`] = 0;
-            userProgress[`${category}NewCardsRemovedQueueToday`] = 0;
-            userProgress[`${category}ReviewCardsRemovedQueueToday`] = 0;
         });
     }
 
@@ -333,7 +335,6 @@ export async function saveUserProgress(userId: string, progress: UserProgress): 
         console.error("Error saving user progress:", error);
     }
 }
-
 export async function initializeUserProgress(userId: string): Promise<void> {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
