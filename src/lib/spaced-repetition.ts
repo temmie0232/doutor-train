@@ -3,6 +3,9 @@ import { Product, productData } from '@/data/productData';
 
 const db = getFirestore();
 
+const categories = ['hot', 'ice', 'food'] as const;
+type Category = typeof categories[number];
+
 interface LearningHistoryItem {
     date: Date | Timestamp;
     score: number;
@@ -28,9 +31,14 @@ export interface UserProgress {
     iceReviewQueue: string[];
     foodNewQueue: string[];
     foodReviewQueue: string[];
+    hotNewCardsAddedToday: number;
+    hotReviewCardsAddedToday: number;
+    iceNewCardsAddedToday: number;
+    iceReviewCardsAddedToday: number;
+    foodNewCardsAddedToday: number;
+    foodReviewCardsAddedToday: number;
+    [key: string]: any; // Add index signature
 }
-
-type Category = 'hot' | 'ice' | 'food';
 
 function convertToDate(dateOrTimestamp: Date | Timestamp): Date {
     if (dateOrTimestamp instanceof Timestamp) {
@@ -54,14 +62,14 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
     const lastInitDate = convertToDate(userProgress.lastInitializationDate);
 
     if (today > lastInitDate) {
-        const categories: Category[] = ['hot', 'ice', 'food'];
-
         categories.forEach(category => {
             // Initialize new queue for each category
             const newCards = allProducts
                 .filter(p => p.category === category && (!userProgress.cards[p.productID] || userProgress.cards[p.productID].isNew));
             const shuffledNewCards = shuffleArray(newCards.map(p => p.productID.toString()));
-            userProgress[`${category}NewQueue`] = shuffledNewCards.slice(0, 6);
+            const newQueueToAdd = shuffledNewCards.slice(0, 6);
+            userProgress[`${category}NewQueue`] = newQueueToAdd;
+            userProgress[`${category}NewCardsAddedToday`] = newQueueToAdd.length;
 
             // Initialize review queue for each category
             const dueReviewCards = Object.entries(userProgress.cards || {})
@@ -70,10 +78,18 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
                     allProducts.find(p => p.productID.toString() === card.productId)?.category === category)
                 .map(([productId, _]) => productId);
             const shuffledDueReviewCards = shuffleArray(dueReviewCards);
-            userProgress[`${category}ReviewQueue`] = shuffledDueReviewCards.slice(0, 12);
+            const reviewQueueToAdd = shuffledDueReviewCards.slice(0, 12);
+            userProgress[`${category}ReviewQueue`] = reviewQueueToAdd;
+            userProgress[`${category}ReviewCardsAddedToday`] = reviewQueueToAdd.length;
         });
 
         userProgress.lastInitializationDate = Timestamp.fromDate(today);
+    } else {
+        // If queues were already initialized today, set added cards to 0
+        categories.forEach(category => {
+            userProgress[`${category}NewCardsAddedToday`] = 0;
+            userProgress[`${category}ReviewCardsAddedToday`] = 0;
+        });
     }
 
     return userProgress;
@@ -176,7 +192,13 @@ export async function getUserProgress(userId: string): Promise<UserProgress> {
             iceNewQueue: [],
             iceReviewQueue: [],
             foodNewQueue: [],
-            foodReviewQueue: []
+            foodReviewQueue: [],
+            hotNewCardsAddedToday: 0,
+            hotReviewCardsAddedToday: 0,
+            iceNewCardsAddedToday: 0,
+            iceReviewCardsAddedToday: 0,
+            foodNewCardsAddedToday: 0,
+            foodReviewCardsAddedToday: 0
         };
         productData.forEach(product => {
             data!.cards[product.productID] = {
@@ -206,7 +228,13 @@ export async function saveUserQueues(userId: string, userProgress: UserProgress)
         iceReviewQueue: userProgress.iceReviewQueue,
         foodNewQueue: userProgress.foodNewQueue,
         foodReviewQueue: userProgress.foodReviewQueue,
-        lastStudyDate: userProgress.lastStudyDate
+        lastStudyDate: userProgress.lastStudyDate,
+        hotNewCardsAddedToday: userProgress.hotNewCardsAddedToday,
+        hotReviewCardsAddedToday: userProgress.hotReviewCardsAddedToday,
+        iceNewCardsAddedToday: userProgress.iceNewCardsAddedToday,
+        iceReviewCardsAddedToday: userProgress.iceReviewCardsAddedToday,
+        foodNewCardsAddedToday: userProgress.foodNewCardsAddedToday,
+        foodReviewCardsAddedToday: userProgress.foodReviewCardsAddedToday
     });
 }
 
@@ -242,7 +270,15 @@ export async function saveUserProgress(userId: string, progress: UserProgress): 
     console.log("Saving user progress...");
     const userProgressRef = doc(db, 'userProgress', userId);
     try {
-        await setDoc(userProgressRef, progress, { merge: true });
+        await setDoc(userProgressRef, {
+            ...progress,
+            hotNewCardsAddedToday: progress.hotNewCardsAddedToday,
+            hotReviewCardsAddedToday: progress.hotReviewCardsAddedToday,
+            iceNewCardsAddedToday: progress.iceNewCardsAddedToday,
+            iceReviewCardsAddedToday: progress.iceReviewCardsAddedToday,
+            foodNewCardsAddedToday: progress.foodNewCardsAddedToday,
+            foodReviewCardsAddedToday: progress.foodReviewCardsAddedToday,
+        }, { merge: true });
         console.log("User progress saved successfully for:", userId);
     } catch (error) {
         console.error("Error saving user progress:", error);
@@ -263,7 +299,13 @@ export async function initializeUserProgress(userId: string): Promise<void> {
         iceNewQueue: [],
         iceReviewQueue: [],
         foodNewQueue: [],
-        foodReviewQueue: []
+        foodReviewQueue: [],
+        hotNewCardsAddedToday: 0,
+        hotReviewCardsAddedToday: 0,
+        iceNewCardsAddedToday: 0,
+        iceReviewCardsAddedToday: 0,
+        foodNewCardsAddedToday: 0,
+        foodReviewCardsAddedToday: 0
     };
 
     // Initialize card data for all products
