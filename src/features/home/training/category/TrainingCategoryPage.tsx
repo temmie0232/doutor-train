@@ -104,6 +104,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                         cardData.dueDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1日後
                         cardData.interval = 1; // 初期間隔を1日に設定
                         userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+                        userProgress[`${category}NewCardsRemovedQueueToday`]++;
                         // 注意: この復習カードは今日の復習キューには追加しない
                     } else {
                         // 新規キューの最後に移動
@@ -121,7 +122,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
                 }
 
                 await updateUserProgress(user.uid, currentProduct.productID.toString(), scorePercentage);
-                await saveUserQueues(user.uid, userProgress);
+                await saveUserQueues(user.uid);
             } else {
                 // 復習カードの場合は、ユーザーの自己評価を待つ
                 // handleRating 関数で処理されるため、ここでは何もしない
@@ -143,8 +144,9 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
 
             const updatedProgress = { ...userProgress };
             updatedProgress[`${category}ReviewQueue`] = updatedProgress[`${category}ReviewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
+            updatedProgress[`${category}ReviewCardsRemovedQueueToday`]++;
 
-            await saveUserQueues(user.uid, updatedProgress);
+            await saveUserQueues(user.uid);
 
             loadNextCard();
         } catch (error) {
