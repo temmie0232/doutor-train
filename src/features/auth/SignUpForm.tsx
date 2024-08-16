@@ -16,8 +16,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { saveUserData } from '@/lib/firebase'
 
 interface FormData {
+    name: string
     email: string;
     password: string;
     confirmPassword: string;
@@ -33,6 +35,9 @@ const SignUpForm: React.FC = () => {
         try {
             const userCredential = await signUp(data.email, data.password);
             const userId = userCredential.user.uid;
+
+            // ユーザーデータを保存
+            await saveUserData(userId, data.name, data.email);
 
             // ユーザーの進捗データを初期化
             await initializeUserProgress(userId);

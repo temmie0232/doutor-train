@@ -56,3 +56,31 @@ export const getUserName = async (userId: string): Promise<string | null> => {
     return null;
 };
 
+export const saveUserData = async (userId: string, name: string, email: string) => {
+    const userRef = doc(db, 'users', userId);
+    await setDoc(userRef, {
+        name,
+        email,
+        emailAccountName: email.split('@')[0] // メールアカウント名を抽出
+    }, { merge: true });
+};
+
+// ユーザーのメールアドレスを取得
+export const getUserEmail = async (userId: string): Promise<string | null> => {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+        return userDoc.data().email || null;
+    }
+    return null;
+};
+
+// ユーザーのメールアカウント名を取得
+export const getUserEmailAccountName = async (userId: string): Promise<string | null> => {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+        return userDoc.data().emailAccountName || null;
+    }
+    return null;
+};

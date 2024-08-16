@@ -1,7 +1,7 @@
 "use client"
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, UserCredential, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, saveUserData } from '@/lib/firebase';
 import { saveUserName, getUserName } from '@/lib/firebase';
 
 interface AuthContextType {
@@ -42,9 +42,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return signOut(auth);
     };
 
-    const signInWithGoogle = () => {
+    const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider);
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            // Google認証成功後にユーザーデータを保存
+            if (user.email) {
+                await saveUserData(user.uid, user.displayName || '', user.email);
+            }
+            return result;
+        } catch (error) {
+            console.error("Google sign in error:", error);
+            throw error;
+        }
     };
 
     const value = {

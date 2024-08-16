@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button'
 import { FaGoogle } from "react-icons/fa"
 import { useToast } from "@/components/ui/use-toast"
+import { saveUserData } from '@/lib/firebase';
 
 const GoogleAuthButton = () => {
     const { signInWithGoogle } = useAuth();
@@ -14,31 +15,28 @@ const GoogleAuthButton = () => {
 
     const handleGoogleSignIn = async () => {
         try {
-            await signInWithGoogle();
+            const result = await signInWithGoogle();
+            const user = result.user;
+            if (user.email) {
+                // Google認証成功後にユーザーデータを保存
+                await saveUserData(user.uid, user.displayName || '', user.email);
+            }
             router.push('/home');
         } catch (error) {
             console.error('Google sign in failed', error);
+            toast({
+                title: "エラー",
+                description: "Googleログインに失敗しました。",
+                variant: "destructive",
+            });
         }
     };
-
-    const handleReasonClick = () => {
-        toast({
-            title: "アカウントが必要な理由",
-            description: "達成度などのユーザーごとに異なる情報を保存するため",
-        })
-    }
 
     return (
         <div className="flex flex-col items-center space-y-4">
             <Button size="sm" onClick={handleGoogleSignIn} className="w-full">
                 <FaGoogle className='mr-2' /> Googleアカウントで始める
             </Button>
-            <button
-                onClick={handleReasonClick}
-                className="text-sm text-blue-600 hover:underline focus:outline-none"
-            >
-                アカウントが必要な理由
-            </button>
         </div>
     )
 }

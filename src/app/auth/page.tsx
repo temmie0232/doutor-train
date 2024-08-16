@@ -14,6 +14,9 @@ const AuthPage = () => {
                 </div>
                 <GoogleAuthButton />
             </div>
+            <div className="mt-4 text-sm text-gray-500">
+                バージョン 1.0.0
+            </div>
         </div>
     )
 }
