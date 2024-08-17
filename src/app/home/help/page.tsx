@@ -126,7 +126,7 @@ const HelpPage: React.FC = () => {
                 <AccordionItem value="item-7">
                     <AccordionTrigger>リポジトリ</AccordionTrigger>
                     <AccordionContent>
-                        <a href="https://github.com/temmie0232/doutor-train">https://github.com/temmie0232/doutor-train</a>
+                        <a href="https://github.com/temmie0232/doutor-train" className='underline text-blue-500'>https://github.com/temmie0232/doutor-train</a>
                     </AccordionContent>
                 </AccordionItem>
 
