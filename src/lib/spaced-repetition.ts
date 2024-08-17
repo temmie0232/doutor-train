@@ -67,26 +67,29 @@ export function initializeQueues(userProgress: UserProgress, allProducts: Produc
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const lastInitDate = convertToDate(userProgress.lastInitializationDate);
 
+    // 前回の初期化日が今日よりも前の場合にのみ初期化を行う
     if (today > lastInitDate) {
         categories.forEach(category => {
-            // Initialize new queue for each category
+            // 新規キューを完全にリセット
             const newCards = allProducts
                 .filter(p => p.category === category && (!userProgress.cards[p.productID] || userProgress.cards[p.productID].isNew));
             const shuffledNewCards = shuffleArray(newCards.map(p => p.productID.toString()));
-            const newQueueToAdd = shuffledNewCards.slice(0, 6);
-            userProgress[`${category}NewQueue`] = newQueueToAdd;
-            userProgress[`${category}NewCardsAddedToday`] = newQueueToAdd.length;
+            userProgress[`${category}NewQueue`] = shuffledNewCards.slice(0, 6);
+            userProgress[`${category}NewCardsAddedToday`] = userProgress[`${category}NewQueue`].length;
 
-            // Initialize review queue for each category
+            // 復習キューを完全にリセット
             const dueReviewCards = Object.entries(userProgress.cards || {})
                 .filter(([_, card]) => !card.isNew &&
                     (!card.dueDate || convertToDate(card.dueDate) <= today) &&
                     allProducts.find(p => p.productID.toString() === card.productId)?.category === category)
                 .map(([productId, _]) => productId);
             const shuffledDueReviewCards = shuffleArray(dueReviewCards);
-            const reviewQueueToAdd = shuffledDueReviewCards.slice(0, 12);
-            userProgress[`${category}ReviewQueue`] = reviewQueueToAdd;
-            userProgress[`${category}ReviewCardsAddedToday`] = reviewQueueToAdd.length;
+            userProgress[`${category}ReviewQueue`] = shuffledDueReviewCards.slice(0, 12);
+            userProgress[`${category}ReviewCardsAddedToday`] = userProgress[`${category}ReviewQueue`].length;
+
+            // カウンターをリセット
+            userProgress[`${category}NewCardsRemovedQueueToday`] = 0;
+            userProgress[`${category}ReviewCardsRemovedQueueToday`] = 0;
         });
 
         userProgress.lastInitializationDate = Timestamp.fromDate(today);
@@ -326,6 +329,7 @@ export async function saveUserProgress(userId: string, progress: UserProgress): 
         console.error("Error saving user progress:", error);
     }
 }
+
 export async function initializeUserProgress(userId: string): Promise<void> {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
