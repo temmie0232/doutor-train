@@ -98,61 +98,42 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
         const scorePercentage = (quizScore / totalQuestions) * 100;
 
         // 進捗更新前の状態を保存
-        const progressBefore = {
+        setProgressBefore({
             new: userProgress[`${category}NewQueue`].length,
             review: userProgress[`${category}ReviewQueue`].length
-        };
+        });
 
         try {
+            await updateUserProgress(user.uid, currentProduct.productID.toString(), scorePercentage);
+            const updatedProgress = await getUserProgress(user.uid);
+            setUserProgress(updatedProgress);
+
+            // 進捗更新後の状態を保存
+            setProgressAfter({
+                new: updatedProgress[`${category}NewQueue`].length,
+                review: updatedProgress[`${category}ReviewQueue`].length
+            });
+
+            // 進捗が変化した場合、トーストを表示
             if (isNewCard) {
-                // 新規カードの場合
-                if (scorePercentage === 100) {
-                    cardData.correctCount += 1;
-                    if (cardData.correctCount >= 2) {
-                        // 新規カードから復習カードへの移行
-                        cardData.isNew = false;
-                        cardData.dueDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1日後
-                        cardData.interval = 1; // 初期間隔を1日に設定
-                        userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
-                        userProgress[`${category}NewCardsRemovedQueueToday`]++;
-                        // 注意: この復習カードは今日の復習キューには追加しない
-                    } else {
-                        // 新規キューの最後に移動
-                        userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
-                        if (userProgress[`${category}NewQueue`].length < 6) {
-                            userProgress[`${category}NewQueue`].push(currentProduct.productID.toString());
-                        }
-                    }
-                } else {
-                    // スコアが100%未満の場合、新規キューの最後に移動
-                    userProgress[`${category}NewQueue`] = userProgress[`${category}NewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
-                    if (userProgress[`${category}NewQueue`].length < 6) {
-                        userProgress[`${category}NewQueue`].push(currentProduct.productID.toString());
-                    }
-                }
-
-                // 進捗更新後の状態を取得
-                const progressAfter = {
-                    new: userProgress[`${category}NewQueue`].length,
-                    review: userProgress[`${category}ReviewQueue`].length
-                };
-
-                // 進捗が変化した場合、トーストを表示
-                if (progressBefore.new !== progressAfter.new || progressBefore.review !== progressAfter.review) {
+                if (progressBefore.new !== progressAfter.new) {
                     showProgressToast(
                         'new',
                         progressBefore.new,
                         progressAfter.new,
-                        userProgress[`${category}NewCardsAddedToday`]
+                        updatedProgress[`${category}NewCardsAddedToday`]
                     );
                 }
             } else {
-                // 復習カードの場合は、ユーザーの自己評価を待つ
-                // handleRating 関数で処理されるため、ここでは何もしない
+                if (progressBefore.review !== progressAfter.review) {
+                    showProgressToast(
+                        'review',
+                        progressBefore.review,
+                        progressAfter.review,
+                        updatedProgress[`${category}ReviewCardsAddedToday`]
+                    );
+                }
             }
-
-            await updateUserProgress(user.uid, currentProduct.productID.toString(), scorePercentage);
-            await saveUserQueues(user.uid);
         } catch (error) {
             console.error("Error updating user progress:", error);
             toast({
@@ -166,36 +147,7 @@ const TrainingCategoryPage: React.FC<TrainingCategoryPageProps> = ({ category })
     const handleRating = async (rating: number) => {
         if (!user || !currentProduct || !userProgress) return;
         try {
-            // 進捗更新前の状態を保存
-            setProgressBefore({
-                new: userProgress[`${category}NewQueue`].length,
-                review: userProgress[`${category}ReviewQueue`].length
-            });
-
             await updateUserProgress(user.uid, currentProduct.productID.toString(), rating * 25);
-
-            const updatedProgress = { ...userProgress };
-            updatedProgress[`${category}ReviewQueue`] = updatedProgress[`${category}ReviewQueue`].filter((id: string) => id !== currentProduct.productID.toString());
-            updatedProgress[`${category}ReviewCardsRemovedQueueToday`]++;
-
-            // 進捗更新後の状態を保存
-            setProgressAfter({
-                new: updatedProgress[`${category}NewQueue`].length,
-                review: updatedProgress[`${category}ReviewQueue`].length
-            });
-
-            // 進捗が変化した場合、トーストを表示
-            if (progressBefore.review !== progressAfter.review) {
-                showProgressToast(
-                    'review',
-                    progressBefore.review,
-                    progressAfter.review,
-                    userProgress[`${category}ReviewCardsAddedToday`]
-                );
-            }
-
-            await saveUserQueues(user.uid);
-
             loadNextCard();
         } catch (error) {
             console.error("Error in handleRating:", error);
