@@ -20,7 +20,7 @@ export default function TrainingPage() {
     return (
         <>
             <TrainingScreen />
-            <UnderMaintenanceDialog isOpen={isDialogOpen} onClose={handleCloseDialog} />
+            {/*<UnderMaintenanceDialog isOpen={isDialogOpen} onClose={handleCloseDialog} />*/}
         </>
     );
 }
