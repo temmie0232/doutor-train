@@ -42,6 +42,11 @@ const HomePage = () => {
           </div>
           <MenuButtons />
         </div>
+        <div className="bg-gray-100 p-4 mt-8 rounded-lg shadow-md">
+          <p className="text-sm text-gray-700">
+            <span className="font-semibold">fix:</span> 選択肢、回答の修正 <span className="text-gray-500">(2024/08/23)</span>
+          </p>
+        </div>
       </div>
       <NameInputModal isOpen={showNameModal} onClose={handleNameSubmit} />
     </Layout>
